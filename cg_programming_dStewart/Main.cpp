@@ -42,12 +42,146 @@ int InitWindow() {
 	return EXIT_WITH_SUCCESS;
 }
 
+GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
+	GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+	GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+
+	//Read in shader code here.
+	string vertexShaderCode = "";
+	ifstream vertexShaderStream(vertex_file_path, ios::in);
+
+	if(vertexShaderStream.is_open()) {
+		string line = "";
+		while(getline(vertexShaderStream, line)) {
+			vertexShaderCode += "\n" + line;
+		}
+
+		vertexShaderStream.close();
+	}
+
+	string fragmentShaderCode = "";
+	ifstream fragmentShaderStream(fragment_file_path, ios::in);
+
+	if(fragmentShaderStream.is_open()) {
+		string line = "";
+		while(getline(fragmentShaderStream, line)) {
+			fragmentShaderCode += "\n" + line;
+		}
+
+		fragmentShaderStream.close();
+	}
+
+	GLint result = GL_FALSE;
+	int infoLogLength = NULL;
+
+	// compile shaders here...
+	printf("Compiling vertex shader: %s\n", vertex_file_path);
+	char const* vertexSourcePointer = vertexShaderCode.c_str();
+	glShaderSource(vertexShaderID, 1, &vertexSourcePointer, NULL);
+	glCompileShader(vertexShaderID);
+
+	//Check vertex shader...
+	glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &result);
+	glGetShaderiv(vertexShaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+	char* vertexShaderErrorMessage = new char[infoLogLength];
+	glGetShaderInfoLog(vertexShaderID, infoLogLength, NULL, &vertexShaderErrorMessage[0]);
+	fprintf(stdout, "%s\n", &vertexShaderErrorMessage[0]);
+
+	//Compile the fragment shader
+	printf("Compiling fragment shader: %s\n", fragment_file_path);
+	char const* fragmentSourcePointer = fragmentShaderCode.c_str();
+	glShaderSource(fragmentShaderID, 1, &fragmentSourcePointer, NULL);
+	glCompileShader(fragmentShaderID);
+
+	//Check vertex shader...
+	glGetShaderiv(fragmentShaderID, GL_COMPILE_STATUS, &result);
+	glGetShaderiv(fragmentShaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+	char* fragmentShaderErrorMessage = new char[infoLogLength];
+	glGetShaderInfoLog(fragmentShaderID, infoLogLength, NULL, &fragmentShaderErrorMessage[0]);
+	fprintf(stdout, "%s\n", &fragmentShaderErrorMessage[0]);
+
+	// Link program...
+	fprintf(stdout, "Linking program.\n");
+	GLuint programID = glCreateProgram();
+	glAttachShader(programID, vertexShaderID);
+	glAttachShader(programID, fragmentShaderID);
+	glLinkProgram(programID);
+
+	//Check the program...
+	glGetProgramiv(programID, GL_LINK_STATUS, &result);
+	glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
+	char* programErrorMessage = new char[glm::max(infoLogLength, int(1))];
+	glGetProgramInfoLog(programID, infoLogLength, NULL, &programErrorMessage[0]);
+	fprintf(stdout, "%s\n", &programErrorMessage[0]);
+
+	glDeleteShader(vertexShaderID);
+	glDeleteShader(fragmentShaderID);
+	
+	delete(programErrorMessage);
+	programErrorMessage = NULL;
+
+	delete(fragmentShaderErrorMessage);
+	fragmentShaderErrorMessage = NULL;
+
+	delete(vertexShaderErrorMessage);
+	vertexShaderErrorMessage = NULL;
+
+	return programID;
+}
+
+GLuint& LoadTriangle() {
+	static const GLfloat g_vertex_buffer_data[] = {
+		-1.0f, -1.0f, 0.0f,
+		1.0f, -1.0f, 0.0f,
+		0.0f, 1.0f, 0.0f
+	};
+
+	GLuint vertexBuffer = 0;
+	glGenBuffers(1, &vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+	return vertexBuffer;
+}
+
+void RenderTriangle(GLuint vertexBuffer) {
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+
+	glVertexAttribPointer(
+		0,			// attribute layout
+		3,			// how many elements in array? 
+		GL_FLOAT,   // what datatype?
+		GL_FALSE,   // normalized?
+		0,			// stride...
+		(void*)0	// array buffer offset...
+		);
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDisableVertexAttribArray(0);
+}
+
 int main() {
 	if(InitWindow() | InitGlew()) {
 		return EXIT_WITH_ERROR;
 	}
 
+	GLuint vertexArrayID = NULL;
+	glGenVertexArrays(1, &vertexArrayID);
+	glBindVertexArray(vertexArrayID);
+
+	// Create and compile glsl from shaders.
+	GLuint programID = LoadShaders("BasicVertexShader.vertexshader", "BasicFragmentShader.fragmentshader");
+
+	GLuint triangleID = LoadTriangle();
+
 	do {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glUseProgram(programID);
+		RenderTriangle(triangleID);
 		//Update();
 		//Render();
 		glfwSwapBuffers(window);
@@ -58,6 +192,54 @@ int main() {
 
 
 	return EXIT_WITH_SUCCESS;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	//// Init GLFW
 	//if (!glfwInit()) {
 	//	fprintf(stderr, "Failed to init GLFW\n");
@@ -140,6 +322,3 @@ int main() {
 	//	glfwWindowShouldClose(window) == 0 );
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-}
