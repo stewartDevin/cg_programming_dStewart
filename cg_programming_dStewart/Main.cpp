@@ -4,6 +4,43 @@
 #include "Application.h"
 
 GLFWwindow* window = NULL;
+float deltaTime = NULL;
+vec3 ballPosition = vec3(0.0f, 0.0f, 0.0f);
+vec3 leftPaddlePosition = vec3(0.0f, 0.0f, 0.0f);
+vec3 rightPaddlePosition = vec3(0.0f, 0.0f, 0.0f);
+
+vec3 startingPos = vec3(0.0f, 0.0f, 0.0f);
+vec3 ballVelocity = vec3(0.0f, 0.0f, 0.0f);
+vec3 startingBallVelocity = vec3(1.0f, 0.5f, 0.0f);
+float paddleWidth = 5.0f;
+
+bool initializedPong = false;
+void InitializePong() {
+	leftPaddlePosition = vec3(-2.0f, 0.0, 0.0f);
+	rightPaddlePosition = vec3(2.0f, 0.0, 0.0f);
+	ballPosition = vec3(0);
+	ballVelocity = startingBallVelocity;
+}
+
+
+
+void RunBallMovement() {
+	ballPosition += ballVelocity * deltaTime;
+
+	if(ballPosition < ) {
+
+	}
+	/*
+	else if() {
+
+	}
+	else if() {
+
+	}
+	else if() {
+
+	}*/
+}
 
 int InitGlew() {
 	glfwMakeContextCurrent(window); // Initialize GLEW
@@ -134,7 +171,7 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 GLuint& LoadQuad() {
 	float offset = 0.5f;
 
-	static GLfloat g_vertex_buffer_data[] = {
+	GLfloat g_vertex_buffer_data[] = {
 		0.0f, 0.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
 		1.0f, 1.0f, 0.0f,
@@ -173,7 +210,25 @@ GLuint& LoadTriangle() {
 	return vertexBuffer;
 }
 
-void RenderVertex(GLuint vertexBuffer) {
+GLuint& LoadColor() {
+	static const GLfloat g_color_buffer_data[] = {
+		1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f
+	};
+
+	GLuint vertexBuffer = 0;
+	glGenBuffers(1, &vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+
+	return vertexBuffer;
+}
+
+mat4 RenderVertex(GLuint vertexBuffer,  const vec3& position, const vec3& scaleVec) {
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
@@ -185,20 +240,57 @@ void RenderVertex(GLuint vertexBuffer) {
 		0,			// stride...
 		(void*)0	// array buffer offset...
 		);
+
+	mat4 identityMatrix = mat4(1.0f);
+	mat4 positionMatrix = translate(identityMatrix, position);
+	mat4 scaleMatrix = scale(positionMatrix, scaleVec);
+	return scaleMatrix;
 }
 
-void RenderTriangle(GLuint vertexBuffer) {
-	RenderVertex(vertexBuffer);
+void RenderColor(GLuint vertexBuffer) {
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
-	glDisableVertexAttribArray(0);
+	glVertexAttribPointer(
+		1,			// attribute layout
+		3,			// how many elements in array? 
+		GL_FLOAT,   // what datatype?
+		GL_FALSE,   // normalized?
+		0,			// stride...
+		(void*)0	// array buffer offset...
+		);
 }
 
-void RenderQuad(GLuint vertexBuffer) {
-	RenderVertex(vertexBuffer);
+//void RenderTriangle(GLuint vertexBuffer, GLuint colorBuffer) {
+//	RenderVertex(vertexBuffer);
+//	RenderColor(colorBuffer);
+//
+//	glDrawArrays(GL_TRIANGLES, 0, 3);
+//	glDisableVertexAttribArray(0);
+//	glDisableVertexAttribArray(1);
+//}
+
+mat4 RenderQuad(GLuint vertexBuffer, const vec3& position, GLuint colorBuffer, const vec3& scaleVec) {
+	mat4 positionMatrix = RenderVertex(vertexBuffer, position, scaleVec);
+
+	//positionMatrix *= identity;
+
+	//RenderVertex(vertexBuffer);
+	RenderColor(colorBuffer);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisableVertexAttribArray(0);
+	return positionMatrix;
+}
+
+float& getDeltaTime() {
+	static float lastTime = glfwGetTime();
+	
+	float now = glfwGetTime();
+	float deltaTime = now - lastTime;
+
+	lastTime = now;
+	return deltaTime;
 }
 
 int main() {
@@ -213,15 +305,48 @@ int main() {
 	// Create and compile glsl from shaders.
 	GLuint programID = LoadShaders("BasicVertexShader.vertexshader", "BasicFragmentShader.fragmentshader");
 
+	GLuint MVPMatrixID = glGetUniformLocation(programID, "MVP");
+
+	float aspectRatio = SCREEN_WIDTH/(float)SCREEN_HEIGHT;
+	mat4 projectionMatrix = perspective(FIELD_OF_VIEW, aspectRatio, Z_NEAR, Z_FAR);
+
 	GLuint triangleID = LoadTriangle();
 	GLuint quadID = LoadQuad();
+	GLuint quadID2 = LoadQuad();
+	GLuint quadID3 = LoadQuad();
+	GLuint colorID = LoadColor();
 
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//fprintf(stdout, "Delta Time: %f", getDeltaTime()); 
+		deltaTime = getDeltaTime();
+		
+		if(!initializedPong) {
+			InitializePong();
+			initializedPong = true;
+		}
 
 		glUseProgram(programID);
-		//RenderTriangle(triangleID);
-		RenderQuad(quadID);
+
+		// camera matrix
+		mat4 viewMatrix = glm::lookAt(
+			vec3(0, 0, 3),		// position
+			vec3(0, 0, 0),		// look at
+			vec3(0, 1, 0)		// up
+			);
+
+		//mat4 scaleMatrix = mat4(10.0f);
+		//RenderTriangle(triangleID, colorID);
+		RunBallMovement();
+
+		mat4 MVPMatrix1 = projectionMatrix * viewMatrix * RenderQuad(quadID, ballPosition, colorID, vec3(0.1f, 0.1f, 1.0f));
+		glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &MVPMatrix1[0][0]);
+
+		mat4 MVPMatrix2 = projectionMatrix * viewMatrix * RenderQuad(quadID2, rightPaddlePosition, colorID, vec3(0.1f, 1.0f, 1.0f));
+		glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &MVPMatrix2[0][0]);
+
+		mat4 MVPMatrix3 = projectionMatrix * viewMatrix * RenderQuad(quadID3, leftPaddlePosition, colorID, vec3(0.1f, 1.0f, 1.0f));
+		glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &MVPMatrix3[0][0]);
 		//Update();
 		//Render();
 		glfwSwapBuffers(window);

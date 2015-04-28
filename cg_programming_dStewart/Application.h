@@ -16,6 +16,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm.hpp>
+#include "gtc/matrix_transform.hpp"
 
 #define GLFW_DLL
 #define APP_NAME "Devin Stewart -- Application"
@@ -25,6 +26,9 @@
 #define ANTIALIASING 4
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
+#define FIELD_OF_VIEW 45.0f
+#define Z_NEAR 0.1f
+#define Z_FAR 100.0f
 #define GLFW_OK 0
 
 extern GLFWwindow* window;
