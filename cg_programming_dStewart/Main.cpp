@@ -40,13 +40,13 @@ public:
 
 		this->startingPos = vec3(0.0f, 0.0f, 0.0f);
 		this->ballVelocity = vec3(0.0f, 0.0f, 0.0f);
-		this->startingBallVelocity = vec3(4.0f, 0.0f, 0.0f);
+		this->startingBallVelocity = vec3(2.0f, 0.0f, 0.0f);
 		this->paddleWidth = 5.0f;
 
 		this->gameTimer = 0.0f;
 
-		this->maxPaddleVelocity = 1.0f;
-		this->paddleAcceleration = 0.2f;
+		this->maxPaddleVelocity = 1.4f;
+		this->paddleAcceleration = 10.0f;
 	}
 
 }gameOptions;
@@ -539,35 +539,63 @@ public:
 	Object rightPaddle;
 	Object ball;
 
+	float gameTimer;
+	bool isTimerRunning;
+	bool isGameRunning;
+	bool ballVelocityInitialized;
+
+	float leftBound;
+	float rightBound;
+	float topBound;
+	float bottomBound;
+
 	Scene::Scene() {
 		this->initializedPong = false;
+		this->gameTimer = 0.0f;
+		this->isTimerRunning = true;
+		this->isGameRunning = false;
+		this->ballVelocityInitialized = false;
+		this->leftBound = -2.6f;
+		this->rightBound = 2.6f;
+		this->topBound = 1.9f;
+		this->bottomBound = -1.9f;
+	}
+
+	static void RunGameTimer() {
+		if(scene.isTimerRunning) scene.gameTimer += 1.0f * gameOptions.deltaTime;
+
+		if (scene.gameTimer > 2.0f) {
+			scene.gameTimer = 0.0f;
+			scene.isTimerRunning = false;
+			scene.isGameRunning = true;
+			scene.ballVelocityInitialized = false;
+		}
 	}
 
 	static void RunBallConstraints() {
 
-		float left = -2.6f;
-		float right = 2.6f;
-		float top = 1.9f;
-		float bottom = -1.9f;
+		
 
-		if (scene.ball.transform.position.x <= left) {
-			scene.ball.transform.position.x = left;
-			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(1.0f, 0.0f, 0.0f));
-			//ball.transform.velocity.x = -ball.transform.velocity.x;
+		if (scene.ball.transform.position.x <= scene.leftBound) {
+			scene.ball.transform.position.x = scene.leftBound;
+			scene.isGameRunning = false;
+			scene.isTimerRunning = true;
+			//scene.ball.transform.velocity = Utility::CalculateReflectionVector(scene.ball.transform.velocity, vec3(1.0f, 0.0f, 0.0f));
 		}
-		if (scene.ball.transform.position.x >= right) {
-			scene.ball.transform.position.x = right;
-			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(-1.0f, 0.0f, 0.0f));
-			//ball.transform.velocity.x = -ball.transform.velocity.x;
+		if (scene.ball.transform.position.x >= scene.rightBound) {
+			scene.ball.transform.position.x = scene.rightBound;
+			scene.isGameRunning = false;
+			scene.isTimerRunning = true;
+			//scene.ball.transform.velocity = Utility::CalculateReflectionVector(scene.ball.transform.velocity, vec3(-1.0f, 0.0f, 0.0f));
 		}
-		if (scene.ball.transform.position.y >= top) {
-			scene.ball.transform.position.y = top;
-			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(0.0f, -1.0f, 0.0f));
+		if (scene.ball.transform.position.y >= scene.topBound) {
+			scene.ball.transform.position.y = scene.topBound;
+			scene.ball.transform.velocity = Utility::CalculateReflectionVector(scene.ball.transform.velocity, vec3(0.0f, -1.0f, 0.0f));
 
 		}
-		if (scene.ball.transform.position.y <= bottom) {
-			scene.ball.transform.position.y = bottom;
-			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(0.0f, 1.0f, 0.0f));
+		if (scene.ball.transform.position.y <= scene.bottomBound) {
+			scene.ball.transform.position.y = scene.bottomBound;
+			scene.ball.transform.velocity = Utility::CalculateReflectionVector(scene.ball.transform.velocity, vec3(0.0f, 1.0f, 0.0f));
 
 		}
 	}
@@ -616,18 +644,35 @@ public:
 	}
 
 	static void RunPaddleVelocityConstraints() {
-		if (scene.leftPaddle.transform.velocity.y > gameOptions.maxPaddleVelocity) {
+		if (scene.leftPaddle.transform.velocity.y >= gameOptions.maxPaddleVelocity) {
 			scene.leftPaddle.transform.velocity.y = gameOptions.maxPaddleVelocity;
 		}
-		if (scene.rightPaddle.transform.velocity.y > gameOptions.maxPaddleVelocity) {
+		if (scene.rightPaddle.transform.velocity.y >= gameOptions.maxPaddleVelocity) {
 			scene.rightPaddle.transform.velocity.y = gameOptions.maxPaddleVelocity;
 		}
 	}
 
+	static void KillLowVelocity() {
+		if ((!keyboard.W && !keyboard.S) && (scene.leftPaddle.transform.velocity.y <= 0.08f && scene.leftPaddle.transform.velocity.y > 0.0f)) {
+			scene.leftPaddle.transform.velocity.y = 0.0f;
+		}
+		if ((!keyboard.W && !keyboard.S) && (scene.leftPaddle.transform.velocity.y >= -0.08f && scene.leftPaddle.transform.velocity.y < 0.0f)) {
+			scene.leftPaddle.transform.velocity.y = 0.0f;
+		}
+
+		if ((!keyboard.UpArrow && !keyboard.DownArrow) && (scene.rightPaddle.transform.velocity.y <= 0.08f && scene.rightPaddle.transform.velocity.y > 0.0f)) {
+			scene.rightPaddle.transform.velocity.y = 0.0f;
+		}
+		if ((!keyboard.UpArrow && !keyboard.DownArrow) && (scene.rightPaddle.transform.velocity.y >= -0.08f && scene.rightPaddle.transform.velocity.y < 0.0f)) {
+			scene.rightPaddle.transform.velocity.y = 0.0f;
+		}
+	}
+
 	static void RunPaddleControls() {
-		scene.RunPaddleVelocityConstraints();
+		scene.KillLowVelocity();
 		scene.RunLeftPaddleControls();
 		scene.RunRightPaddleControls();
+		scene.RunPaddleVelocityConstraints();
 	}
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -643,7 +688,7 @@ public:
 		if ((leftMet && belowTopMet && !tooFarToTheLeft) || (leftMet && aboveBottomMet && !tooFarToTheLeft))
 		{
 			scene.ball.transform.position.x = scene.leftPaddle.transform.position.x + (scene.ball.transform.scale.x * 0.5f) + offset;
-			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(1.0f, 0.0f, 0.0f));
+			scene.ball.transform.velocity = Utility::CalculateReflectionVector(scene.ball.transform.velocity + scene.leftPaddle.transform.velocity, vec3(1.0f, 0.0f, 0.0f));
 		}
 	}
 
@@ -657,8 +702,34 @@ public:
 		if ((rightMet && belowTopMet && !tooFarToTheRight) || (rightMet && aboveBottomMet && !tooFarToTheRight))
 		{
 			scene.ball.transform.position.x = scene.rightPaddle.transform.position.x - (scene.ball.transform.scale.x * 0.5f) - offset;
-			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(-1.0f, 0.0f, 0.0f));
+			scene.ball.transform.velocity = Utility::CalculateReflectionVector(scene.ball.transform.velocity + scene.rightPaddle.transform.velocity, vec3(-1.0f, 0.0f, 0.0f));
 		}
+	}
+
+	static void RunLeftPaddlePositionConstraints() {
+		float botOffset = 0.05f;
+		if (scene.leftPaddle.transform.position.y + (scene.leftPaddle.transform.scale.y * 0.5f) < scene.bottomBound + scene.leftPaddle.transform.scale.y - botOffset) {
+			scene.leftPaddle.transform.position.y = (scene.bottomBound + scene.leftPaddle.transform.scale.y * 0.5f) - botOffset;
+			scene.leftPaddle.transform.velocity = vec3(0.0f, 0.0f, 0.0f);
+		}
+
+		float topOffset = 0.05f;
+		if (scene.leftPaddle.transform.position.y + (scene.leftPaddle.transform.scale.y * 0.5f) > scene.topBound + topOffset) {
+			scene.leftPaddle.transform.position.y = (scene.topBound - scene.leftPaddle.transform.scale.y * 0.5f) + topOffset;
+			scene.leftPaddle.transform.velocity = vec3(0.0f, 0.0f, 0.0f);
+		}
+
+	}
+
+	static void RunRightPaddlePositionConstraints() {
+
+
+	}
+
+	static void RunPaddlePositionConstraints() {
+		scene.RunLeftPaddlePositionConstraints();
+		scene.RunRightPaddlePositionConstraints();
+
 	}
 
 	static void RunPaddleCollision() {
@@ -694,6 +765,18 @@ public:
 		scene.rightPaddle.transform.position = vec3(2.0f, 0.0, 0.0f);
 	}
 
+	static void RunBallBehavior() {
+		if (scene.isGameRunning && !scene.ballVelocityInitialized) {
+			scene.ball.transform.velocity = gameOptions.startingBallVelocity;
+			scene.ballVelocityInitialized = true;
+		}
+		else if (!scene.isGameRunning) {
+			scene.ball.transform.position = gameOptions.startingPos;
+			scene.ball.transform.velocity = vec3(0.0f, 0.0f, 0.0f);
+
+		}
+	}
+
 	static int MainLoop() {
 		do {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -716,12 +799,15 @@ public:
 
 			keyboard.RunKeyboardKeys();
 
+			scene.RunGameTimer();
+			scene.RunBallBehavior();
 			scene.ball.Run();
 			scene.leftPaddle.Run();
 			scene.rightPaddle.Run();
 			scene.RunBallConstraints();
 			scene.RunPaddleCollision();
 			scene.RunPaddleControls();
+			scene.RunPaddlePositionConstraints();
 
 			//Update();
 			//Render();
