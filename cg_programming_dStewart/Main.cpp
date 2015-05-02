@@ -3,7 +3,7 @@
 
 #include "Application.h"
 
-glm::mat4 RenderQuad(GLuint vertexBuffer, const vec3& position, GLuint colorBuffer, const vec3& scaleVec);
+//glm::mat4 RenderQuad(GLuint vertexBuffer, const vec3& position, GLuint colorBuffer, const vec3& scaleVec);
 
 
 static class GameOptions {
@@ -23,66 +23,72 @@ public:
 	float paddleWidth;
 	float gameTimer;
 
-	GameOptions::GameOptions();
+	GameOptions::GameOptions() {
+		this->aspectRatio = SCREEN_WIDTH / (float)SCREEN_HEIGHT;
+		//this->programID = glCreateProgram();
+		this->paddleScale = vec3(0.1f, 1.0f, 1.0f);
+		this->ballScale = vec3(0.1f, 0.1f, 1.0f);
+
+		this->window = NULL;
+		this->deltaTime = 0.0f;
+		this->ballPosition = vec3(0.0f, 0.0f, 0.0f);
+		this->leftPaddlePosition = vec3(-2.0f, 0.0f, 0.0f);
+		this->rightPaddlePosition = vec3(2.0f, 0.0f, 0.0f);
+
+		this->startingPos = vec3(0.0f, 0.0f, 0.0f);
+		this->ballVelocity = vec3(0.0f, 0.0f, 0.0f);
+		this->startingBallVelocity = vec3(1.0f, 0.0f, 0.0f);
+		this->paddleWidth = 5.0f;
+
+		this->gameTimer = 0.0f;
+	}
 
 }gameOptions;
 
-GameOptions::GameOptions() {
-	this->aspectRatio = SCREEN_WIDTH / (float)SCREEN_HEIGHT;
-	//this->programID = glCreateProgram();
-	this->paddleScale = vec3(0.1f, 1.0f, 1.0f);
-	this->ballScale = vec3(0.1f, 0.1f, 1.0f);
 
-	this->window = NULL;
-	this->deltaTime = 0.0f;
-	this->ballPosition = vec3(0.0f, 0.0f, 0.0f);
-	this->leftPaddlePosition = vec3(-2.0f, 0.0f, 0.0f);
-	this->rightPaddlePosition = vec3(2.0f, 0.0f, 0.0f);
 
-	this->startingPos = vec3(0.0f, 0.0f, 0.0f);
-	this->ballVelocity = vec3(0.0f, 0.0f, 0.0f);
-	this->startingBallVelocity = vec3(1.0f, 0.0f, 0.0f);
-	this->paddleWidth = 5.0f;
+static class GL_Init {
+public:
+	static int InitGlew() {
+		glfwMakeContextCurrent(gameOptions.window); // Initialize GLEW
+		glewExperimental = true; // has to do with core profile. 
+		if (glewInit() != GLEW_OK) {
+			fprintf(stderr, "Failed to initialize GLEW.");
+			return EXIT_WITH_ERROR;
+		}
 
-	this->gameTimer = 0.0f;
-}
-
-int InitGlew() {
-	glfwMakeContextCurrent(gameOptions.window); // Initialize GLEW
-	glewExperimental = true; // has to do with core profile. 
-	if (glewInit() != GLEW_OK) {
-		fprintf(stderr, "Failed to initialize GLEW.");
-		return EXIT_WITH_ERROR;
+		return EXIT_WITH_SUCCESS;
 	}
 
-	return EXIT_WITH_SUCCESS;
-}
+	static int InitWindow() {
+		if (!glfwInit()) {
+			fprintf(stderr, "Failed to initialize GLFW.");
+			return EXIT_WITH_ERROR;
+		}
 
-int InitWindow() {
-	if (!glfwInit()) {
-		fprintf(stderr, "Failed to initialize GLFW.");
-		return EXIT_WITH_ERROR;
+		glfwWindowHint(GLFW_SAMPLES, ANTIALIASING);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPEN_GL_VERSION);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPEN_GL_VERSION);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // get mac up and running.
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // we don't want the old openGL, gives the new one.
+
+		gameOptions.window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, APP_NAME, NULL, NULL);
+
+		if (gameOptions.window == NULL) {
+			fprintf(stderr, "Failed to initialize window.");
+			glfwTerminate();
+			return EXIT_WITH_ERROR;
+		}
+
+		// Ensure we can capture the escape key being pressed below
+		glfwSetInputMode(gameOptions.window, GLFW_STICKY_KEYS, GL_TRUE);
+
+		return EXIT_WITH_SUCCESS;
 	}
 
-	glfwWindowHint(GLFW_SAMPLES, ANTIALIASING);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPEN_GL_VERSION);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPEN_GL_VERSION);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // get mac up and running.
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // we don't want the old openGL, gives the new one.
+};
 
-	gameOptions.window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, APP_NAME, NULL, NULL);
 
-	if (gameOptions.window == NULL) {
-		fprintf(stderr, "Failed to initialize window.");
-		glfwTerminate();
-		return EXIT_WITH_ERROR;
-	}
-
-	// Ensure we can capture the escape key being pressed below
-	glfwSetInputMode(gameOptions.window, GLFW_STICKY_KEYS, GL_TRUE);
-
-	return EXIT_WITH_SUCCESS;
-}
 
 
 
@@ -170,6 +176,7 @@ public:
 	GLuint objectID;
 	GLuint colorID;
 	mat4 MVPMatrix;
+	bool initialized;
 
 	GameObject::GameObject() {
 
@@ -199,6 +206,70 @@ public:
 
 } matrix;
 
+static class Render {
+public:
+	static glm::mat4 RenderVertex(GLuint vertexBuffer, const vec3& position, const vec3& scaleVec) {
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+
+		glVertexAttribPointer(
+			0,			// attribute layout
+			3,			// how many elements in array? 
+			GL_FLOAT,   // what datatype?
+			GL_FALSE,   // normalized?
+			0,			// stride...
+			(void*)0	// array buffer offset...
+			);
+
+		mat4 identityMatrix = mat4(1.0f);
+		mat4 positionMatrix = translate(identityMatrix, position);
+		mat4 scaleMatrix = scale(positionMatrix, scaleVec);
+		return scaleMatrix;
+	}
+
+	static void RenderColor(GLuint vertexBuffer) {
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+
+		glVertexAttribPointer(
+			1,			// attribute layout
+			3,			// how many elements in array? 
+			GL_FLOAT,   // what datatype?
+			GL_FALSE,   // normalized?
+			0,			// stride...
+			(void*)0	// array buffer offset...
+			);
+	}
+
+	//static void RenderTriangle(GLuint vertexBuffer, GLuint colorBuffer) {
+	//	RenderVertex(vertexBuffer);
+	//	RenderColor(colorBuffer);
+	//
+	//	glDrawArrays(GL_TRIANGLES, 0, 3);
+	//	glDisableVertexAttribArray(0);
+	//	glDisableVertexAttribArray(1);
+	//}
+
+	static glm::mat4 RenderQuad(GLuint vertexBuffer, const vec3& position, GLuint colorBuffer, const vec3& scaleVec) {
+		mat4 positionMatrix = RenderVertex(vertexBuffer, position, scaleVec);
+
+		RenderColor(colorBuffer);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDisableVertexAttribArray(0);
+		return positionMatrix;
+	}
+
+	static glm::mat4 RenderQuad(GLuint vertexBuffer, const vec3& position, const vec3& scaleVec) {
+		mat4 positionMatrix = RenderVertex(vertexBuffer, position, scaleVec);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDisableVertexAttribArray(0);
+		return positionMatrix;
+	}
+
+};
+
 class Object : public GameObject {
 public:
 
@@ -207,288 +278,250 @@ public:
 		this->transform.scale = scale;
 		this->objectID = objectID;
 		this->colorID = colorID;
+		this->initialized = false;
 	}
 
 	Object::Object() {
-
+		this->objectID = NULL;
+		this->colorID = NULL;
+		this->initialized = false;
 	}
 
-	static Object* CreateObject(vec3 position, vec3 scale, GLuint colorID, GLuint objectID);
-	//static void DeleteObject();
-	static void DeleteObject(Object* object);
-	void DeleteObject();
+	static Object* Object::CreateObject(vec3 position, vec3 scale, GLuint colorID, GLuint objectID) {
+		Object* object = new Object(position, scale, colorID, objectID);
+		return object;
+	}
+	static void Object::DeleteObject(Object* object) {
+		delete(object);
+	}
+	void DeleteObject() {
+		delete(this);
+	}
 
 	void Init() {
 
 	}
 
 	void Run() {
-		this->MVPMatrix = matrix.projectionMatrix * matrix.viewMatrix * RenderQuad(this->objectID, this->transform.position, this->colorID, this->transform.scale);
+		if (!this->initialized) {
+			this->Init();
+			this->initialized = true;
+		}
+
+		this->MVPMatrix = matrix.projectionMatrix * matrix.viewMatrix * Render::RenderQuad(this->objectID, this->transform.position, this->colorID, this->transform.scale);
 		glUniformMatrix4fv(matrix.MVPMatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
 		this->transform.position += this->transform.velocity * gameOptions.deltaTime;
 	}
+};
 
+static class Scene {
+public:
+	bool initializedPong;
+	Object leftPaddle;
+	Object rightPaddle;
+	Object ball;
+
+	Scene::Scene() {
+		this->initializedPong = false;
+	}
+
+	static void InitializePong() {
+
+		scene.ball.transform.velocity = gameOptions.startingBallVelocity;
+		scene.leftPaddle.transform.position = vec3(-2.0f, 0.0, 0.0f);
+		scene.rightPaddle.transform.position = vec3(2.0f, 0.0, 0.0f);
+	}
+
+	static void RunBallConstraints() {
+
+		float left = -2.6f;
+		float right = 2.6f;
+		float top = 1.9f;
+		float bottom = -1.9f;
+
+		if (scene.ball.transform.position.x <= left) {
+			scene.ball.transform.position.x = left;
+			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(1.0f, 0.0f, 0.0f));
+			//ball.transform.velocity.x = -ball.transform.velocity.x;
+		}
+		if (scene.ball.transform.position.x >= right) {
+			scene.ball.transform.position.x = right;
+			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(-1.0f, 0.0f, 0.0f));
+			//ball.transform.velocity.x = -ball.transform.velocity.x;
+		}
+		if (scene.ball.transform.position.y >= top) {
+			scene.ball.transform.position.y = top;
+			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(0.0f, -1.0f, 0.0f));
+
+		}
+		if (scene.ball.transform.position.y <= bottom) {
+			scene.ball.transform.position.y = bottom;
+			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(0.0f, 1.0f, 0.0f));
+
+		}
+	}
+
+}scene;
+
+
+
+static class Load {
+public:
+	static GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
+		GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+		GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+
+		//Read in shader code here.
+		string vertexShaderCode = "";
+		ifstream vertexShaderStream(vertex_file_path, ios::in);
+
+		if (vertexShaderStream.is_open()) {
+			string line = "";
+			while (getline(vertexShaderStream, line)) {
+				vertexShaderCode += "\n" + line;
+			}
+
+			vertexShaderStream.close();
+		}
+
+		string fragmentShaderCode = "";
+		ifstream fragmentShaderStream(fragment_file_path, ios::in);
+
+		if (fragmentShaderStream.is_open()) {
+			string line = "";
+			while (getline(fragmentShaderStream, line)) {
+				fragmentShaderCode += "\n" + line;
+			}
+
+			fragmentShaderStream.close();
+		}
+
+		GLint result = GL_FALSE;
+		int infoLogLength = NULL;
+
+		// compile shaders here...
+		printf("Compiling vertex shader: %s\n", vertex_file_path);
+		char const* vertexSourcePointer = vertexShaderCode.c_str();
+		glShaderSource(vertexShaderID, 1, &vertexSourcePointer, NULL);
+		glCompileShader(vertexShaderID);
+
+		//Check vertex shader...
+		glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &result);
+		glGetShaderiv(vertexShaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+		char* vertexShaderErrorMessage = new char[infoLogLength];
+		glGetShaderInfoLog(vertexShaderID, infoLogLength, NULL, &vertexShaderErrorMessage[0]);
+		fprintf(stdout, "%s\n", &vertexShaderErrorMessage[0]);
+
+		//Compile the fragment shader
+		printf("Compiling fragment shader: %s\n", fragment_file_path);
+		char const* fragmentSourcePointer = fragmentShaderCode.c_str();
+		glShaderSource(fragmentShaderID, 1, &fragmentSourcePointer, NULL);
+		glCompileShader(fragmentShaderID);
+
+		//Check vertex shader...
+		glGetShaderiv(fragmentShaderID, GL_COMPILE_STATUS, &result);
+		glGetShaderiv(fragmentShaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+		char* fragmentShaderErrorMessage = new char[infoLogLength];
+		glGetShaderInfoLog(fragmentShaderID, infoLogLength, NULL, &fragmentShaderErrorMessage[0]);
+		fprintf(stdout, "%s\n", &fragmentShaderErrorMessage[0]);
+
+		// Link program...
+		fprintf(stdout, "Linking program.\n");
+
+		GLuint programID = glCreateProgram();
+		glAttachShader(programID, vertexShaderID);
+		glAttachShader(programID, fragmentShaderID);
+		glLinkProgram(programID);
+
+		//Check the program...
+		glGetProgramiv(programID, GL_LINK_STATUS, &result);
+		glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
+		char* programErrorMessage = new char[glm::max(infoLogLength, int(1))];
+		glGetProgramInfoLog(programID, infoLogLength, NULL, &programErrorMessage[0]);
+		fprintf(stdout, "%s\n", &programErrorMessage[0]);
+
+		glDeleteShader(vertexShaderID);
+		glDeleteShader(fragmentShaderID);
+
+		delete(programErrorMessage);
+		programErrorMessage = NULL;
+
+		delete(fragmentShaderErrorMessage);
+		fragmentShaderErrorMessage = NULL;
+
+		delete(vertexShaderErrorMessage);
+		vertexShaderErrorMessage = NULL;
+
+		return programID;
+	}
+
+	static GLuint& LoadQuad() {
+		float offset = 0.5f;
+
+		GLfloat g_vertex_buffer_data[] = {
+			0.0f, 0.0f, 0.0f,
+			1.0f, 0.0f, 0.0f,
+			1.0f, 1.0f, 0.0f,
+
+			0.0f, 0.0f, 0.0f,
+			1.0f, 1.0f, 0.0f,
+			0.0f, 1.0f, 0.0f
+		};
+
+		for (int n = 0, size = 18; n < size; n++) {
+			float &f = g_vertex_buffer_data[n];
+			f -= offset;
+			continue;
+		}
+
+		GLuint vertexBuffer = 0;
+		glGenBuffers(1, &vertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+		return vertexBuffer;
+	}
+
+	static GLuint& LoadTriangle() {
+		static const GLfloat g_vertex_buffer_data[] = {
+			-1.0f, -1.0f, 0.0f,
+			1.0f, -1.0f, 0.0f,
+			0.0f, 1.0f, 0.0f
+		};
+
+		GLuint vertexBuffer = 0;
+		glGenBuffers(1, &vertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+		return vertexBuffer;
+	}
+
+	static GLuint& LoadColor() {
+		static const GLfloat g_color_buffer_data[] = {
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f
+		};
+
+		GLuint vertexBuffer = 0;
+		glGenBuffers(1, &vertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+
+		return vertexBuffer;
+	}
 
 };
 
-
-Object leftPaddle;
-Object rightPaddle;
-Object ball;
-
-Object* Object::CreateObject(vec3 position, vec3 scale, GLuint colorID, GLuint objectID) {
-	Object* object = new Object(position, scale, colorID, objectID);
-	return object;
-}
-
-void Object::DeleteObject(Object* object) {
-	delete(object);
-}
-
-void Object::DeleteObject() {
-	delete(this);
-}
-
-bool initializedPong = false;
-
-void InitializePong() {
-	//gameOptions.leftPaddlePosition = vec3(-2.0f, 0.0, 0.0f);
-	//gameOptions.rightPaddlePosition = vec3(2.0f, 0.0, 0.0f);
-	//gameOptions.ballPosition = vec3(0.0f, 0.0f, 0.0f);
-	//gameOptions.ballVelocity = gameOptions.startingBallVelocity;
-
-	ball.transform.velocity = gameOptions.startingBallVelocity;
-	leftPaddle.transform.position = vec3(-2.0f, 0.0, 0.0f);
-	rightPaddle.transform.position = vec3(2.0f, 0.0, 0.0f);
-}
-
-void RunBallConstraints() {
-
-	if (ball.transform.position.x < -2.6f) {
-		ball.transform.position.x = -2.6f;
-		ball.transform.velocity.x = -ball.transform.velocity.x;
-	}
-	else if (ball.transform.position.x > 2.6f) {
-		ball.transform.position.x = 2.6f;
-		ball.transform.velocity.x = -ball.transform.velocity.x;
-	}
-}
-
-GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
-	GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-	GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-
-	//Read in shader code here.
-	string vertexShaderCode = "";
-	ifstream vertexShaderStream(vertex_file_path, ios::in);
-
-	if (vertexShaderStream.is_open()) {
-		string line = "";
-		while (getline(vertexShaderStream, line)) {
-			vertexShaderCode += "\n" + line;
-		}
-
-		vertexShaderStream.close();
-	}
-
-	string fragmentShaderCode = "";
-	ifstream fragmentShaderStream(fragment_file_path, ios::in);
-
-	if (fragmentShaderStream.is_open()) {
-		string line = "";
-		while (getline(fragmentShaderStream, line)) {
-			fragmentShaderCode += "\n" + line;
-		}
-
-		fragmentShaderStream.close();
-	}
-
-	GLint result = GL_FALSE;
-	int infoLogLength = NULL;
-
-	// compile shaders here...
-	printf("Compiling vertex shader: %s\n", vertex_file_path);
-	char const* vertexSourcePointer = vertexShaderCode.c_str();
-	glShaderSource(vertexShaderID, 1, &vertexSourcePointer, NULL);
-	glCompileShader(vertexShaderID);
-
-	//Check vertex shader...
-	glGetShaderiv(vertexShaderID, GL_COMPILE_STATUS, &result);
-	glGetShaderiv(vertexShaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-	char* vertexShaderErrorMessage = new char[infoLogLength];
-	glGetShaderInfoLog(vertexShaderID, infoLogLength, NULL, &vertexShaderErrorMessage[0]);
-	fprintf(stdout, "%s\n", &vertexShaderErrorMessage[0]);
-
-	//Compile the fragment shader
-	printf("Compiling fragment shader: %s\n", fragment_file_path);
-	char const* fragmentSourcePointer = fragmentShaderCode.c_str();
-	glShaderSource(fragmentShaderID, 1, &fragmentSourcePointer, NULL);
-	glCompileShader(fragmentShaderID);
-
-	//Check vertex shader...
-	glGetShaderiv(fragmentShaderID, GL_COMPILE_STATUS, &result);
-	glGetShaderiv(fragmentShaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-	char* fragmentShaderErrorMessage = new char[infoLogLength];
-	glGetShaderInfoLog(fragmentShaderID, infoLogLength, NULL, &fragmentShaderErrorMessage[0]);
-	fprintf(stdout, "%s\n", &fragmentShaderErrorMessage[0]);
-
-	// Link program...
-	fprintf(stdout, "Linking program.\n");
-
-	GLuint programID = glCreateProgram();
-	glAttachShader(programID, vertexShaderID);
-	glAttachShader(programID, fragmentShaderID);
-	glLinkProgram(programID);
-
-	//Check the program...
-	glGetProgramiv(programID, GL_LINK_STATUS, &result);
-	glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
-	char* programErrorMessage = new char[glm::max(infoLogLength, int(1))];
-	glGetProgramInfoLog(programID, infoLogLength, NULL, &programErrorMessage[0]);
-	fprintf(stdout, "%s\n", &programErrorMessage[0]);
-
-	glDeleteShader(vertexShaderID);
-	glDeleteShader(fragmentShaderID);
-
-	delete(programErrorMessage);
-	programErrorMessage = NULL;
-
-	delete(fragmentShaderErrorMessage);
-	fragmentShaderErrorMessage = NULL;
-
-	delete(vertexShaderErrorMessage);
-	vertexShaderErrorMessage = NULL;
-
-	return programID;
-}
-
-GLuint& LoadQuad() {
-	float offset = 0.5f;
-
-	GLfloat g_vertex_buffer_data[] = {
-		0.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		1.0f, 1.0f, 0.0f,
-
-		0.0f, 0.0f, 0.0f,
-		1.0f, 1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f
-	};
-
-	for (int n = 0, size = 18; n < size; n++) {
-		float &f = g_vertex_buffer_data[n];
-		f -= offset;
-		continue;
-	}
-
-	GLuint vertexBuffer = 0;
-	glGenBuffers(1, &vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-
-	return vertexBuffer;
-}
-
-GLuint& LoadTriangle() {
-	static const GLfloat g_vertex_buffer_data[] = {
-		-1.0f, -1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		0.0f, 1.0f, 0.0f
-	};
-
-	GLuint vertexBuffer = 0;
-	glGenBuffers(1, &vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-
-	return vertexBuffer;
-}
-
-GLuint& LoadColor() {
-	static const GLfloat g_color_buffer_data[] = {
-		1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f
-	};
-
-	GLuint vertexBuffer = 0;
-	glGenBuffers(1, &vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
-
-	return vertexBuffer;
-}
-
-glm::mat4 RenderVertex(GLuint vertexBuffer, const vec3& position, const vec3& scaleVec) {
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-
-	glVertexAttribPointer(
-		0,			// attribute layout
-		3,			// how many elements in array? 
-		GL_FLOAT,   // what datatype?
-		GL_FALSE,   // normalized?
-		0,			// stride...
-		(void*)0	// array buffer offset...
-		);
-
-	mat4 identityMatrix = mat4(1.0f);
-	mat4 positionMatrix = translate(identityMatrix, position);
-	mat4 scaleMatrix = scale(positionMatrix, scaleVec);
-	return scaleMatrix;
-}
-
-void RenderColor(GLuint vertexBuffer) {
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-
-	glVertexAttribPointer(
-		1,			// attribute layout
-		3,			// how many elements in array? 
-		GL_FLOAT,   // what datatype?
-		GL_FALSE,   // normalized?
-		0,			// stride...
-		(void*)0	// array buffer offset...
-		);
-}
-
-//void RenderTriangle(GLuint vertexBuffer, GLuint colorBuffer) {
-//	RenderVertex(vertexBuffer);
-//	RenderColor(colorBuffer);
-//
-//	glDrawArrays(GL_TRIANGLES, 0, 3);
-//	glDisableVertexAttribArray(0);
-//	glDisableVertexAttribArray(1);
-//}
-
-glm::mat4 RenderQuad(GLuint vertexBuffer, const vec3& position, GLuint colorBuffer, const vec3& scaleVec) {
-	mat4 positionMatrix = RenderVertex(vertexBuffer, position, scaleVec);
-
-	RenderColor(colorBuffer);
-
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glDisableVertexAttribArray(0);
-	return positionMatrix;
-}
-
-glm::mat4 RenderQuad(GLuint vertexBuffer, const vec3& position, const vec3& scaleVec) {
-	mat4 positionMatrix = RenderVertex(vertexBuffer, position, scaleVec);
-
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glDisableVertexAttribArray(0);
-	return positionMatrix;
-}
-
-
-
 int main() {
-	if (InitWindow() | InitGlew()) {
+	if (GL_Init::InitWindow() | GL_Init::InitGlew()) {
 		return EXIT_WITH_ERROR;
 	}
 
@@ -497,7 +530,7 @@ int main() {
 	glBindVertexArray(vertexArrayID);
 
 	// Create and compile glsl from shaders.
-	gameOptions.programID = LoadShaders("BasicVertexShader.vertexshader", "BasicFragmentShader.fragmentshader");
+	gameOptions.programID = Load::LoadShaders("BasicVertexShader.vertexshader", "BasicFragmentShader.fragmentshader");
 
 	matrix.MVPMatrixID = glGetUniformLocation(gameOptions.programID, "MVP");
 
@@ -507,9 +540,9 @@ int main() {
 	//GLuint triangleID = LoadTriangle();
 	//GLuint ballID = LoadQuad();
 	//GLuint colorID = LoadColor();
-	leftPaddle = Object(gameOptions.leftPaddlePosition, gameOptions.paddleScale, LoadColor(), LoadQuad());
-	rightPaddle = Object(gameOptions.rightPaddlePosition, gameOptions.paddleScale, LoadColor(), LoadQuad());
-	ball = Object(gameOptions.ballPosition, gameOptions.ballScale, LoadColor(), LoadQuad());
+	scene.leftPaddle = Object(gameOptions.leftPaddlePosition, gameOptions.paddleScale, Load::LoadColor(), Load::LoadQuad());
+	scene.rightPaddle = Object(gameOptions.rightPaddlePosition, gameOptions.paddleScale, Load::LoadColor(), Load::LoadQuad());
+	scene.ball = Object(gameOptions.ballPosition, gameOptions.ballScale, Load::LoadColor(), Load::LoadQuad());
 	
 
 	do {
@@ -517,9 +550,9 @@ int main() {
 		//fprintf(stdout, "Delta Time: %f", getDeltaTime()); 
 		gameOptions.deltaTime = Utility::getDeltaTime();
 
-		if (!initializedPong) {
-			InitializePong();
-			initializedPong = true;
+		if (!scene.initializedPong) {
+			scene.InitializePong();
+			scene.initializedPong = true;
 		}
 
 		glUseProgram(gameOptions.programID);
@@ -534,10 +567,10 @@ int main() {
 		//RenderTriangle(triangleID, colorID);
 		//RunBallMovement();
 
-		ball.Run();
-		leftPaddle.Run();
-		rightPaddle.Run();
-		RunBallConstraints();
+		scene.ball.Run();
+		scene.leftPaddle.Run();
+		scene.rightPaddle.Run();
+		scene.RunBallConstraints();
 
 		//Update();
 		//Render();
