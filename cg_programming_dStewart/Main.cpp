@@ -2,9 +2,10 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "Application.h"
-
 //glm::mat4 RenderQuad(GLuint vertexBuffer, const vec3& position, GLuint colorBuffer, const vec3& scaleVec);
 
+///////////////////////////////////////////////////////////////////////////////
+// GameOptions
 
 static class GameOptions {
 public:
@@ -35,8 +36,8 @@ public:
 		this->window = NULL;
 		this->deltaTime = 0.0f;
 		this->ballPosition = vec3(0.0f, 0.0f, 0.0f);
-		this->leftPaddlePosition = vec3(-2.0f, 0.0f, 0.0f);
-		this->rightPaddlePosition = vec3(2.0f, 0.0f, 0.0f);
+		this->leftPaddlePosition = vec3(-2.5f, 0.0f, 0.0f);
+		this->rightPaddlePosition = vec3(2.5f, 0.0f, 0.0f);
 
 		this->startingPos = vec3(0.0f, 0.0f, 0.0f);
 		this->ballVelocity = vec3(0.0f, 0.0f, 0.0f);
@@ -51,7 +52,8 @@ public:
 
 }gameOptions;
 
-
+///////////////////////////////////////////////////////////////////////////////
+// GL_Init
 
 static class GL_Init {
 public:
@@ -94,9 +96,8 @@ public:
 
 };
 
-
-
-
+///////////////////////////////////////////////////////////////////////////////
+// Utility
 
 static class Utility {
 public:
@@ -129,6 +130,9 @@ public:
 	}
 
 };
+
+///////////////////////////////////////////////////////////////////////////////
+// Keyboard
 
 static class Keyboard {
 public:
@@ -212,6 +216,9 @@ public:
 
 } keyboard;
 
+///////////////////////////////////////////////////////////////////////////////
+// Transform
+
 class Transform {
 public:
 	vec3 position;
@@ -233,6 +240,9 @@ public:
 	}
 };
 
+///////////////////////////////////////////////////////////////////////////////
+// GameObject
+
 class GameObject {
 public:
 	Transform transform;
@@ -249,7 +259,8 @@ public:
 	virtual void Run() = 0;
 };
 
-
+///////////////////////////////////////////////////////////////////////////////
+// Matrix
 
 static class Matrix {
 public:
@@ -268,6 +279,9 @@ public:
 	}
 
 } matrix;
+
+///////////////////////////////////////////////////////////////////////////////
+// Render
 
 static class Render {
 public:
@@ -333,6 +347,9 @@ public:
 
 };
 
+///////////////////////////////////////////////////////////////////////////////
+// Object
+
 class Object : public GameObject {
 public:
 
@@ -377,6 +394,9 @@ public:
 		this->transform.position += this->transform.velocity * gameOptions.deltaTime;
 	}
 };
+
+///////////////////////////////////////////////////////////////////////////////
+// Load
 
 static class Load {
 public:
@@ -532,6 +552,9 @@ public:
 
 };
 
+///////////////////////////////////////////////////////////////////////////////
+// Scene
+
 static class Scene {
 public:
 	bool initializedPong;
@@ -548,7 +571,6 @@ public:
 	float rightBound;
 	float topBound;
 	float bottomBound;
-
 	Scene::Scene() {
 		this->initializedPong = false;
 		this->gameTimer = 0.0f;
@@ -561,8 +583,8 @@ public:
 		this->bottomBound = -1.9f;
 	}
 
-	static void RunGameTimer() {
-		if(scene.isTimerRunning) scene.gameTimer += 1.0f * gameOptions.deltaTime;
+	void Scene::RunGameTimer() {
+		if (scene.isTimerRunning) scene.gameTimer += 1.0f * gameOptions.deltaTime;
 
 		if (scene.gameTimer > 2.0f) {
 			scene.gameTimer = 0.0f;
@@ -572,9 +594,7 @@ public:
 		}
 	}
 
-	static void RunBallConstraints() {
-
-		
+	void Scene::RunBallConstraints() {
 
 		if (scene.ball.transform.position.x <= scene.leftBound) {
 			scene.ball.transform.position.x = scene.leftBound;
@@ -600,10 +620,7 @@ public:
 		}
 	}
 
-	////////////////////////////////////////////////////////////////////////////////
-	// Paddle Controls
-
-	static void RunLeftPaddleControls() {
+	void Scene::RunLeftPaddleControls() {
 		if (keyboard.W) {
 			scene.leftPaddle.transform.velocity.y += gameOptions.paddleAcceleration * gameOptions.deltaTime;
 		}
@@ -623,7 +640,7 @@ public:
 		}
 	}
 
-	static void RunRightPaddleControls() {
+	void Scene::RunRightPaddleControls() {
 		if (keyboard.UpArrow) {
 			scene.rightPaddle.transform.velocity.y += gameOptions.paddleAcceleration * gameOptions.deltaTime;
 		}
@@ -643,16 +660,25 @@ public:
 		}
 	}
 
-	static void RunPaddleVelocityConstraints() {
+	void Scene::RunPaddleVelocityConstraints() {
+		// left
 		if (scene.leftPaddle.transform.velocity.y >= gameOptions.maxPaddleVelocity) {
 			scene.leftPaddle.transform.velocity.y = gameOptions.maxPaddleVelocity;
 		}
+		if (scene.leftPaddle.transform.velocity.y <= -gameOptions.maxPaddleVelocity) {
+			scene.leftPaddle.transform.velocity.y = -gameOptions.maxPaddleVelocity;
+		}
+
+		// right
 		if (scene.rightPaddle.transform.velocity.y >= gameOptions.maxPaddleVelocity) {
 			scene.rightPaddle.transform.velocity.y = gameOptions.maxPaddleVelocity;
 		}
+		if (scene.rightPaddle.transform.velocity.y <= -gameOptions.maxPaddleVelocity) {
+			scene.rightPaddle.transform.velocity.y = -gameOptions.maxPaddleVelocity;
+		}
 	}
 
-	static void KillLowVelocity() {
+	void Scene::KillLowVelocity() {
 		if ((!keyboard.W && !keyboard.S) && (scene.leftPaddle.transform.velocity.y <= 0.08f && scene.leftPaddle.transform.velocity.y > 0.0f)) {
 			scene.leftPaddle.transform.velocity.y = 0.0f;
 		}
@@ -668,17 +694,14 @@ public:
 		}
 	}
 
-	static void RunPaddleControls() {
+	void Scene::RunPaddleControls() {
 		scene.KillLowVelocity();
 		scene.RunLeftPaddleControls();
 		scene.RunRightPaddleControls();
 		scene.RunPaddleVelocityConstraints();
 	}
 
-	////////////////////////////////////////////////////////////////////////////////
-	// Paddle Collisions
-
-	static void RunLeftPaddleCollision() {
+	void Scene::RunLeftPaddleCollision() {
 		float offset = 0.05;
 		bool leftMet = (scene.ball.transform.position.x <= ((scene.leftPaddle.transform.position.x) + (scene.ball.transform.scale.x * 0.5f) + offset));
 		bool belowTopMet = ((scene.ball.transform.position.y <= scene.leftPaddle.transform.position.y + ((scene.leftPaddle.transform.scale.y * 0.5f) + scene.ball.transform.scale.y * 0.5f)) && (scene.ball.transform.position.y >= scene.leftPaddle.transform.position.y));
@@ -692,7 +715,7 @@ public:
 		}
 	}
 
-	static void RunRightPaddleCollision() {
+	void Scene::RunRightPaddleCollision() {
 		float offset = 0.05;
 		bool rightMet = (scene.ball.transform.position.x >= ((scene.rightPaddle.transform.position.x) - (scene.ball.transform.scale.x * 0.5f) - offset));
 		bool belowTopMet = ((scene.ball.transform.position.y <= scene.rightPaddle.transform.position.y + ((scene.rightPaddle.transform.scale.y * 0.5f) + scene.ball.transform.scale.y * 0.5f)) && (scene.ball.transform.position.y >= scene.rightPaddle.transform.position.y));
@@ -706,7 +729,7 @@ public:
 		}
 	}
 
-	static void RunLeftPaddlePositionConstraints() {
+	void Scene::RunLeftPaddlePositionConstraints() {
 		float botOffset = 0.05f;
 		if (scene.leftPaddle.transform.position.y + (scene.leftPaddle.transform.scale.y * 0.5f) < scene.bottomBound + scene.leftPaddle.transform.scale.y - botOffset) {
 			scene.leftPaddle.transform.position.y = (scene.bottomBound + scene.leftPaddle.transform.scale.y * 0.5f) - botOffset;
@@ -721,23 +744,33 @@ public:
 
 	}
 
-	static void RunRightPaddlePositionConstraints() {
+	void Scene::RunRightPaddlePositionConstraints() {
+		float botOffset = 0.05f;
+		if (scene.rightPaddle.transform.position.y + (scene.rightPaddle.transform.scale.y * 0.5f) < scene.bottomBound + scene.rightPaddle.transform.scale.y - botOffset) {
+			scene.rightPaddle.transform.position.y = (scene.bottomBound + scene.rightPaddle.transform.scale.y * 0.5f) - botOffset;
+			scene.rightPaddle.transform.velocity = vec3(0.0f, 0.0f, 0.0f);
+		}
 
+		float topOffset = 0.05f;
+		if (scene.rightPaddle.transform.position.y + (scene.rightPaddle.transform.scale.y * 0.5f) > scene.topBound + topOffset) {
+			scene.rightPaddle.transform.position.y = (scene.topBound - scene.rightPaddle.transform.scale.y * 0.5f) + topOffset;
+			scene.rightPaddle.transform.velocity = vec3(0.0f, 0.0f, 0.0f);
+		}
 
 	}
 
-	static void RunPaddlePositionConstraints() {
+	void Scene::RunPaddlePositionConstraints() {
 		scene.RunLeftPaddlePositionConstraints();
 		scene.RunRightPaddlePositionConstraints();
 
 	}
 
-	static void RunPaddleCollision() {
+	void Scene::RunPaddleCollision() {
 		scene.RunLeftPaddleCollision();
 		scene.RunRightPaddleCollision();
 	}
 
-	static void InitScene() {
+	void Scene::InitScene() {
 		GLuint vertexArrayID = NULL;
 		glGenVertexArrays(1, &vertexArrayID);
 		glBindVertexArray(vertexArrayID);
@@ -755,7 +788,7 @@ public:
 
 	}
 
-	static int InitializePong() {
+	int Scene::InitializePong() {
 		if (GL_Init::InitWindow() | GL_Init::InitGlew()) {
 			return EXIT_WITH_ERROR;
 		}
@@ -765,7 +798,7 @@ public:
 		scene.rightPaddle.transform.position = vec3(2.0f, 0.0, 0.0f);
 	}
 
-	static void RunBallBehavior() {
+	void Scene::RunBallBehavior() {
 		if (scene.isGameRunning && !scene.ballVelocityInitialized) {
 			scene.ball.transform.velocity = gameOptions.startingBallVelocity;
 			scene.ballVelocityInitialized = true;
@@ -777,7 +810,7 @@ public:
 		}
 	}
 
-	static int MainLoop() {
+	int Scene::MainLoop() {
 		do {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			//fprintf(stdout, "Delta Time: %f", getDeltaTime()); 
@@ -817,8 +850,10 @@ public:
 		} while (glfwGetKey(gameOptions.window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 			glfwWindowShouldClose(gameOptions.window) == 0);
 	}
-
 }scene;
+
+///////////////////////////////////////////////////////////////////////////////
+// main
 
 int main() {
 
