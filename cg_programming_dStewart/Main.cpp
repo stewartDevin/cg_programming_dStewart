@@ -23,6 +23,9 @@ public:
 	float paddleWidth;
 	float gameTimer;
 
+	float maxPaddleVelocity;
+	float paddleAcceleration;
+
 	GameOptions::GameOptions() {
 		this->aspectRatio = SCREEN_WIDTH / (float)SCREEN_HEIGHT;
 		//this->programID = glCreateProgram();
@@ -37,10 +40,13 @@ public:
 
 		this->startingPos = vec3(0.0f, 0.0f, 0.0f);
 		this->ballVelocity = vec3(0.0f, 0.0f, 0.0f);
-		this->startingBallVelocity = vec3(1.0f, 0.0f, 0.0f);
+		this->startingBallVelocity = vec3(4.0f, 0.0f, 0.0f);
 		this->paddleWidth = 5.0f;
 
 		this->gameTimer = 0.0f;
+
+		this->maxPaddleVelocity = 1.0f;
+		this->paddleAcceleration = 0.2f;
 	}
 
 }gameOptions;
@@ -144,7 +150,64 @@ public:
 		this->LeftArrow = false;
 		this->RightArrow = false;
 		this->DownArrow = false;
+	}
 
+	static void RunKeyboardKeys() {
+		if (glfwGetKey(gameOptions.window, GLFW_KEY_W) == GLFW_PRESS) {
+			keyboard.W = true;
+		}
+		else {
+			keyboard.W = false;
+		}
+
+		if (glfwGetKey(gameOptions.window, GLFW_KEY_A) == GLFW_PRESS) {
+			keyboard.A = true;
+		}
+		else {
+			keyboard.A = false;
+		}
+
+		if (glfwGetKey(gameOptions.window, GLFW_KEY_S) == GLFW_PRESS) {
+			keyboard.S = true;
+		}
+		else {
+			keyboard.S = false;
+		}
+
+		if (glfwGetKey(gameOptions.window, GLFW_KEY_D) == GLFW_PRESS) {
+			keyboard.D = true;
+		}
+		else {
+			keyboard.D = false;
+		}
+
+		if (glfwGetKey(gameOptions.window, GLFW_KEY_UP) == GLFW_PRESS) {
+			keyboard.UpArrow = true;
+		}
+		else {
+			keyboard.UpArrow = false;
+		}
+
+		if (glfwGetKey(gameOptions.window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+			keyboard.LeftArrow = true;
+		}
+		else {
+			keyboard.LeftArrow = false;
+		}
+
+		if (glfwGetKey(gameOptions.window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+			keyboard.DownArrow = true;
+		}
+		else {
+			keyboard.DownArrow = false;
+		}
+
+		if (glfwGetKey(gameOptions.window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+			keyboard.RightArrow = true;
+		}
+		else {
+			keyboard.RightArrow = false;
+		}
 	}
 
 } keyboard;
@@ -449,14 +512,14 @@ public:
 		return vertexBuffer;
 	}
 
-	static GLuint& LoadColor() {
+	static GLuint& LoadColor(vec3 rgb_color) {
 		static const GLfloat g_color_buffer_data[] = {
-			1.0f, 1.0f, 1.0f,
-			1.0f, 1.0f, 1.0f,
-			1.0f, 1.0f, 1.0f,
-			1.0f, 1.0f, 1.0f,
-			1.0f, 1.0f, 1.0f,
-			1.0f, 1.0f, 1.0f
+			rgb_color.x, rgb_color.y, rgb_color.z,
+			rgb_color.x, rgb_color.y, rgb_color.z,
+			rgb_color.x, rgb_color.y, rgb_color.z,
+			rgb_color.x, rgb_color.y, rgb_color.z,
+			rgb_color.x, rgb_color.y, rgb_color.z,
+			rgb_color.x, rgb_color.y, rgb_color.z
 		};
 
 		GLuint vertexBuffer = 0;
@@ -509,6 +572,67 @@ public:
 		}
 	}
 
+	////////////////////////////////////////////////////////////////////////////////
+	// Paddle Controls
+
+	static void RunLeftPaddleControls() {
+		if (keyboard.W) {
+			scene.leftPaddle.transform.velocity.y += gameOptions.paddleAcceleration * gameOptions.deltaTime;
+		}
+		else {
+			if (scene.leftPaddle.transform.velocity.y > 0.0f) {
+				scene.leftPaddle.transform.velocity.y -= gameOptions.paddleAcceleration * gameOptions.deltaTime;
+			}
+		}
+
+		if (keyboard.S) {
+			scene.leftPaddle.transform.velocity.y -= gameOptions.paddleAcceleration * gameOptions.deltaTime;
+		}
+		else {
+			if (scene.leftPaddle.transform.velocity.y < 0.0f) {
+				scene.leftPaddle.transform.velocity.y += gameOptions.paddleAcceleration * gameOptions.deltaTime;
+			}
+		}
+	}
+
+	static void RunRightPaddleControls() {
+
+	}
+
+	static void RunPaddleVelocityConstraints() {
+		if (scene.leftPaddle.transform.velocity.y > gameOptions.maxPaddleVelocity) {
+			scene.leftPaddle.transform.velocity.y = gameOptions.maxPaddleVelocity;
+		}
+	}
+
+	static void RunPaddleControls() {
+		scene.RunPaddleVelocityConstraints();
+		scene.RunLeftPaddleControls();
+		scene.RunRightPaddleControls();
+	}
+
+	////////////////////////////////////////////////////////////////////////////////
+	// Paddle Collisions
+
+	static void RunLeftPaddleCollision() {
+		if (((scene.ball.transform.position.x <= scene.leftPaddle.transform.position.x) &&
+			((scene.ball.transform.position.y <= scene.leftPaddle.transform.position.y + (scene.leftPaddle.transform.scale.y * 0.5f)) && (scene.ball.transform.position.y > scene.leftPaddle.transform.position.y))) ||
+			((scene.ball.transform.position.x <= scene.leftPaddle.transform.position.x) &&
+			((scene.ball.transform.position.y >= scene.leftPaddle.transform.position.y - (scene.leftPaddle.transform.scale.y * 0.5f)) && (scene.ball.transform.position.y < scene.leftPaddle.transform.position.y)))) {
+			scene.ball.transform.position.x = scene.leftPaddle.transform.position.x;
+			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(1.0f, 0.0f, 0.0f));
+		}
+	}
+
+	static void RunRightPaddleCollision() {
+
+	}
+
+	static void RunPaddleCollision() {
+		scene.RunLeftPaddleCollision();
+		scene.RunRightPaddleCollision();
+	}
+
 	static void InitScene() {
 		GLuint vertexArrayID = NULL;
 		glGenVertexArrays(1, &vertexArrayID);
@@ -519,12 +643,11 @@ public:
 
 		matrix.MVPMatrixID = glGetUniformLocation(gameOptions.programID, "MVP");
 
-		//mat4 projectionMatrix = perspective(FIELD_OF_VIEW, gameOptions.aspectRatio, Z_NEAR, Z_FAR);
 		matrix.projectionMatrix = perspective(FIELD_OF_VIEW, gameOptions.aspectRatio, Z_NEAR, Z_FAR);
 
-		scene.leftPaddle = Object(gameOptions.leftPaddlePosition, gameOptions.paddleScale, Load::LoadColor(), Load::LoadQuad());
-		scene.rightPaddle = Object(gameOptions.rightPaddlePosition, gameOptions.paddleScale, Load::LoadColor(), Load::LoadQuad());
-		scene.ball = Object(gameOptions.ballPosition, gameOptions.ballScale, Load::LoadColor(), Load::LoadQuad());
+		scene.leftPaddle = Object(gameOptions.leftPaddlePosition, gameOptions.paddleScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
+		scene.rightPaddle = Object(gameOptions.rightPaddlePosition, gameOptions.paddleScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
+		scene.ball = Object(gameOptions.ballPosition, gameOptions.ballScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
 
 	}
 
@@ -558,10 +681,14 @@ public:
 				vec3(0, 1, 0)		// up
 				);
 
+			keyboard.RunKeyboardKeys();
+
 			scene.ball.Run();
 			scene.leftPaddle.Run();
 			scene.rightPaddle.Run();
 			scene.RunBallConstraints();
+			scene.RunPaddleCollision();
+			scene.RunPaddleControls();
 
 			//Update();
 			//Render();
@@ -575,137 +702,8 @@ public:
 }scene;
 
 int main() {
-	
-	if(scene.MainLoop() == EXIT_WITH_ERROR) return EXIT_WITH_ERROR;
+
+	if (scene.MainLoop() == EXIT_WITH_ERROR) return EXIT_WITH_ERROR;
 
 	return EXIT_WITH_SUCCESS;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//// Init GLFW
-//if (!glfwInit()) {
-//	fprintf(stderr, "Failed to init GLFW\n");
-//	return -1;
-//}
-
-//glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
-//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
-//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL 
-
-//// Open a window and create its OpenGL context 
-//GLFWwindow* window; // (In the accompanying source code, this variable is global) 
-//window = glfwCreateWindow( 1024, 768, "Tutorial 01", NULL, NULL); 
-//if( window == NULL ){
-//	fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
-//	glfwTerminate();
-//	return -1;
-//}
-//glfwMakeContextCurrent(window); // Initialize GLEW 
-//glewExperimental=true; // Needed in core profile 
-//if (glewInit() != GLEW_OK) {
-//	fprintf(stderr, "Failed to initialize GLEW\n");
-//	return -1;
-//}
-
-//// Ensure we can capture the escape key being pressed below
-//glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-
-//GLuint VertexArrayID;
-//glGenVertexArrays(1, &VertexArrayID);
-//glBindVertexArray(VertexArrayID);
-
-//// An array of 3 vectors which represents 3 vertices
-//static const GLfloat g_vertex_buffer_data[] = {
-//	-1.0f, -1.0f, 0.0f,
-//	1.0f, -1.0f, 0.0f,
-//	0.0f,  1.0f, 0.0f,
-//};
-
-//// This will identify our vertex buffer
-//GLuint vertexbuffer;
-
-//// Generate 1 buffer, put the resulting identifier in vertexbuffer
-//glGenBuffers(1, &vertexbuffer);
-
-//// The following commands will talk about our 'vertexbuffer' buffer
-//glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-
-//// Give our vertices to OpenGL.
-//glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-
-
-//// on frame
-//do{
-//	// Draw nothing, see you in tutorial 2 !
-//	// 1rst attribute buffer : vertices
-//	glEnableVertexAttribArray(0);
-//	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-//	glVertexAttribPointer(
-//		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-//		3,                  // size
-//		GL_FLOAT,           // type
-//		GL_FALSE,           // normalized?
-//		0,                  // stride
-//		(void*)0            // array buffer offset
-//		);
-
-//	// Draw the triangle !
-//	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
-
-//	glDisableVertexAttribArray(0);
-//	// Swap buffers
-//	glfwSwapBuffers(window);
-//	glfwPollEvents();
-
-//} // Check if the ESC key was pressed or the window was closed
-//while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
-//	glfwWindowShouldClose(window) == 0 );
-
-///////////////////////////////////////////////////////////////////////////////////////////////
