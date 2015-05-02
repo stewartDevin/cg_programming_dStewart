@@ -596,12 +596,31 @@ public:
 	}
 
 	static void RunRightPaddleControls() {
+		if (keyboard.UpArrow) {
+			scene.rightPaddle.transform.velocity.y += gameOptions.paddleAcceleration * gameOptions.deltaTime;
+		}
+		else {
+			if (scene.rightPaddle.transform.velocity.y > 0.0f) {
+				scene.rightPaddle.transform.velocity.y -= gameOptions.paddleAcceleration * gameOptions.deltaTime;
+			}
+		}
 
+		if (keyboard.DownArrow) {
+			scene.rightPaddle.transform.velocity.y -= gameOptions.paddleAcceleration * gameOptions.deltaTime;
+		}
+		else {
+			if (scene.rightPaddle.transform.velocity.y < 0.0f) {
+				scene.rightPaddle.transform.velocity.y += gameOptions.paddleAcceleration * gameOptions.deltaTime;
+			}
+		}
 	}
 
 	static void RunPaddleVelocityConstraints() {
 		if (scene.leftPaddle.transform.velocity.y > gameOptions.maxPaddleVelocity) {
 			scene.leftPaddle.transform.velocity.y = gameOptions.maxPaddleVelocity;
+		}
+		if (scene.rightPaddle.transform.velocity.y > gameOptions.maxPaddleVelocity) {
+			scene.rightPaddle.transform.velocity.y = gameOptions.maxPaddleVelocity;
 		}
 	}
 
@@ -615,17 +634,31 @@ public:
 	// Paddle Collisions
 
 	static void RunLeftPaddleCollision() {
-		if (((scene.ball.transform.position.x <= scene.leftPaddle.transform.position.x) &&
-			((scene.ball.transform.position.y <= scene.leftPaddle.transform.position.y + (scene.leftPaddle.transform.scale.y * 0.5f)) && (scene.ball.transform.position.y > scene.leftPaddle.transform.position.y))) ||
-			((scene.ball.transform.position.x <= scene.leftPaddle.transform.position.x) &&
-			((scene.ball.transform.position.y >= scene.leftPaddle.transform.position.y - (scene.leftPaddle.transform.scale.y * 0.5f)) && (scene.ball.transform.position.y < scene.leftPaddle.transform.position.y)))) {
-			scene.ball.transform.position.x = scene.leftPaddle.transform.position.x;
+		float offset = 0.05;
+		bool leftMet = (scene.ball.transform.position.x <= ((scene.leftPaddle.transform.position.x) + (scene.ball.transform.scale.x * 0.5f) + offset));
+		bool belowTopMet = ((scene.ball.transform.position.y <= scene.leftPaddle.transform.position.y + ((scene.leftPaddle.transform.scale.y * 0.5f) + scene.ball.transform.scale.y * 0.5f)) && (scene.ball.transform.position.y >= scene.leftPaddle.transform.position.y));
+		bool aboveBottomMet = ((scene.ball.transform.position.y >= scene.leftPaddle.transform.position.y - ((scene.leftPaddle.transform.scale.y * 0.5f) + scene.ball.transform.scale.y * 0.5f)) && (scene.ball.transform.position.y <= scene.leftPaddle.transform.position.y));
+		bool tooFarToTheLeft = (scene.ball.transform.position.x + scene.ball.transform.scale.x * 0.5f) <= (scene.leftPaddle.transform.position.x + scene.leftPaddle.transform.scale.x * 0.5f);
+
+		if ((leftMet && belowTopMet && !tooFarToTheLeft) || (leftMet && aboveBottomMet && !tooFarToTheLeft))
+		{
+			scene.ball.transform.position.x = scene.leftPaddle.transform.position.x + (scene.ball.transform.scale.x * 0.5f) + offset;
 			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(1.0f, 0.0f, 0.0f));
 		}
 	}
 
 	static void RunRightPaddleCollision() {
+		float offset = 0.05;
+		bool rightMet = (scene.ball.transform.position.x >= ((scene.rightPaddle.transform.position.x) - (scene.ball.transform.scale.x * 0.5f) - offset));
+		bool belowTopMet = ((scene.ball.transform.position.y <= scene.rightPaddle.transform.position.y + ((scene.rightPaddle.transform.scale.y * 0.5f) + scene.ball.transform.scale.y * 0.5f)) && (scene.ball.transform.position.y >= scene.rightPaddle.transform.position.y));
+		bool aboveBottomMet = ((scene.ball.transform.position.y >= scene.rightPaddle.transform.position.y - ((scene.rightPaddle.transform.scale.y * 0.5f) + scene.ball.transform.scale.y * 0.5f)) && (scene.ball.transform.position.y <= scene.rightPaddle.transform.position.y));
+		bool tooFarToTheRight = (scene.ball.transform.position.x + scene.ball.transform.scale.x * 0.5f) >= (scene.rightPaddle.transform.position.x + scene.rightPaddle.transform.scale.x * 0.5f);
 
+		if ((rightMet && belowTopMet && !tooFarToTheRight) || (rightMet && aboveBottomMet && !tooFarToTheRight))
+		{
+			scene.ball.transform.position.x = scene.rightPaddle.transform.position.x - (scene.ball.transform.scale.x * 0.5f) - offset;
+			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(-1.0f, 0.0f, 0.0f));
+		}
 	}
 
 	static void RunPaddleCollision() {
