@@ -315,57 +315,6 @@ public:
 	}
 };
 
-static class Scene {
-public:
-	bool initializedPong;
-	Object leftPaddle;
-	Object rightPaddle;
-	Object ball;
-
-	Scene::Scene() {
-		this->initializedPong = false;
-	}
-
-	static void InitializePong() {
-
-		scene.ball.transform.velocity = gameOptions.startingBallVelocity;
-		scene.leftPaddle.transform.position = vec3(-2.0f, 0.0, 0.0f);
-		scene.rightPaddle.transform.position = vec3(2.0f, 0.0, 0.0f);
-	}
-
-	static void RunBallConstraints() {
-
-		float left = -2.6f;
-		float right = 2.6f;
-		float top = 1.9f;
-		float bottom = -1.9f;
-
-		if (scene.ball.transform.position.x <= left) {
-			scene.ball.transform.position.x = left;
-			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(1.0f, 0.0f, 0.0f));
-			//ball.transform.velocity.x = -ball.transform.velocity.x;
-		}
-		if (scene.ball.transform.position.x >= right) {
-			scene.ball.transform.position.x = right;
-			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(-1.0f, 0.0f, 0.0f));
-			//ball.transform.velocity.x = -ball.transform.velocity.x;
-		}
-		if (scene.ball.transform.position.y >= top) {
-			scene.ball.transform.position.y = top;
-			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(0.0f, -1.0f, 0.0f));
-
-		}
-		if (scene.ball.transform.position.y <= bottom) {
-			scene.ball.transform.position.y = bottom;
-			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(0.0f, 1.0f, 0.0f));
-
-		}
-	}
-
-}scene;
-
-
-
 static class Load {
 public:
 	static GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
@@ -520,68 +469,114 @@ public:
 
 };
 
-int main() {
-	if (GL_Init::InitWindow() | GL_Init::InitGlew()) {
-		return EXIT_WITH_ERROR;
+static class Scene {
+public:
+	bool initializedPong;
+	Object leftPaddle;
+	Object rightPaddle;
+	Object ball;
+
+	Scene::Scene() {
+		this->initializedPong = false;
 	}
 
-	GLuint vertexArrayID = NULL;
-	glGenVertexArrays(1, &vertexArrayID);
-	glBindVertexArray(vertexArrayID);
+	static void RunBallConstraints() {
 
-	// Create and compile glsl from shaders.
-	gameOptions.programID = Load::LoadShaders("BasicVertexShader.vertexshader", "BasicFragmentShader.fragmentshader");
+		float left = -2.6f;
+		float right = 2.6f;
+		float top = 1.9f;
+		float bottom = -1.9f;
 
-	matrix.MVPMatrixID = glGetUniformLocation(gameOptions.programID, "MVP");
-
-	//mat4 projectionMatrix = perspective(FIELD_OF_VIEW, gameOptions.aspectRatio, Z_NEAR, Z_FAR);
-	matrix.projectionMatrix = perspective(FIELD_OF_VIEW, gameOptions.aspectRatio, Z_NEAR, Z_FAR);
-
-	//GLuint triangleID = LoadTriangle();
-	//GLuint ballID = LoadQuad();
-	//GLuint colorID = LoadColor();
-	scene.leftPaddle = Object(gameOptions.leftPaddlePosition, gameOptions.paddleScale, Load::LoadColor(), Load::LoadQuad());
-	scene.rightPaddle = Object(gameOptions.rightPaddlePosition, gameOptions.paddleScale, Load::LoadColor(), Load::LoadQuad());
-	scene.ball = Object(gameOptions.ballPosition, gameOptions.ballScale, Load::LoadColor(), Load::LoadQuad());
-	
-
-	do {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//fprintf(stdout, "Delta Time: %f", getDeltaTime()); 
-		gameOptions.deltaTime = Utility::getDeltaTime();
-
-		if (!scene.initializedPong) {
-			scene.InitializePong();
-			scene.initializedPong = true;
+		if (scene.ball.transform.position.x <= left) {
+			scene.ball.transform.position.x = left;
+			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(1.0f, 0.0f, 0.0f));
+			//ball.transform.velocity.x = -ball.transform.velocity.x;
 		}
+		if (scene.ball.transform.position.x >= right) {
+			scene.ball.transform.position.x = right;
+			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(-1.0f, 0.0f, 0.0f));
+			//ball.transform.velocity.x = -ball.transform.velocity.x;
+		}
+		if (scene.ball.transform.position.y >= top) {
+			scene.ball.transform.position.y = top;
+			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(0.0f, -1.0f, 0.0f));
 
-		glUseProgram(gameOptions.programID);
+		}
+		if (scene.ball.transform.position.y <= bottom) {
+			scene.ball.transform.position.y = bottom;
+			scene.ball.transform.velocity = Utility::CalculateReflectionVector(Utility::NormalizeVector3(scene.ball.transform.velocity), vec3(0.0f, 1.0f, 0.0f));
 
-		// camera matrix
-		matrix.viewMatrix = glm::lookAt(
-			vec3(0, 0, 3),		// position
-			vec3(0, 0, 0),		// look at
-			vec3(0, 1, 0)		// up
-			);
+		}
+	}
 
-		//RenderTriangle(triangleID, colorID);
-		//RunBallMovement();
+	static void InitScene() {
+		GLuint vertexArrayID = NULL;
+		glGenVertexArrays(1, &vertexArrayID);
+		glBindVertexArray(vertexArrayID);
 
-		scene.ball.Run();
-		scene.leftPaddle.Run();
-		scene.rightPaddle.Run();
-		scene.RunBallConstraints();
+		// Create and compile glsl from shaders.
+		gameOptions.programID = Load::LoadShaders("BasicVertexShader.vertexshader", "BasicFragmentShader.fragmentshader");
 
-		//Update();
-		//Render();
-		glfwSwapBuffers(gameOptions.window);
-		glfwPollEvents();
+		matrix.MVPMatrixID = glGetUniformLocation(gameOptions.programID, "MVP");
 
-	} while (glfwGetKey(gameOptions.window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
-		glfwWindowShouldClose(gameOptions.window) == 0);
+		//mat4 projectionMatrix = perspective(FIELD_OF_VIEW, gameOptions.aspectRatio, Z_NEAR, Z_FAR);
+		matrix.projectionMatrix = perspective(FIELD_OF_VIEW, gameOptions.aspectRatio, Z_NEAR, Z_FAR);
 
-	//Object::DeleteObject(&leftPaddle);
-	//Object::DeleteObject(&rightPaddle);
+		scene.leftPaddle = Object(gameOptions.leftPaddlePosition, gameOptions.paddleScale, Load::LoadColor(), Load::LoadQuad());
+		scene.rightPaddle = Object(gameOptions.rightPaddlePosition, gameOptions.paddleScale, Load::LoadColor(), Load::LoadQuad());
+		scene.ball = Object(gameOptions.ballPosition, gameOptions.ballScale, Load::LoadColor(), Load::LoadQuad());
+
+	}
+
+	static int InitializePong() {
+		if (GL_Init::InitWindow() | GL_Init::InitGlew()) {
+			return EXIT_WITH_ERROR;
+		}
+		scene.InitScene();
+		scene.ball.transform.velocity = gameOptions.startingBallVelocity;
+		scene.leftPaddle.transform.position = vec3(-2.0f, 0.0, 0.0f);
+		scene.rightPaddle.transform.position = vec3(2.0f, 0.0, 0.0f);
+	}
+
+	static int MainLoop() {
+		do {
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			//fprintf(stdout, "Delta Time: %f", getDeltaTime()); 
+			gameOptions.deltaTime = Utility::getDeltaTime();
+
+			if (!scene.initializedPong) {
+				if (scene.InitializePong() == EXIT_WITH_ERROR) return EXIT_WITH_ERROR;
+				scene.initializedPong = true;
+			}
+
+			glUseProgram(gameOptions.programID);
+
+			// camera matrix
+			matrix.viewMatrix = glm::lookAt(
+				vec3(0, 0, 3),		// position
+				vec3(0, 0, 0),		// look at
+				vec3(0, 1, 0)		// up
+				);
+
+			scene.ball.Run();
+			scene.leftPaddle.Run();
+			scene.rightPaddle.Run();
+			scene.RunBallConstraints();
+
+			//Update();
+			//Render();
+			glfwSwapBuffers(gameOptions.window);
+			glfwPollEvents();
+
+		} while (glfwGetKey(gameOptions.window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+			glfwWindowShouldClose(gameOptions.window) == 0);
+	}
+
+}scene;
+
+int main() {
+	
+	if(scene.MainLoop() == EXIT_WITH_ERROR) return EXIT_WITH_ERROR;
 
 	return EXIT_WITH_SUCCESS;
 }
