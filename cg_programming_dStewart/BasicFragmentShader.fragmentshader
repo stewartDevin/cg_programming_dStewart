@@ -1,7 +1,11 @@
 #version 330 core
 
+// output data
 out vec3 color;
+smooth in vec3 fragColor;
 
 void main() {
-	color = vec3(1,0,0);
+	// output color = white
+	//color = vec3(1, 1, 1);
+	color = fragColor;
 }
