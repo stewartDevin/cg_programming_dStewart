@@ -21,6 +21,8 @@ public:
 	vec3 startingBallVelocity;
 	float paddleWidth;
 	float gameTimer;
+	float currentBallBounceStrength;
+	float ballBounceStrengthIncrement;
 
 	float maxPaddleVelocity;
 	float paddleAcceleration;
@@ -44,8 +46,10 @@ public:
 
 		this->gameTimer = 0.0f;
 
-		this->maxPaddleVelocity = 1.4f;
+		this->maxPaddleVelocity = 2.0f;
 		this->paddleAcceleration = 10.0f;
+		this->currentBallBounceStrength = 0.0f;
+		this->ballBounceStrengthIncrement = 0.01f;
 	}
 
 }gameOptions;
@@ -76,6 +80,7 @@ public:
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPEN_GL_VERSION);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // get mac up and running.
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // we don't want the old openGL, gives the new one.
+		glfwSwapInterval(1);
 
 		gameOptions.window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, APP_NAME, NULL, NULL);
 
@@ -715,7 +720,10 @@ public:
 		if ((leftMet && belowTopMet && !tooFarToTheLeft) || (leftMet && aboveBottomMet && !tooFarToTheLeft))
 		{
 			scene.ball.transform.position.x = scene.leftPaddle.transform.position.x + (scene.ball.transform.scale.x * 0.5f) + offset;
+			gameOptions.currentBallBounceStrength += gameOptions.ballBounceStrengthIncrement;
+			scene.ball.transform.velocity.x -= gameOptions.currentBallBounceStrength;
 			scene.ball.transform.velocity = Utility::CalculateReflectionVector(scene.ball.transform.velocity + scene.leftPaddle.transform.velocity, vec3(1.0f, 0.0f, 0.0f));
+			
 		}
 	}
 
@@ -729,6 +737,8 @@ public:
 		if ((rightMet && belowTopMet && !tooFarToTheRight) || (rightMet && aboveBottomMet && !tooFarToTheRight))
 		{
 			scene.ball.transform.position.x = scene.rightPaddle.transform.position.x - (scene.ball.transform.scale.x * 0.5f) - offset;
+			gameOptions.currentBallBounceStrength += gameOptions.ballBounceStrengthIncrement;
+			scene.ball.transform.velocity.x += gameOptions.currentBallBounceStrength;
 			scene.ball.transform.velocity = Utility::CalculateReflectionVector(scene.ball.transform.velocity + scene.rightPaddle.transform.velocity, vec3(-1.0f, 0.0f, 0.0f));
 		}
 	}
@@ -811,6 +821,7 @@ public:
 		else if (!scene.isGameRunning) {
 			scene.ball.transform.position = gameOptions.startingPos;
 			scene.ball.transform.velocity = vec3(0.0f, 0.0f, 0.0f);
+			gameOptions.currentBallBounceStrength = 0.0f;
 
 		}
 	}
