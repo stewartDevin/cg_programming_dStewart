@@ -2,7 +2,6 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "Application.h"
-//glm::mat4 RenderQuad(GLuint vertexBuffer, const vec3& position, GLuint colorBuffer, const vec3& scaleVec);
 
 ///////////////////////////////////////////////////////////////////////////////
 // GameOptions
@@ -683,17 +682,18 @@ public:
 	}
 
 	void Scene::KillLowVelocity() {
-		if ((!keyboard.W && !keyboard.S) && (scene.leftPaddle.transform.velocity.y <= 0.08f && scene.leftPaddle.transform.velocity.y > 0.0f)) {
+		float tolerance = 0.1f;
+		if ((!keyboard.W && !keyboard.S) && (scene.leftPaddle.transform.velocity.y <= tolerance && scene.leftPaddle.transform.velocity.y > 0.0f)) {
 			scene.leftPaddle.transform.velocity.y = 0.0f;
 		}
-		if ((!keyboard.W && !keyboard.S) && (scene.leftPaddle.transform.velocity.y >= -0.08f && scene.leftPaddle.transform.velocity.y < 0.0f)) {
+		if ((!keyboard.W && !keyboard.S) && (scene.leftPaddle.transform.velocity.y >= -tolerance && scene.leftPaddle.transform.velocity.y < 0.0f)) {
 			scene.leftPaddle.transform.velocity.y = 0.0f;
 		}
 
-		if ((!keyboard.UpArrow && !keyboard.DownArrow) && (scene.rightPaddle.transform.velocity.y <= 0.08f && scene.rightPaddle.transform.velocity.y > 0.0f)) {
+		if ((!keyboard.UpArrow && !keyboard.DownArrow) && (scene.rightPaddle.transform.velocity.y <= tolerance && scene.rightPaddle.transform.velocity.y > 0.0f)) {
 			scene.rightPaddle.transform.velocity.y = 0.0f;
 		}
-		if ((!keyboard.UpArrow && !keyboard.DownArrow) && (scene.rightPaddle.transform.velocity.y >= -0.08f && scene.rightPaddle.transform.velocity.y < 0.0f)) {
+		if ((!keyboard.UpArrow && !keyboard.DownArrow) && (scene.rightPaddle.transform.velocity.y >= -tolerance && scene.rightPaddle.transform.velocity.y < 0.0f)) {
 			scene.rightPaddle.transform.velocity.y = 0.0f;
 		}
 	}
