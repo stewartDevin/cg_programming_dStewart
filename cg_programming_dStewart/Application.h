@@ -12,6 +12,7 @@
 #include <cmath>
 #include <fstream>
 #include <string>
+#include <time.h>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

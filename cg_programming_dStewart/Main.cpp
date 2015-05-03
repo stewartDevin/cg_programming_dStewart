@@ -6,7 +6,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // GameOptions
-
 static class GameOptions {
 public:
 	float aspectRatio;
@@ -19,7 +18,7 @@ public:
 	vec3 leftPaddlePosition;
 	vec3 rightPaddlePosition;
 	vec3 startingPos;
-	vec3 ballVelocity;
+	float ballVelocity;
 	vec3 startingBallVelocity;
 	float paddleWidth;
 	float gameTimer;
@@ -40,7 +39,7 @@ public:
 		this->rightPaddlePosition = vec3(2.5f, 0.0f, 0.0f);
 
 		this->startingPos = vec3(0.0f, 0.0f, 0.0f);
-		this->ballVelocity = vec3(0.0f, 0.0f, 0.0f);
+		this->ballVelocity = 2.5f;
 		this->startingBallVelocity = vec3(2.0f, 0.0f, 0.0f);
 		this->paddleWidth = 5.0f;
 
@@ -54,7 +53,6 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 // GL_Init
-
 static class GL_Init {
 public:
 	static int InitGlew() {
@@ -98,7 +96,6 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 // Utility
-
 static class Utility {
 public:
 	static float& getDeltaTime() {
@@ -129,11 +126,15 @@ public:
 		return r;
 	}
 
+	static int GetRandomInt(int from, int to) {
+		return rand() % to + from;
+
+	}
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 // Keyboard
-
 static class Keyboard {
 public:
 	bool W;
@@ -218,7 +219,6 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 // Transform
-
 class Transform {
 public:
 	vec3 position;
@@ -242,7 +242,6 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 // GameObject
-
 class GameObject {
 public:
 	Transform transform;
@@ -261,7 +260,6 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 // Matrix
-
 static class Matrix {
 public:
 	mat4 projectionMatrix;
@@ -282,7 +280,6 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 // Render
-
 static class Render {
 public:
 	static glm::mat4 RenderVertex(GLuint vertexBuffer, const vec3& position, const vec3& scaleVec) {
@@ -349,7 +346,6 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 // Object
-
 class Object : public GameObject {
 public:
 
@@ -397,7 +393,6 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 // Load
-
 static class Load {
 public:
 	static GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
@@ -554,7 +549,6 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 // Scene
-
 static class Scene {
 public:
 	bool initializedPong;
@@ -581,6 +575,16 @@ public:
 		this->rightBound = 2.6f;
 		this->topBound = 1.9f;
 		this->bottomBound = -1.9f;
+	}
+
+	vec3 DecideStartingBallDirection() {
+		int randInt = Utility::GetRandomInt(1, 2);
+		if (randInt == 1) {
+			return vec3(-gameOptions.ballVelocity, 0.0f, 0.0f);
+		}
+		else {
+			return vec3(gameOptions.ballVelocity, 0.0f, 0.0f);
+		}
 	}
 
 	void Scene::RunGameTimer() {
@@ -793,14 +797,15 @@ public:
 			return EXIT_WITH_ERROR;
 		}
 		scene.InitScene();
-		scene.ball.transform.velocity = gameOptions.startingBallVelocity;
-		scene.leftPaddle.transform.position = vec3(-2.0f, 0.0, 0.0f);
-		scene.rightPaddle.transform.position = vec3(2.0f, 0.0, 0.0f);
+		//scene.ball.transform.velocity = gameOptions.startingBallVelocity;
+		/*scene.leftPaddle.transform.position = vec3(-2.0f, 0.0, 0.0f);
+		scene.rightPaddle.transform.position = vec3(2.0f, 0.0, 0.0f);*/
 	}
 
 	void Scene::RunBallBehavior() {
 		if (scene.isGameRunning && !scene.ballVelocityInitialized) {
-			scene.ball.transform.velocity = gameOptions.startingBallVelocity;
+			//scene.ball.transform.velocity = gameOptions.startingBallVelocity;
+			scene.ball.transform.velocity = DecideStartingBallDirection();
 			scene.ballVelocityInitialized = true;
 		}
 		else if (!scene.isGameRunning) {
@@ -854,9 +859,8 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 // main
-
 int main() {
-
+	srand(time(NULL));
 	if (scene.MainLoop() == EXIT_WITH_ERROR) return EXIT_WITH_ERROR;
 
 	return EXIT_WITH_SUCCESS;
