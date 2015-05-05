@@ -3,6 +3,8 @@
 
 #include "Application.h"
 
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // GameOptions
 static class GameOptions {
@@ -23,6 +25,15 @@ public:
 	float gameTimer;
 	float currentBallBounceStrength;
 	float ballBounceStrengthIncrement;
+	vec3 targetPos;
+	vec3 d;
+
+	GLfloat angle;
+
+	int leftPlayerScore;
+	int rightPlayerScore;
+
+	int isRotating;
 
 	float maxPaddleVelocity;
 	float paddleAcceleration;
@@ -31,11 +42,51 @@ public:
 		this->aspectRatio = SCREEN_WIDTH / (float)SCREEN_HEIGHT;
 		//this->programID = glCreateProgram();
 		this->paddleScale = vec3(0.1f, 1.0f, 1.0f);
-		this->ballScale = vec3(0.1f, 0.1f, 1.0f);
+		this->angle = 0.0f;
+		
+
+		//////////////////////////////////////////////////////////////////////////////////////////////
+		// MIDTERM
+
+		///////////////////////////////////////////////////////////////
+		// fill screen
+		//this->ballScale = vec3(aspectRatio*4.0, aspectRatio*3.0, 1.0f);
+		//this->ballPosition = vec3(0.0f, 0.0f, 0.0f);
+		///////////////////////////////////////////////////////////////
+
+		/////////////////////////////////////////////////////////////////
+		//fill quarter
+		//this->ballScale = vec3(aspectRatio*2.3f, aspectRatio*2.1f, 1.0f);
+		//this->ballPosition = vec3(-1.9f, -1.3f, 0.0f);
+		/////////////////////////////////////////////////////////////////
+
+		/////////////////////////////////////////////////////////////////
+		//fill screen and offset
+		//this->ballScale = vec3(aspectRatio*4.0, aspectRatio*3.0, 1.0f);
+		//this->ballPosition = vec3(-2.4f, -1.7f, 0.0f);
+		//////////////////////////////////////////////////////////////////
+
+		//EXTRA CREDIT
+		//////////////////////////////////////////////////////////////////
+		// rotate
+		/*gameOptions.isRotating = true;
+		this->ballScale = vec3(aspectRatio*4.0, aspectRatio*3.0, 1.0f);
+		this->ballPosition = vec3(0.0f, 0.0f, 0.0f);*/
+		
+		
+		
+		//orbit
+		//this->targetPos = vec3(0.0f, 0.0f, 0.0f);
+		//this->d = vec3(0.0f, 0.0f, 0.0f);
+		//
+		//this->ballScale = vec3(aspectRatio*0.5, aspectRatio*0.5, 1.0f);
+		//this->ballPosition = vec3(1.5f, 0.0f, 0.0f);
+
+		//////////////////////////////////////////////////////////////////////////////////////////////
 
 		this->window = NULL;
 		this->deltaTime = 0.0f;
-		this->ballPosition = vec3(0.0f, 0.0f, 0.0f);
+		
 		this->leftPaddlePosition = vec3(-2.5f, 0.0f, 0.0f);
 		this->rightPaddlePosition = vec3(2.5f, 0.0f, 0.0f);
 
@@ -50,9 +101,23 @@ public:
 		this->paddleAcceleration = 10.0f;
 		this->currentBallBounceStrength = 0.0f;
 		this->ballBounceStrengthIncrement = 0.01f;
-	}
+
+		this->leftPlayerScore = 0;
+		this->rightPlayerScore = 0;
+	}	
 
 }gameOptions;
+
+void RunBallOrbit() {
+	gameOptions.d = gameOptions.targetPos - gameOptions.ballPosition;
+	
+	float dis = sqrt(gameOptions.d.x * gameOptions.d.x + gameOptions.d.y * gameOptions.d.y + gameOptions.d.z * gameOptions.d.z);	
+	gameOptions.d.x /= dis;
+	gameOptions.d.y /= dis;
+	gameOptions.d.z /= dis;
+
+	gameOptions.ballPosition += gameOptions.d * gameOptions.deltaTime;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // GL_Init
@@ -299,10 +364,12 @@ public:
 			(void*)0	// array buffer offset...
 			);
 
+		
 		mat4 identityMatrix = mat4(1.0f);
 		mat4 positionMatrix = translate(identityMatrix, position);
 		mat4 scaleMatrix = scale(positionMatrix, scaleVec);
-		return scaleMatrix;
+		mat4 rotateMatrix = rotate(scaleMatrix, gameOptions.angle, vec3(0.0f, 0.0f, 10.0f));
+		return rotateMatrix;
 	}
 
 	static void RenderColor(GLuint vertexBuffer) {
@@ -549,6 +616,24 @@ public:
 		return vertexBuffer;
 	}
 
+	static GLuint& LoadColor() {
+		static const GLfloat g_color_buffer_data[] = {
+			1.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 1.0f,
+			1.0f, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f,
+			0.0f, 1.0f, 0.0f
+		};
+
+		GLuint vertexBuffer = 0;
+		glGenBuffers(1, &vertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+
+		return vertexBuffer;
+	}
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -608,12 +693,18 @@ public:
 			scene.ball.transform.position.x = scene.leftBound;
 			scene.isGameRunning = false;
 			scene.isTimerRunning = true;
+			gameOptions.rightPlayerScore += 1;
+			fprintf(stdout, "Right Player Score : %d \n", gameOptions.rightPlayerScore);
+			fprintf(stdout, "Left Player Score : %d \n", gameOptions.leftPlayerScore);
 			//scene.ball.transform.velocity = Utility::CalculateReflectionVector(scene.ball.transform.velocity, vec3(1.0f, 0.0f, 0.0f));
 		}
 		if (scene.ball.transform.position.x >= scene.rightBound) {
 			scene.ball.transform.position.x = scene.rightBound;
 			scene.isGameRunning = false;
 			scene.isTimerRunning = true;
+			gameOptions.leftPlayerScore += 1;
+			fprintf(stdout, "Right Player Score : %d \n", gameOptions.rightPlayerScore);
+			fprintf(stdout, "Left Player Score : %d \n", gameOptions.leftPlayerScore);
 			//scene.ball.transform.velocity = Utility::CalculateReflectionVector(scene.ball.transform.velocity, vec3(-1.0f, 0.0f, 0.0f));
 		}
 		if (scene.ball.transform.position.y >= scene.topBound) {
@@ -717,6 +808,8 @@ public:
 		bool aboveBottomMet = ((scene.ball.transform.position.y >= scene.leftPaddle.transform.position.y - ((scene.leftPaddle.transform.scale.y * 0.5f) + scene.ball.transform.scale.y * 0.5f)) && (scene.ball.transform.position.y <= scene.leftPaddle.transform.position.y));
 		bool tooFarToTheLeft = (scene.ball.transform.position.x + scene.ball.transform.scale.x * 0.5f) <= (scene.leftPaddle.transform.position.x + scene.leftPaddle.transform.scale.x * 0.5f);
 
+
+
 		if ((leftMet && belowTopMet && !tooFarToTheLeft) || (leftMet && aboveBottomMet && !tooFarToTheLeft))
 		{
 			scene.ball.transform.position.x = scene.leftPaddle.transform.position.x + (scene.ball.transform.scale.x * 0.5f) + offset;
@@ -796,9 +889,9 @@ public:
 
 		matrix.projectionMatrix = perspective(FIELD_OF_VIEW, gameOptions.aspectRatio, Z_NEAR, Z_FAR);
 
-		scene.leftPaddle = Object(gameOptions.leftPaddlePosition, gameOptions.paddleScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
-		scene.rightPaddle = Object(gameOptions.rightPaddlePosition, gameOptions.paddleScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
-		scene.ball = Object(gameOptions.ballPosition, gameOptions.ballScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
+		//scene.leftPaddle = Object(gameOptions.leftPaddlePosition, gameOptions.paddleScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
+		//scene.rightPaddle = Object(gameOptions.rightPaddlePosition, gameOptions.paddleScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
+		scene.ball = Object(gameOptions.ballPosition, gameOptions.ballScale, Load::LoadColor(), Load::LoadQuad());
 
 	}
 
@@ -848,15 +941,17 @@ public:
 
 			keyboard.RunKeyboardKeys();
 
-			scene.RunGameTimer();
-			scene.RunBallBehavior();
+			//scene.RunGameTimer();
+			//scene.RunBallBehavior();
 			scene.ball.Run();
-			scene.leftPaddle.Run();
-			scene.rightPaddle.Run();
-			scene.RunBallConstraints();
-			scene.RunPaddleCollision();
-			scene.RunPaddleControls();
-			scene.RunPaddlePositionConstraints();
+			
+			RunBallOrbit();
+			//scene.leftPaddle.Run();
+			//scene.rightPaddle.Run();
+			//scene.RunBallConstraints();
+			//scene.RunPaddleCollision();
+			//scene.RunPaddleControls();
+			//scene.RunPaddlePositionConstraints();
 
 			//Update();
 			//Render();

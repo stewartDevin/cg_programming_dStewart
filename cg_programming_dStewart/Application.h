@@ -13,6 +13,7 @@
 #include <fstream>
 #include <string>
 #include <time.h>
+#include <vector>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
