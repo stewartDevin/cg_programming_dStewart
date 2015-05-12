@@ -3,8 +3,9 @@
 
 #include "CORE.Object.h"
 #include "CORE.Matrix.h"
-#include "../APP/APP.GameOptions.h"
 #include "CORE.Render.h"
+#include "../APP/APP.GameOptions.h"
+#include "../APP/APP.Scene.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Object
@@ -25,8 +26,11 @@ Object::Object() {
 
 Object* Object::CreateObject(vec3 position, vec3 scale, GLuint colorID, GLuint objectID) {
 	Object* object = new Object(position, scale, colorID, objectID);
+	Scene::listOfObjects[Scene::sizeOfListOfObjects] = object;
+	Scene::sizeOfListOfObjects++;
 	return object;
 }
+
 void Object::DeleteObject(Object* object) {
 	delete(object);
 }
@@ -48,4 +52,11 @@ void Object::Run() {
 	glUniformMatrix4fv(Matrix::MVPMatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
 	this->transform.position += this->transform.velocity * GameOptions::deltaTime;
+}
+
+void Object::RunAllObjects() {
+	for(int n = 0; n < Scene::sizeOfListOfObjects; n++) {
+		GameObject* obj = Scene::listOfObjects[n];
+		obj->Run();
+	}
 }

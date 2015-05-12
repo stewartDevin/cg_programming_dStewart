@@ -1,13 +1,13 @@
 // APP.Scene.cpp
 //////////////////////////////////////////////////////////////////////////
 
-#include "APP.Scene.h"
 #include "../CORE/CORE.Utility.h"
-#include "APP.GameOptions.h"
 #include "../CORE/CORE.Keyboard.h"
 #include "../CORE/CORE.Matrix.h"
 #include "../CORE/CORE.Load.h"
 #include "../CORE/CORE.GL_Init.h"
+#include "APP.GameOptions.h"
+#include "APP.Scene.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Scene
@@ -15,6 +15,10 @@ bool Scene::initializedPong = false;
 Object Scene::leftPaddle;
 Object Scene::rightPaddle;
 Object Scene::ball;
+
+GameObject* Scene::listOfObjects[];
+
+int Scene::sizeOfListOfObjects = 0;
 
 float Scene::gameTimer = 0.0f;
 bool Scene::isTimerRunning = true;
@@ -295,8 +299,9 @@ int Scene::MainLoop() {
 			);
 
 		Keyboard::RunKeyboardKeys();
+		Object::RunAllObjects();
 
-		Scene::RunGameTimer();
+		/*Scene::RunGameTimer();
 		Scene::RunBallBehavior();
 		Scene::ball.Run();
 		Scene::leftPaddle.Run();
@@ -304,7 +309,7 @@ int Scene::MainLoop() {
 		Scene::RunBallConstraints();
 		Scene::RunPaddleCollision();
 		Scene::RunPaddleControls();
-		Scene::RunPaddlePositionConstraints();
+		Scene::RunPaddlePositionConstraints();*/
 
 		//Update();
 		//Render();

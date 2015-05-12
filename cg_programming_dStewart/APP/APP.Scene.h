@@ -8,6 +8,9 @@
 // Scene
 static class Scene {
 public:
+	static int sizeOfListOfObjects;
+	static GameObject* listOfObjects[];
+
 	static bool initializedPong;
 	static Object leftPaddle;
 	static Object rightPaddle;

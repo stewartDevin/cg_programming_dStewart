@@ -18,6 +18,8 @@ public:
 
 	static void Object::DeleteObject(Object* object);
 
+	static void RunAllObjects();
+
 	void DeleteObject();
 
 	void Init();
