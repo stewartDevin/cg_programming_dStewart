@@ -18,7 +18,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -75,10 +75,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="APP\APP.GameOptions.cpp" />
+    <ClCompile Include="APP\APP.Scene.cpp" />
+    <ClCompile Include="CORE\CORE.GameObject.cpp" />
+    <ClCompile Include="CORE\CORE.GL_Init.cpp" />
+    <ClCompile Include="CORE\CORE.Keyboard.cpp" />
+    <ClCompile Include="CORE\CORE.Load.cpp" />
+    <ClCompile Include="CORE\CORE.Matrix.cpp" />
+    <ClCompile Include="CORE\CORE.Object.cpp" />
+    <ClCompile Include="CORE\CORE.Render.cpp" />
+    <ClCompile Include="CORE\CORE.Transform.cpp" />
+    <ClCompile Include="CORE\CORE.Utility.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="APP\APP.GameOptions.h" />
+    <ClInclude Include="APP\APP.Scene.h" />
+    <ClInclude Include="CORE\CORE.GameObject.h" />
+    <ClInclude Include="CORE\CORE.GL_Init.h" />
+    <ClInclude Include="CORE\CORE.Keyboard.h" />
+    <ClInclude Include="CORE\CORE.Load.h" />
+    <ClInclude Include="CORE\CORE.Matrix.h" />
+    <ClInclude Include="CORE\CORE.Object.h" />
+    <ClInclude Include="CORE\CORE.Render.h" />
+    <ClInclude Include="CORE\CORE.Transform.h" />
+    <ClInclude Include="CORE\CORE.Utility.h" />
+    <ClInclude Include="Main.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="BasicVertexShader.vertexshader" />
