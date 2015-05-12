@@ -16,15 +16,15 @@ Object Scene::leftPaddle;
 Object Scene::rightPaddle;
 Object Scene::ball;
 
-float Scene::gameTimer;
-bool Scene::isTimerRunning;
-bool Scene::isGameRunning;
-bool Scene::ballVelocityInitialized;
+float Scene::gameTimer = 0.0f;
+bool Scene::isTimerRunning = true;
+bool Scene::isGameRunning = false;
+bool Scene::ballVelocityInitialized = false;
 
-float Scene::leftBound;
-float Scene::rightBound;
-float Scene::topBound;
-float Scene::bottomBound;
+float Scene::leftBound = -2.6f;
+float Scene::rightBound = 2.6f;
+float Scene::topBound = 1.9f;
+float Scene::bottomBound = -1.9f;
 
 Scene::Scene() {
 	
