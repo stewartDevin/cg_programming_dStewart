@@ -6,9 +6,9 @@
 #include "../CORE/CORE.Matrix.h"
 #include "../CORE/CORE.Load.h"
 #include "../CORE/CORE.GL_Init.h"
-#include "APP.GameOptions.h"
 #include "APP.Scene.h"
 #include <vector>
+#include "Pong\Pong.Options.h"
 #include "Pong\Pong.Scene.h"
 using namespace std;
 
@@ -21,19 +21,14 @@ int Scene::MainLoop() {
 	do {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//fprintf(stdout, "Delta Time: %f", getDeltaTime()); 
-		GameOptions::deltaTime = Utility::getDeltaTime();
-
-		/*if (!Scene::initializedPong) {
-			if (Scene::InitializePong() == EXIT_WITH_ERROR) return EXIT_WITH_ERROR;
-			Scene::initializedPong = true;
-			}*/
+		PongGameOptions::deltaTime = Utility::getDeltaTime();
 
 		Keyboard::RunKeyboardKeys();
 		Object::RunAllObjects();
 
 		PongScene::PongMainLoop();
 
-		glUseProgram(GameOptions::programID);
+		glUseProgram(PongGameOptions::programID);
 
 		// camera matrix
 		Matrix::viewMatrix = glm::lookAt(
@@ -44,11 +39,11 @@ int Scene::MainLoop() {
 
 		//Update();
 		//Render();
-		glfwSwapBuffers(GameOptions::window);
+		glfwSwapBuffers(PongGameOptions::window);
 		glfwPollEvents();
 
-	} while (glfwGetKey(GameOptions::window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
-		glfwWindowShouldClose(GameOptions::window) == 0);
+	} while (glfwGetKey(PongGameOptions::window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+		glfwWindowShouldClose(PongGameOptions::window) == 0);
 
 	return EXIT_WITH_SUCCESS;
 }

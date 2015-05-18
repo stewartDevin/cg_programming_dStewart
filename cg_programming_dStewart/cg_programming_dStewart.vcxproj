@@ -77,6 +77,7 @@
   <ItemGroup>
     <ClCompile Include="APP\APP.GameOptions.cpp" />
     <ClCompile Include="APP\APP.Scene.cpp" />
+    <ClCompile Include="APP\Pong\Pong.Options.cpp" />
     <ClCompile Include="APP\Pong\Pong.Scene.cpp" />
     <ClCompile Include="CORE\CORE.GameObject.cpp" />
     <ClCompile Include="CORE\CORE.GL_Init.cpp" />
@@ -93,6 +94,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="APP\APP.GameOptions.h" />
     <ClInclude Include="APP\APP.Scene.h" />
+    <ClInclude Include="APP\Pong\Pong.Options.h" />
     <ClInclude Include="APP\Pong\Pong.Scene.h" />
     <ClInclude Include="CORE\CORE.GameObject.h" />
     <ClInclude Include="CORE\CORE.GL_Init.h" />

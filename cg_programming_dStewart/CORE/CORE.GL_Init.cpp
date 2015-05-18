@@ -2,13 +2,13 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "CORE.GL_Init.h"
-#include "../APP/APP.GameOptions.h"
+#include "../APP/Pong/Pong.Options.h"
 #include "../Application.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // GL_Init
 int GL_Init::InitGlew() {
-	glfwMakeContextCurrent(GameOptions::window); // Initialize GLEW
+	glfwMakeContextCurrent(PongGameOptions::window); // Initialize GLEW
 	glewExperimental = true; // has to do with core profile. 
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Failed to initialize GLEW.");
@@ -31,16 +31,16 @@ int GL_Init::InitWindow() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // we don't want the old openGL, gives the new one.
 	glfwSwapInterval(1);
 
-	GameOptions::window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, APP_NAME, NULL, NULL);
+	PongGameOptions::window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, APP_NAME, NULL, NULL);
 
-	if (GameOptions::window == NULL) {
+	if (PongGameOptions::window == NULL) {
 		fprintf(stderr, "Failed to initialize window.");
 		glfwTerminate();
 		return EXIT_WITH_ERROR;
 	}
 
 	// Ensure we can capture the escape key being pressed below
-	glfwSetInputMode(GameOptions::window, GLFW_STICKY_KEYS, GL_TRUE);
+	glfwSetInputMode(PongGameOptions::window, GLFW_STICKY_KEYS, GL_TRUE);
 
 	return EXIT_WITH_SUCCESS;
 }

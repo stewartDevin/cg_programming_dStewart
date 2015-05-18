@@ -4,7 +4,7 @@
 #include "CORE.Object.h"
 #include "CORE.Matrix.h"
 #include "CORE.Render.h"
-#include "../APP/APP.GameOptions.h"
+#include "../APP/Pong/Pong.Options.h"
 #include "../APP/APP.Scene.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -52,7 +52,7 @@ void Object::Run() {
 	this->MVPMatrix = Matrix::projectionMatrix * Matrix::viewMatrix * Render::RenderQuad(this->objectID, this->transform.position, this->colorID, this->transform.scale);
 	glUniformMatrix4fv(Matrix::MVPMatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
-	this->transform.position += this->transform.velocity * GameOptions::deltaTime;
+	this->transform.position += this->transform.velocity * PongGameOptions::deltaTime;
 }
 
 void Object::RunAllObjects() {

@@ -5,7 +5,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "../Main.h"
-#include "../APP/APP.GameOptions.h"
+#include "../APP/Pong/Pong.Options.h"
 
 bool Keyboard::W = false;
 bool Keyboard::A = false;
@@ -21,56 +21,56 @@ Keyboard::Keyboard() {
 }
 
 void Keyboard::RunKeyboardKeys() {
-	if (glfwGetKey(GameOptions::window, GLFW_KEY_W) == GLFW_PRESS) {
+	if (glfwGetKey(PongGameOptions::window, GLFW_KEY_W) == GLFW_PRESS) {
 		Keyboard::W = true;
 	}
 	else {
 		Keyboard::W = false;
 	}
 
-	if (glfwGetKey(GameOptions::window, GLFW_KEY_A) == GLFW_PRESS) {
+	if (glfwGetKey(PongGameOptions::window, GLFW_KEY_A) == GLFW_PRESS) {
 		Keyboard::A = true;
 	}
 	else {
 		Keyboard::A = false;
 	}
 
-	if (glfwGetKey(GameOptions::window, GLFW_KEY_S) == GLFW_PRESS) {
+	if (glfwGetKey(PongGameOptions::window, GLFW_KEY_S) == GLFW_PRESS) {
 		Keyboard::S = true;
 	}
 	else {
 		Keyboard::S = false;
 	}
 
-	if (glfwGetKey(GameOptions::window, GLFW_KEY_D) == GLFW_PRESS) {
+	if (glfwGetKey(PongGameOptions::window, GLFW_KEY_D) == GLFW_PRESS) {
 		Keyboard::D = true;
 	}
 	else {
 		Keyboard::D = false;
 	}
 
-	if (glfwGetKey(GameOptions::window, GLFW_KEY_UP) == GLFW_PRESS) {
+	if (glfwGetKey(PongGameOptions::window, GLFW_KEY_UP) == GLFW_PRESS) {
 		Keyboard::UpArrow = true;
 	}
 	else {
 		Keyboard::UpArrow = false;
 	}
 
-	if (glfwGetKey(GameOptions::window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+	if (glfwGetKey(PongGameOptions::window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 		Keyboard::LeftArrow = true;
 	}
 	else {
 		Keyboard::LeftArrow = false;
 	}
 
-	if (glfwGetKey(GameOptions::window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+	if (glfwGetKey(PongGameOptions::window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		Keyboard::DownArrow = true;
 	}
 	else {
 		Keyboard::DownArrow = false;
 	}
 
-	if (glfwGetKey(GameOptions::window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+	if (glfwGetKey(PongGameOptions::window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 		Keyboard::RightArrow = true;
 	}
 	else {

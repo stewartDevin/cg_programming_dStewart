@@ -54,6 +54,9 @@
     <ClCompile Include="APP\Pong\Pong.Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="APP\Pong\Pong.Options.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -96,6 +99,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="APP\Pong\Pong.Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="APP\Pong\Pong.Options.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
