@@ -18,7 +18,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -77,6 +77,7 @@
   <ItemGroup>
     <ClCompile Include="APP\APP.GameOptions.cpp" />
     <ClCompile Include="APP\APP.Scene.cpp" />
+    <ClCompile Include="APP\Pong\Pong.Scene.cpp" />
     <ClCompile Include="CORE\CORE.GameObject.cpp" />
     <ClCompile Include="CORE\CORE.GL_Init.cpp" />
     <ClCompile Include="CORE\CORE.Keyboard.cpp" />
@@ -92,6 +93,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="APP\APP.GameOptions.h" />
     <ClInclude Include="APP\APP.Scene.h" />
+    <ClInclude Include="APP\Pong\Pong.Scene.h" />
     <ClInclude Include="CORE\CORE.GameObject.h" />
     <ClInclude Include="CORE\CORE.GL_Init.h" />
     <ClInclude Include="CORE\CORE.Keyboard.h" />

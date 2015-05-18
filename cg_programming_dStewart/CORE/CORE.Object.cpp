@@ -26,8 +26,9 @@ Object::Object() {
 
 Object* Object::CreateObject(vec3 position, vec3 scale, GLuint colorID, GLuint objectID) {
 	Object* object = new Object(position, scale, colorID, objectID);
-	Scene::listOfObjects[Scene::sizeOfListOfObjects] = object;
-	Scene::sizeOfListOfObjects++;
+	Scene::listOfObjects.push_back(object);
+	//Scene::listOfObjects[Scene::sizeOfListOfObjects] = object;
+	//Scene::sizeOfListOfObjects++;
 	return object;
 }
 
@@ -55,7 +56,7 @@ void Object::Run() {
 }
 
 void Object::RunAllObjects() {
-	for(int n = 0; n < Scene::sizeOfListOfObjects; n++) {
+	for(int n = 0; n < Scene::listOfObjects.size(); n++) {
 		GameObject* obj = Scene::listOfObjects[n];
 		obj->Run();
 	}
