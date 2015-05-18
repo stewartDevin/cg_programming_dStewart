@@ -247,13 +247,11 @@ void PongScene::InitScene() {
 }
 
 int PongScene::InitializePong() {
-	if (GL_Init::InitWindow() | GL_Init::InitGlew()) {
-		return EXIT_WITH_ERROR;
-	}
 	PongScene::InitScene();
 	//PongScene::ball.transform.velocity = PongGameOptions::startingBallVelocity;
 	/*PongScene::leftPaddle.transform.position = vec3(-2.0f, 0.0, 0.0f);
 	PongScene::rightPaddle.transform.position = vec3(2.0f, 0.0, 0.0f);*/
+	return 0;
 }
 
 void PongScene::RunBallBehavior() {

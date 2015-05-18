@@ -1,0 +1,10 @@
+// APP.DataCore.h
+/////////////////////////////////////////////////////////////
+
+#pragma once 
+
+static class DataCore {
+public:
+
+
+};

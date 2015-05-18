@@ -75,6 +75,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="APP\APP.DataCore.cpp" />
     <ClCompile Include="APP\APP.GameOptions.cpp" />
     <ClCompile Include="APP\APP.Scene.cpp" />
     <ClCompile Include="APP\Pong\Pong.Options.cpp" />
@@ -92,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="APP\APP.DataCore.h" />
     <ClInclude Include="APP\APP.GameOptions.h" />
     <ClInclude Include="APP\APP.Scene.h" />
     <ClInclude Include="APP\Pong\Pong.Options.h" />
