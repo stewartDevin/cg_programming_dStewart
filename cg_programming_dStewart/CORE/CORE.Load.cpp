@@ -1,9 +1,76 @@
 // CORE.Load.cpp
 //////////////////////////////////////////////////////////////////////////
 #include "CORE.Load.h"
+#include "../APP/APP.DataCore.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Load
+
+unsigned char Load::FindChar(const char* buffer, const char& c) {
+	// TODO: Search for char c, if found, return true.
+	char* value = (char*)buffer;
+	unsigned char length = 0;
+
+	while(value != '\0') {
+		++length;
+		if(*value++ == c) {
+			return length;
+		}
+	}
+
+	return length = 0;
+}
+
+string Load::LoadFile(char* str) {
+	string line;
+	ifstream myfile (str);
+	char* path = NULL;
+
+	unsigned char len = 0;
+	if (myfile.is_open())
+	{
+		char buffer[256];
+		char path[256];
+
+		while (getline(myfile, line))
+		{
+			line.copy(buffer, len = line.length());
+			buffer[len] = '\0';
+
+			unsigned char commaLength = FindChar(buffer, ',');
+
+			if(buffer[0] > 47 && buffer[0] < 58) {
+				// TODO: add level data...
+				continue;
+			}
+
+			if(buffer[0] == 32 || buffer[0] == '\0') {
+				// empty space
+				continue;
+			}
+
+			if(buffer[0] == 35) {
+				// TODO: get next count
+				continue;
+			}
+
+			if(commaLength > 0) {
+				strcpy(path, buffer);
+				path[commaLength - 1] = '\0';
+				++DataCore::numberOfTextures;
+				continue;
+				// TODO: Add texture data...
+			}
+
+			// load textures...
+			cout << line << '\n';
+		}
+		myfile.close();
+	} else cout << "Unable to open file";
+
+	return line;
+}
+
 GLuint Load::LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
 	GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);

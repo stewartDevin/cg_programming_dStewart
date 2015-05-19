@@ -8,6 +8,7 @@
 #include "../CORE/CORE.Load.h"
 #include "../CORE/CORE.GL_Init.h"
 #include "../Pong/Pong.Options.h"
+#include "../APP.DataCore.h"
 #include <vector>
 using namespace std;
 
@@ -37,7 +38,7 @@ vec3 PongScene::DecideStartingBallDirection() {
 }
 
 void PongScene::RunGameTimer() {
-	if (PongScene::isTimerRunning) PongScene::gameTimer += 1.0f * PongGameOptions::deltaTime;
+	if (PongScene::isTimerRunning) PongScene::gameTimer += 1.0f * DataCore::deltaTime;
 
 	if (PongScene::gameTimer > 2.0f) {
 		PongScene::gameTimer = 0.0f;
@@ -75,40 +76,40 @@ void PongScene::RunBallConstraints() {
 
 void PongScene::RunLeftPaddleControls() {
 	if (Keyboard::W) {
-		PongScene::leftPaddle.transform.velocity.y += PongGameOptions::paddleAcceleration * PongGameOptions::deltaTime;
+		PongScene::leftPaddle.transform.velocity.y += PongGameOptions::paddleAcceleration * DataCore::deltaTime;
 	}
 	else {
 		if (PongScene::leftPaddle.transform.velocity.y > 0.0f) {
-			PongScene::leftPaddle.transform.velocity.y -= PongGameOptions::paddleAcceleration * PongGameOptions::deltaTime;
+			PongScene::leftPaddle.transform.velocity.y -= PongGameOptions::paddleAcceleration * DataCore::deltaTime;
 		}
 	}
 
 	if (Keyboard::S) {
-		PongScene::leftPaddle.transform.velocity.y -= PongGameOptions::paddleAcceleration * PongGameOptions::deltaTime;
+		PongScene::leftPaddle.transform.velocity.y -= PongGameOptions::paddleAcceleration * DataCore::deltaTime;
 	}
 	else {
 		if (PongScene::leftPaddle.transform.velocity.y < 0.0f) {
-			PongScene::leftPaddle.transform.velocity.y += PongGameOptions::paddleAcceleration * PongGameOptions::deltaTime;
+			PongScene::leftPaddle.transform.velocity.y += PongGameOptions::paddleAcceleration * DataCore::deltaTime;
 		}
 	}
 }
 
 void PongScene::RunRightPaddleControls() {
 	if (Keyboard::UpArrow) {
-		PongScene::rightPaddle.transform.velocity.y += PongGameOptions::paddleAcceleration * PongGameOptions::deltaTime;
+		PongScene::rightPaddle.transform.velocity.y += PongGameOptions::paddleAcceleration * DataCore::deltaTime;
 	}
 	else {
 		if (PongScene::rightPaddle.transform.velocity.y > 0.0f) {
-			PongScene::rightPaddle.transform.velocity.y -= PongGameOptions::paddleAcceleration * PongGameOptions::deltaTime;
+			PongScene::rightPaddle.transform.velocity.y -= PongGameOptions::paddleAcceleration * DataCore::deltaTime;
 		}
 	}
 
 	if (Keyboard::DownArrow) {
-		PongScene::rightPaddle.transform.velocity.y -= PongGameOptions::paddleAcceleration * PongGameOptions::deltaTime;
+		PongScene::rightPaddle.transform.velocity.y -= PongGameOptions::paddleAcceleration * DataCore::deltaTime;
 	}
 	else {
 		if (PongScene::rightPaddle.transform.velocity.y < 0.0f) {
-			PongScene::rightPaddle.transform.velocity.y += PongGameOptions::paddleAcceleration * PongGameOptions::deltaTime;
+			PongScene::rightPaddle.transform.velocity.y += PongGameOptions::paddleAcceleration * DataCore::deltaTime;
 		}
 	}
 }
@@ -229,16 +230,16 @@ void PongScene::RunPaddleCollision() {
 }
 
 void PongScene::InitScene() {
-	GLuint vertexArrayID = NULL;
-	glGenVertexArrays(1, &vertexArrayID);
-	glBindVertexArray(vertexArrayID);
+	//GLuint vertexArrayID = NULL;
+	//glGenVertexArrays(1, &vertexArrayID);
+	//glBindVertexArray(vertexArrayID);
 
-	// Create and compile glsl from shaders.
-	PongGameOptions::programID = Load::LoadShaders("BasicVertexShader.vertexshader", "BasicFragmentShader.fragmentshader");
+	//// Create and compile glsl from shaders.
+	//PongGameOptions::programID = Load::LoadShaders("BasicVertexShader.vertexshader", "BasicFragmentShader.fragmentshader");
 
-	Matrix::MVPMatrixID = glGetUniformLocation(PongGameOptions::programID, "MVP");
+	//Matrix::MVPMatrixID = glGetUniformLocation(PongGameOptions::programID, "MVP");
 
-	Matrix::projectionMatrix = perspective(FIELD_OF_VIEW, PongGameOptions::aspectRatio, Z_NEAR, Z_FAR);
+	//Matrix::projectionMatrix = perspective(FIELD_OF_VIEW, PongGameOptions::aspectRatio, Z_NEAR, Z_FAR);
 
 	PongScene::leftPaddle = Object(PongGameOptions::leftPaddlePosition, PongGameOptions::paddleScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
 	PongScene::rightPaddle = Object(PongGameOptions::rightPaddlePosition, PongGameOptions::paddleScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());

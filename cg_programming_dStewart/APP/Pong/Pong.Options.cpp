@@ -5,12 +5,11 @@
 
 /////////////////////////////////////////////////////////////////////////////////////
 // PongGameOptions
-float PongGameOptions::aspectRatio = SCREEN_WIDTH / (float)SCREEN_HEIGHT;
-GLuint PongGameOptions::programID = NULL;
+
+
 vec3 PongGameOptions::paddleScale = vec3(0.1f, 1.0f, 1.0f);
 vec3 PongGameOptions::ballScale = vec3(0.1f, 0.1f, 1.0f);
-GLFWwindow* PongGameOptions::window = NULL;
-float PongGameOptions::deltaTime = 0.0f;
+
 vec3 PongGameOptions::ballPosition = vec3(0.0f, 0.0f, 0.0f);
 vec3 PongGameOptions::leftPaddlePosition = vec3(-2.5f, 0.0f, 0.0f);
 vec3 PongGameOptions::rightPaddlePosition = vec3(2.5f, 0.0f, 0.0f);

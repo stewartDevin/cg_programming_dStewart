@@ -16,11 +16,10 @@ using namespace glm;
 static class PongGameOptions {
 public:
 	static float aspectRatio;
-	static GLuint programID;
+
 	static vec3 paddleScale;
 	static vec3 ballScale;
-	static GLFWwindow* window;
-	static float deltaTime;
+
 	static vec3 ballPosition;
 	static vec3 leftPaddlePosition;
 	static vec3 rightPaddlePosition;
