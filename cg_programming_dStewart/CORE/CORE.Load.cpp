@@ -11,11 +11,13 @@ unsigned char Load::FindChar(const char* buffer, const char& c) {
 	char* value = (char*)buffer;
 	unsigned char length = 0;
 
-	while(value != '\0') {
+	while(*value != '\0') {
 		++length;
-		if(*value++ == c) {
+		
+		if(*value == c) {
 			return length;
 		}
+		value++;
 	}
 
 	return length = 0;
@@ -58,6 +60,7 @@ string Load::LoadFile(char* str) {
 				strcpy(path, buffer);
 				path[commaLength - 1] = '\0';
 				++DataCore::numberOfTextures;
+
 				continue;
 				// TODO: Add texture data...
 			}
