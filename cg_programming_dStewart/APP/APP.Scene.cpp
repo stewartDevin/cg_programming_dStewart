@@ -23,19 +23,37 @@ string Scene::loadedLevel = "";
 
 int offset = 0;
 
-void Scene::InitializeScene() {
-	if(!Scene::sceneInitialized) {
+void LoadGrid() {
+	// load grid
+	float xPos = -2.4f;
+	float yPos = 1.8f;
+	float tileScale = 0.2f;
+	float tileSpacing = 0.01f;
+	int xTiles = 24;
+	int yTiles = 24;
 
-		for(int n = 0; n < 5; n++) {
+	for (int m = 0; m < yTiles; ++m) {
+		for (int n = 0; n < xTiles; ++n) {
 			GameObject::CreateObject(
-			vec3(-2.0f + n * 1.0f, 0.0f, 0.0f),
-			vec3(0.8f, 0.8f, 1.0f),
-			Load::LoadColor(vec3(0.5f, 0.5f, 1.0f)),
-			Load::LoadQuad());
+				vec3(xPos + (n * (tileScale + tileSpacing)), yPos - (m * (tileScale + tileSpacing)), 0.0f),
+				vec3(tileScale, tileScale, 1.0f),
+				Load::LoadColor(vec3(0.2f + n*0.4f, 0.5f + n*0.1f, 1.0f - n*0.4f)),
+				Load::LoadQuad());
 		}
+	}
+
+}
+
+void Scene::InitializeScene() {
+	if (!Scene::sceneInitialized) {
 		
+		// Load Grid
+		LoadGrid();
+
+		// load file
 		Scene::loadedFile = Load::LoadFile(LEVEL_0);
 
+		// init scene variable = true;
 		Scene::sceneInitialized = true;
 	}
 }

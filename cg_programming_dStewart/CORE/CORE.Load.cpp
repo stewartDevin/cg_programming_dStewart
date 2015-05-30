@@ -210,6 +210,7 @@ GLuint& Load::LoadColor(vec3 rgb_color) {
 		rgb_color.x, rgb_color.y, rgb_color.z,
 		rgb_color.x, rgb_color.y, rgb_color.z,
 		rgb_color.x, rgb_color.y, rgb_color.z,
+
 		rgb_color.x, rgb_color.y, rgb_color.z,
 		rgb_color.x, rgb_color.y, rgb_color.z,
 		rgb_color.x, rgb_color.y, rgb_color.z
