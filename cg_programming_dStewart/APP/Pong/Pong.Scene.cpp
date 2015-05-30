@@ -13,9 +13,9 @@
 using namespace std;
 
 bool PongScene::initializedPong = false;
-Object PongScene::leftPaddle;
-Object PongScene::rightPaddle;
-Object PongScene::ball;
+GameObject PongScene::leftPaddle;
+GameObject PongScene::rightPaddle;
+GameObject PongScene::ball;
 
 float PongScene::gameTimer = 0.0f;
 bool PongScene::isTimerRunning = true;
@@ -241,9 +241,9 @@ void PongScene::InitScene() {
 
 	//Matrix::projectionMatrix = perspective(FIELD_OF_VIEW, PongGameOptions::aspectRatio, Z_NEAR, Z_FAR);
 
-	PongScene::leftPaddle = Object(PongGameOptions::leftPaddlePosition, PongGameOptions::paddleScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
-	PongScene::rightPaddle = Object(PongGameOptions::rightPaddlePosition, PongGameOptions::paddleScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
-	PongScene::ball = Object(PongGameOptions::ballPosition, PongGameOptions::ballScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
+	PongScene::leftPaddle = GameObject(PongGameOptions::leftPaddlePosition, PongGameOptions::paddleScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
+	PongScene::rightPaddle = GameObject(PongGameOptions::rightPaddlePosition, PongGameOptions::paddleScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
+	PongScene::ball = GameObject(PongGameOptions::ballPosition, PongGameOptions::ballScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
 
 }
 
@@ -277,9 +277,9 @@ int PongScene::PongMainLoop() {
 
 	PongScene::RunGameTimer();
 	PongScene::RunBallBehavior();
-	PongScene::ball.Run();
-	PongScene::leftPaddle.Run();
-	PongScene::rightPaddle.Run();
+	PongScene::ball.Run(&DataCore::camera);
+	PongScene::leftPaddle.Run(&DataCore::camera);
+	PongScene::rightPaddle.Run(&DataCore::camera);
 	PongScene::RunBallConstraints();
 	PongScene::RunPaddleCollision();
 	PongScene::RunPaddleControls();

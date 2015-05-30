@@ -42,9 +42,6 @@
     <ClCompile Include="CORE\CORE.Render.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CORE\CORE.Object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CORE\CORE.Load.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -58,6 +55,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="APP\APP.DataCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CORE\CORE.Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,9 +92,6 @@
     <ClInclude Include="CORE\CORE.Render.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CORE\CORE.Object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CORE\CORE.Load.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -108,6 +105,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="APP\APP.DataCore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CORE\CORE.Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

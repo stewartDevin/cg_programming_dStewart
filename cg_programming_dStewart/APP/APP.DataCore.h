@@ -4,6 +4,7 @@
 #pragma once 
 
 #include "../Application.h"
+#include "../CORE/CORE.Camera.h"
 
 static class DataCore {
 public:
@@ -12,5 +13,6 @@ public:
 	static GLFWwindow* window;
 	static float deltaTime;
 	static int numberOfTextures;
+	static Camera camera;
 
 };

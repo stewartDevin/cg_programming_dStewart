@@ -2,13 +2,13 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include "../../CORE/CORE.Object.h"
+#include "..\..\CORE\CORE.GameObject.h"
 
 static class PongScene {
 public:
-	static Object leftPaddle;
-	static Object rightPaddle;
-	static Object ball;
+	static GameObject leftPaddle;
+	static GameObject rightPaddle;
+	static GameObject ball;
 
 	static float gameTimer;
 	static bool isTimerRunning;

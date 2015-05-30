@@ -27,7 +27,7 @@ void Scene::InitializeScene() {
 	if(!Scene::sceneInitialized) {
 
 		for(int n = 0; n < 5; n++) {
-			Object::CreateObject(
+			GameObject::CreateObject(
 			vec3(-2.0f + n * 1.0f, 0.0f, 0.0f),
 			vec3(0.8f, 0.8f, 1.0f),
 			Load::LoadColor(vec3(0.5f, 0.5f, 1.0f)),
@@ -55,22 +55,23 @@ int Scene::MainLoop() {
 		glUseProgram(DataCore::programID);
 
 		// update the camera matrix...
-		Matrix::viewMatrix = glm::lookAt(
-			vec3(0, 0, 3),		// position
-			vec3(0, 0, 0),		// look at
-			vec3(0, 1, 0)		// up
-			);
+		//Matrix::viewMatrix = glm::lookAt(
+		//	vec3(0, 0, 3),		// position
+		//	vec3(0, 0, 0),		// look at
+		//	vec3(0, 1, 0)		// up
+		//	);
+
+		Scene::InitializeScene();
+		DataCore::camera.Update();
 
 		// Run Keyboard Input
 		Keyboard::RunKeyboardKeys();
 
 		// Run Objects
-		Object::RunAllObjects();
+		GameObject::RunAllObjects();
 
-		Scene::InitializeScene();
 		// Run Pong
 		//PongScene::PongMainLoop();
-
 
 		// swap the screen buffers...
 		glfwSwapBuffers(DataCore::window);

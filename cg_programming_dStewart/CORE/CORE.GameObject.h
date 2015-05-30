@@ -4,6 +4,7 @@
 #pragma once
 #include "../Application.h"
 #include "CORE.Transform.h"
+#include "CORE.Camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // GameObject
@@ -15,10 +16,19 @@ public:
 	mat4 MVPMatrix;
 	bool initialized;
 
-	GameObject::GameObject() {
+	GameObject::GameObject(vec3 position, vec3 scale, GLuint colorID, GLuint objectID);
 
-	}
+	GameObject::GameObject();
 
-	virtual void Init() = 0;
-	virtual void Run() = 0;
+	static GameObject* GameObject::CreateObject(vec3 position, vec3 scale, GLuint colorID, GLuint objectID);
+
+	static void GameObject::DeleteObject(GameObject* object);
+
+	static void RunAllObjects();
+
+	void DeleteObject();
+
+	void Init();
+
+	void Run(Camera* camera);
 };

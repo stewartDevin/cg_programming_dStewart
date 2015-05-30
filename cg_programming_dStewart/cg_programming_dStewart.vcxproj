@@ -18,7 +18,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -80,12 +80,12 @@
     <ClCompile Include="APP\APP.Scene.cpp" />
     <ClCompile Include="APP\Pong\Pong.Options.cpp" />
     <ClCompile Include="APP\Pong\Pong.Scene.cpp" />
+    <ClCompile Include="CORE\CORE.Camera.cpp" />
     <ClCompile Include="CORE\CORE.GameObject.cpp" />
     <ClCompile Include="CORE\CORE.GL_Init.cpp" />
     <ClCompile Include="CORE\CORE.Keyboard.cpp" />
     <ClCompile Include="CORE\CORE.Load.cpp" />
     <ClCompile Include="CORE\CORE.Matrix.cpp" />
-    <ClCompile Include="CORE\CORE.Object.cpp" />
     <ClCompile Include="CORE\CORE.Render.cpp" />
     <ClCompile Include="CORE\CORE.Transform.cpp" />
     <ClCompile Include="CORE\CORE.Utility.cpp" />
@@ -98,12 +98,12 @@
     <ClInclude Include="APP\APP.Scene.h" />
     <ClInclude Include="APP\Pong\Pong.Options.h" />
     <ClInclude Include="APP\Pong\Pong.Scene.h" />
+    <ClInclude Include="CORE\CORE.Camera.h" />
     <ClInclude Include="CORE\CORE.GameObject.h" />
     <ClInclude Include="CORE\CORE.GL_Init.h" />
     <ClInclude Include="CORE\CORE.Keyboard.h" />
     <ClInclude Include="CORE\CORE.Load.h" />
     <ClInclude Include="CORE\CORE.Matrix.h" />
-    <ClInclude Include="CORE\CORE.Object.h" />
     <ClInclude Include="CORE\CORE.Render.h" />
     <ClInclude Include="CORE\CORE.Transform.h" />
     <ClInclude Include="CORE\CORE.Utility.h" />
