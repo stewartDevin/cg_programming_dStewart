@@ -1,6 +1,7 @@
 // APP.Scene.cpp
 //////////////////////////////////////////////////////////////////////////
 
+#include "../Application.h"
 #include "../CORE/CORE.Utility.h"
 #include "../CORE/CORE.Keyboard.h"
 #include "../CORE/CORE.Matrix.h"
@@ -52,6 +53,21 @@ void Scene::InitializeScene() {
 
 		// load file
 		Scene::loadedFile = Load::LoadFile(LEVEL_0);
+		
+		/* load an image file directly as a new OpenGL texture */
+		GLuint tex_2d = SOIL_load_OGL_texture
+			(
+			"Assets/Images/grass.png",
+			SOIL_LOAD_AUTO,
+			SOIL_CREATE_NEW_ID,
+			SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+			);
+
+		/* check for an error during the load process */
+		if (0 == tex_2d)
+		{
+			printf("SOIL loading error: '%s'\n", SOIL_last_result());
+		}
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
@@ -80,11 +96,11 @@ int Scene::MainLoop() {
 		//	);
 
 		Scene::InitializeScene();
-		DataCore::camera.Update();
-
+		
 		// Run Keyboard Input
 		Keyboard::RunKeyboardKeys();
 
+		DataCore::camera.Update();
 		// Run Objects
 		GameObject::RunAllObjects();
 

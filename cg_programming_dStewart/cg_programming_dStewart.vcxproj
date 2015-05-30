@@ -39,23 +39,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>$(ProjectDir)\..\Libraries\glew-1.12.0-win32\glew-1.12.0\lib\Release\Win32;$(ProjectDir)\..\Libraries\glfw-3.1.1.bin.WIN32\lib-vc2013;$(ProjectDir)\..\Libraries\glm-0.9.6.3\glm;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)\..\Libraries\glew-1.12.0-win32\glew-1.12.0\lib\Release\Win32;$(ProjectDir)\..\Libraries\glfw-3.1.1.bin.WIN32\lib-vc2013;$(ProjectDir)\..\Libraries\glm-0.9.6.3\glm;$(ProjectDir)\..\Libraries\Simple OpenGL Image Library\lib;$(LibraryPath)</LibraryPath>
     <IncludePath>glew32.dll;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>$(ProjectDir)\..\Libraries\glew-1.12.0-win32\glew-1.12.0\lib\Release\Win32;$(ProjectDir)\..\Libraries\glfw-3.1.1.bin.WIN32\lib-vc2013;$(ProjectDir)\..\Libraries\glm-0.9.6.3\glm;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)\..\Libraries\glew-1.12.0-win32\glew-1.12.0\lib\Release\Win32;$(ProjectDir)\..\Libraries\glfw-3.1.1.bin.WIN32\lib-vc2013;$(ProjectDir)\..\Libraries\glm-0.9.6.3\glm;$(ProjectDir)\..\Libraries\Simple OpenGL Image Library\lib;$(LibraryPath)</LibraryPath>
     <IncludePath>glew32.dll;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\Libraries\glew-1.12.0-win32\glew-1.12.0\include;$(ProjectDir)\..\Libraries\glfw-3.1.1.bin.WIN32\include;$(ProjectDir)\..\Libraries\glm-0.9.6.3\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\Libraries\glew-1.12.0-win32\glew-1.12.0\include;$(ProjectDir)\..\Libraries\glfw-3.1.1.bin.WIN32\include;$(ProjectDir)\..\Libraries\glm-0.9.6.3\glm\glm;$(ProjectDir)\..\Libraries\Simple OpenGL Image Library\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3dll.lib;glfw3.lib;glew32.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)\..\Libraries\glew-1.12.0-win32\glew-1.12.0\lib\Release\Win32;$(ProjectDir)\..\Libraries\glfw-3.1.1.bin.WIN32\lib-vc2013;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3dll.lib;glfw3.lib;glew32.lib;glew32s.lib;opengl32.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\..\Libraries\glew-1.12.0-win32\glew-1.12.0\lib\Release\Win32;$(ProjectDir)\..\Libraries\glfw-3.1.1.bin.WIN32\lib-vc2013;$(ProjectDir)\..\Libraries\Simple OpenGL Image Library\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -64,14 +64,14 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\Libraries\glew-1.12.0-win32\glew-1.12.0\include;$(ProjectDir)\..\Libraries\glfw-3.1.1.bin.WIN32\include;$(ProjectDir)\..\Libraries\glm-0.9.6.3\glm\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\Libraries\glew-1.12.0-win32\glew-1.12.0\include;$(ProjectDir)\..\Libraries\glfw-3.1.1.bin.WIN32\include;$(ProjectDir)\..\Libraries\glm-0.9.6.3\glm\glm;$(ProjectDir)\..\Libraries\Simple OpenGL Image Library\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glfw3dll.lib;glfw3.lib;glew32.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)\..\Libraries\glew-1.12.0-win32\glew-1.12.0\lib\Release\Win32;$(ProjectDir)\..\Libraries\glfw-3.1.1.bin.WIN32\lib-vc2013;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3dll.lib;glfw3.lib;glew32.lib;glew32s.lib;opengl32.lib;SOIL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\..\Libraries\glew-1.12.0-win32\glew-1.12.0\lib\Release\Win32;$(ProjectDir)\..\Libraries\glfw-3.1.1.bin.WIN32\lib-vc2013;$(ProjectDir)\..\Libraries\Simple OpenGL Image Library\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -114,6 +114,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicFragmentShader.fragmentshader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Images\grass.png" />
+    <Image Include="Assets\Images\grassTile01.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
