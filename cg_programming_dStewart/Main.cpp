@@ -25,11 +25,15 @@ int main() {
 	// Create and compile glsl from shaders.
 	DataCore::programID = Load::LoadShaders("BasicVertexShader.vertexshader", "BasicFragmentShader.fragmentshader");
 
+	// init camera.
+	// link the shaders to the camera.
 	DataCore::camera.MVPMatrixID = glGetUniformLocation(DataCore::programID, "MVP");
-
+	// init perspective.
 	DataCore::camera.projectionMatrix = perspective(FIELD_OF_VIEW, DataCore::aspectRatio, Z_NEAR, Z_FAR);
 
+	// run the main loop of the program.
 	if (Scene::MainLoop() == EXIT_WITH_ERROR) return EXIT_WITH_ERROR;
 
+	// exit with success.
 	return EXIT_WITH_SUCCESS;
 }

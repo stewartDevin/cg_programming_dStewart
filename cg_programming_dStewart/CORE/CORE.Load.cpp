@@ -59,7 +59,6 @@ string Load::LoadFile(char* str) {
 			if(commaLength > 0) {
 				strcpy(path, buffer);
 				path[commaLength - 1] = '\0';
-				++DataCore::numberOfTextures;
 
 				continue;
 				// TODO: Add texture data...

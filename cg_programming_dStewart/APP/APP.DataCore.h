@@ -9,10 +9,12 @@
 static class DataCore {
 public:
 	static GLuint programID;
-	static float aspectRatio;
-	static GLFWwindow* window;
-	static float deltaTime;
-	static int numberOfTextures;
-	static Camera camera;
 
+	static float aspectRatio;
+
+	static GLFWwindow* window;
+
+	static float deltaTime;
+
+	static Camera camera;
 };
