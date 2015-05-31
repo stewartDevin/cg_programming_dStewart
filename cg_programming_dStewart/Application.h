@@ -13,12 +13,17 @@
 #include <fstream>
 #include <string>
 #include <time.h>
+#include <windows.h>
+
 
 #include <GL/glew.h>
+
+#include "GL/GL.h"
+
 #include <GLFW/glfw3.h>
 #include <glm.hpp>
 #include "gtc/matrix_transform.hpp"
-#include "SOIL.h"
+
 
 #define GLFW_DLL
 #define APP_NAME "Devin Stewart -- Application"
@@ -32,10 +37,6 @@
 #define Z_NEAR 0.1f
 #define Z_FAR 100.0f
 #define GLFW_OK 0
-
-extern GLFWwindow* window;
-extern GLint shaderStatus;
-extern bool activeRef;
 
 // using namespaces
 using namespace std;

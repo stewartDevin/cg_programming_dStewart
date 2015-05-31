@@ -12,6 +12,7 @@
 #include "Pong\Pong.Options.h"
 #include "Pong\Pong.Scene.h"
 #include "APP.DataCore.h"
+#include "SOIL.h"
 using namespace std;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,8 +22,6 @@ bool Scene::sceneInitialized = false;
 
 string Scene::loadedFile = "";
 string Scene::loadedLevel = "";
-
-int offset = 0;
 
 void LoadGrid() {
 	// load grid
@@ -45,6 +44,44 @@ void LoadGrid() {
 
 }
 
+void loadTexture(GLuint* texture, char* path){
+	*texture = SOIL_load_OGL_texture(path,
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_MULTIPLY_ALPHA
+		);
+	if (*texture == NULL){
+		printf("[Texture loader] \"%s\" failed to load!\n", path);
+	}
+}
+
+void drawTexturedRect(int x, int y, int w, int h, GLuint texture){
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDepthMask(GL_FALSE);
+	glDisable(GL_DEPTH_TEST);
+	glBegin(GL_QUADS);
+	glColor3f(255, 255, 255);
+	glTexCoord2f(0, 0);
+	glVertex2f(x, y);
+	glTexCoord2f(1, 0);
+	glVertex2f(x + w, y);
+	glTexCoord2f(0, 1);
+	glVertex2f(x, y + h);
+	glTexCoord2f(1, 1);
+	glVertex2f(x + w, y + h);
+	glTexCoord2f(0, 1);
+	glVertex2f(x, y + h);
+	glEnd();
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDisable(GL_BLEND);
+}
+
+
+GLuint texture1 = NULL;
 void Scene::InitializeScene() {
 	if (!Scene::sceneInitialized) {
 		
@@ -54,20 +91,9 @@ void Scene::InitializeScene() {
 		// load file
 		Scene::loadedFile = Load::LoadFile(LEVEL_0);
 		
+		
 		/* load an image file directly as a new OpenGL texture */
-		GLuint tex_2d = SOIL_load_OGL_texture
-			(
-			"Assets/Images/grass.png",
-			SOIL_LOAD_AUTO,
-			SOIL_CREATE_NEW_ID,
-			SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
-			);
-
-		/* check for an error during the load process */
-		if (0 == tex_2d)
-		{
-			printf("SOIL loading error: '%s'\n", SOIL_last_result());
-		}
+		loadTexture(&texture1, "Assets/Images/grass.png");
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
@@ -88,21 +114,15 @@ int Scene::MainLoop() {
 		// tell openGL to use our program...
 		glUseProgram(DataCore::programID);
 
-		// update the camera matrix...
-		//Matrix::viewMatrix = glm::lookAt(
-		//	vec3(0, 0, 3),		// position
-		//	vec3(0, 0, 0),		// look at
-		//	vec3(0, 1, 0)		// up
-		//	);
-
-		Scene::InitializeScene();
-		
 		// Run Keyboard Input
 		Keyboard::RunKeyboardKeys();
+
+		Scene::InitializeScene();
 
 		DataCore::camera.Update();
 		// Run Objects
 		GameObject::RunAllObjects();
+		drawTexturedRect(25, 25, 256, 256, texture1);
 
 		// Run Pong
 		//PongScene::PongMainLoop();
