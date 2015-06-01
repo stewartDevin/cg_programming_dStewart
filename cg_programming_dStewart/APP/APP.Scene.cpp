@@ -48,7 +48,7 @@ void LoadGrid() {
 
 }
 
-void loadTexture(GLuint* texture, char* path){
+void _LoadTexture(GLuint* texture, char* path){
 	if(texture == NULL) return;
 	GLuint n = SOIL_load_OGL_texture(path,
 		SOIL_LOAD_AUTO,
@@ -59,6 +59,12 @@ void loadTexture(GLuint* texture, char* path){
 	if (*texture == NULL){
 		printf("[Texture loader] \"%s\" failed to load!\n", path);
 	}
+	glActiveTexture(GL_TEXTURE0 + DataCore::numberOfTextures);
+	++DataCore::numberOfTextures;
+	//GLuint textureID = glGetUniformLocation(DataCore::programID, "myTextureSampler");
+	//glUniform1i(textureID, 1);
+	glBindTexture(GL_TEXTURE_2D, n);
+
 }
 
 
@@ -73,20 +79,12 @@ void Scene::InitializeScene() {
 
 		/* load an image file directly as a new OpenGL texture */
 		// grass
-		glActiveTexture(GL_TEXTURE0);
 		GLuint grassTexture = NULL;
-		loadTexture(&grassTexture, "./Assets/Images/grass1.png");
-		GLuint grassTextureID = glGetUniformLocation(DataCore::programID, "myTextureSampler");
-		glBindTexture(GL_TEXTURE_2D, grassTexture);
-		glUniform1i(grassTextureID, 0);
-
-		// dirt
-		/*glActiveTexture(GL_TEXTURE1);
+		//_LoadTexture(&grassTexture, "./Assets/Images/grass.jpg");
+		_LoadTexture(&grassTexture, "./Assets/Images/grass2.png");
 		GLuint dirtTexture = NULL;
-		loadTexture(&dirtTexture, "./Assets/Images/dirt.jpg");
-		GLuint dirtTextureID = glGetUniformLocation(DataCore::dirtID, "myTextureSampler");
-		glBindTexture(GL_TEXTURE_2D, dirtTexture);
-		glUniform1i(dirtTextureID, 1);*/
+		_LoadTexture(&dirtTexture, "./Assets/Images/dirt.jpg");
+
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
@@ -106,8 +104,7 @@ int Scene::MainLoop() {
 		DataCore::deltaTime = Utility::getDeltaTime();
 
 		// tell openGL to use our program...
-		//glUseProgram(DataCore::programID);
-		glUseProgram(DataCore::dirtID);
+		glUseProgram(DataCore::programID);
 
 		// Run Keyboard Input
 		Keyboard::RunKeyboardKeys();		
@@ -117,7 +114,7 @@ int Scene::MainLoop() {
 		GameObject::RunAllObjects();
 
 		// Run Pong
-		//PongScene::PongMainLoop();
+		PongScene::PongMainLoop();
 
 		// swap the screen buffers...
 		glfwSwapBuffers(DataCore::window);

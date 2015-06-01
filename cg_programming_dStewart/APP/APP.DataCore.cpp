@@ -5,7 +5,10 @@
 
 // program id
 GLuint DataCore::programID = NULL;
-GLuint DataCore::dirtID = NULL;
+//GLuint DataCore::dirtID = NULL;
+
+// number of textures
+int DataCore::numberOfTextures = 0;
 
 // screen aspect ratio
 float DataCore::aspectRatio = SCREEN_WIDTH / (float)SCREEN_HEIGHT;

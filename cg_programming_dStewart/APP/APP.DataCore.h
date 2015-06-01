@@ -8,8 +8,9 @@
 
 static class DataCore {
 public:
+	static int numberOfTextures;
 	static GLuint programID;
-	static GLuint dirtID;
+	//static GLuint dirtID;
 
 	static float aspectRatio;
 
