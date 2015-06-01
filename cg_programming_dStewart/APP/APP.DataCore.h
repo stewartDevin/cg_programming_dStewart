@@ -9,6 +9,7 @@
 static class DataCore {
 public:
 	static GLuint programID;
+	static GLuint dirtID;
 
 	static float aspectRatio;
 

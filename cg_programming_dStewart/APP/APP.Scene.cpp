@@ -27,73 +27,66 @@ void LoadGrid() {
 	// load grid
 	float xPos = -2.4f;
 	float yPos = 1.8f;
-	float tileScale = 0.2f;
-	float tileSpacing = 0.01f;
-	int xTiles = 24;
-	int yTiles = 24;
+	float tileScale = 0.4f;
+	float tileSpacing = 0.0f;
+	int xTiles = 16;
+	int yTiles = 16;
 
 	for (int m = 0; m < yTiles; ++m) {
 		for (int n = 0; n < xTiles; ++n) {
+
+			BufferObject bufferObj = BufferObject();
+			bufferObj.vertexBuffer = Load::LoadQuad();
+			bufferObj.uvBuffer = Load::LoadUVs();
+
 			GameObject::CreateObject(
 				vec3(xPos + (n * (tileScale + tileSpacing)), yPos - (m * (tileScale + tileSpacing)), 0.0f),
 				vec3(tileScale, tileScale, 1.0f),
-				Load::LoadColor(vec3(0.2f + n*0.4f, 0.5f + n*0.1f, 1.0f - n*0.4f)),
-				Load::LoadQuad());
+				bufferObj);
 		}
 	}
 
 }
 
 void loadTexture(GLuint* texture, char* path){
-	*texture = SOIL_load_OGL_texture(path,
+	if(texture == NULL) return;
+	GLuint n = SOIL_load_OGL_texture(path,
 		SOIL_LOAD_AUTO,
 		SOIL_CREATE_NEW_ID,
 		SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_MULTIPLY_ALPHA
 		);
+	*texture = n;
 	if (*texture == NULL){
 		printf("[Texture loader] \"%s\" failed to load!\n", path);
 	}
 }
 
-void drawTexturedRect(int x, int y, int w, int h, GLuint texture){
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDepthMask(GL_FALSE);
-	glDisable(GL_DEPTH_TEST);
-	glBegin(GL_QUADS);
-	glColor3f(255, 255, 255);
-	glTexCoord2f(0, 0);
-	glVertex2f(x, y);
-	glTexCoord2f(1, 0);
-	glVertex2f(x + w, y);
-	glTexCoord2f(0, 1);
-	glVertex2f(x, y + h);
-	glTexCoord2f(1, 1);
-	glVertex2f(x + w, y + h);
-	glTexCoord2f(0, 1);
-	glVertex2f(x, y + h);
-	glEnd();
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);
-	glDisable(GL_BLEND);
-}
 
-
-GLuint texture1 = NULL;
 void Scene::InitializeScene() {
 	if (!Scene::sceneInitialized) {
-		
+
 		// Load Grid
 		LoadGrid();
 
 		// load file
 		Scene::loadedFile = Load::LoadFile(LEVEL_0);
-		
-		
+
 		/* load an image file directly as a new OpenGL texture */
-		loadTexture(&texture1, "Assets/Images/grass.png");
+		// grass
+		glActiveTexture(GL_TEXTURE0);
+		GLuint grassTexture = NULL;
+		loadTexture(&grassTexture, "./Assets/Images/grass1.png");
+		GLuint grassTextureID = glGetUniformLocation(DataCore::programID, "myTextureSampler");
+		glBindTexture(GL_TEXTURE_2D, grassTexture);
+		glUniform1i(grassTextureID, 0);
+
+		// dirt
+		/*glActiveTexture(GL_TEXTURE1);
+		GLuint dirtTexture = NULL;
+		loadTexture(&dirtTexture, "./Assets/Images/dirt.jpg");
+		GLuint dirtTextureID = glGetUniformLocation(DataCore::dirtID, "myTextureSampler");
+		glBindTexture(GL_TEXTURE_2D, dirtTexture);
+		glUniform1i(dirtTextureID, 1);*/
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
@@ -103,6 +96,7 @@ void Scene::InitializeScene() {
 vector<GameObject*> Scene::listOfObjects;
 
 int Scene::MainLoop() {
+	Scene::InitializeScene();
 	do {
 		// clear the screen...
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -112,17 +106,15 @@ int Scene::MainLoop() {
 		DataCore::deltaTime = Utility::getDeltaTime();
 
 		// tell openGL to use our program...
-		glUseProgram(DataCore::programID);
+		//glUseProgram(DataCore::programID);
+		glUseProgram(DataCore::dirtID);
 
 		// Run Keyboard Input
-		Keyboard::RunKeyboardKeys();
-
-		Scene::InitializeScene();
+		Keyboard::RunKeyboardKeys();		
 
 		DataCore::camera.Update();
 		// Run Objects
 		GameObject::RunAllObjects();
-		drawTexturedRect(25, 25, 256, 256, texture1);
 
 		// Run Pong
 		//PongScene::PongMainLoop();
@@ -134,6 +126,13 @@ int Scene::MainLoop() {
 
 	} while (glfwGetKey(DataCore::window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 		glfwWindowShouldClose(DataCore::window) == 0);
+
+	int save_result = SOIL_save_screenshot
+		(
+		"screenshot.bmp",
+		SOIL_SAVE_TYPE_BMP,
+		0, 0, 1024, 768
+		);
 
 	return EXIT_WITH_SUCCESS;
 }

@@ -9,6 +9,7 @@
 #include "../CORE/CORE.GL_Init.h"
 #include "../Pong/Pong.Options.h"
 #include "../APP.DataCore.h"
+#include "../../CORE/CORE.BufferObject.h"
 #include <vector>
 using namespace std;
 
@@ -229,6 +230,8 @@ void PongScene::RunPaddleCollision() {
 	PongScene::RunRightPaddleCollision();
 }
 
+BufferObject bufferObj;
+
 void PongScene::InitScene() {
 	//GLuint vertexArrayID = NULL;
 	//glGenVertexArrays(1, &vertexArrayID);
@@ -240,10 +243,13 @@ void PongScene::InitScene() {
 	//Matrix::MVPMatrixID = glGetUniformLocation(PongGameOptions::programID, "MVP");
 
 	//Matrix::projectionMatrix = perspective(FIELD_OF_VIEW, PongGameOptions::aspectRatio, Z_NEAR, Z_FAR);
+	
+	bufferObj.vertexBuffer =  Load::LoadQuad();
+	bufferObj.vertexColorBuffer = Load::LoadColor(vec3(1.0f, 1.0f, 1.0f));
 
-	PongScene::leftPaddle = GameObject(PongGameOptions::leftPaddlePosition, PongGameOptions::paddleScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
-	PongScene::rightPaddle = GameObject(PongGameOptions::rightPaddlePosition, PongGameOptions::paddleScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
-	PongScene::ball = GameObject(PongGameOptions::ballPosition, PongGameOptions::ballScale, Load::LoadColor(vec3(1.0f, 1.0f, 1.0f)), Load::LoadQuad());
+	PongScene::leftPaddle = GameObject(PongGameOptions::leftPaddlePosition, PongGameOptions::paddleScale, bufferObj);
+	PongScene::rightPaddle = GameObject(PongGameOptions::rightPaddlePosition, PongGameOptions::paddleScale, bufferObj);
+	PongScene::ball = GameObject(PongGameOptions::ballPosition, PongGameOptions::ballScale, bufferObj);
 
 }
 

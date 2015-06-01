@@ -2,6 +2,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "CORE.Render.h"
+#include "CORE.BufferObject.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Render
@@ -38,29 +39,35 @@
 			);
 	}
 
-	//void Render::RenderTriangle(GLuint vertexBuffer, GLuint colorBuffer) {
-	//	RenderVertex(vertexBuffer);
-	//	RenderColor(colorBuffer);
-	//
-	//	glDrawArrays(GL_TRIANGLES, 0, 3);
-	//	glDisableVertexAttribArray(0);
-	//	glDisableVertexAttribArray(1);
-	//}
+	void Render::RenderUVs(GLuint vertexBuffer) {
+		glEnableVertexAttribArray(2);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
-	glm::mat4 Render::RenderQuad(GLuint vertexBuffer, const vec3& position, GLuint colorBuffer, const vec3& scaleVec) {
-		mat4 positionMatrix = RenderVertex(vertexBuffer, position, scaleVec);
+		glVertexAttribPointer(
+			2,			// attribute layout
+			2,			// how many elements in array? 
+			GL_FLOAT,   // what datatype?
+			GL_FALSE,   // normalized?
+			0,			// stride...
+			(void*)0	// array buffer offset...
+			);
+	}
 
-		RenderColor(colorBuffer);
+	glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, const vec3& scaleVec) {
+		mat4 positionMatrix = RenderVertex(bufferObject->vertexBuffer, position, scaleVec);
+
+		//RenderColor(colorBuffer);
+
+		if(bufferObject->vertexColorBuffer != NULL) {
+			RenderColor(bufferObject->vertexColorBuffer);
+		}
+		if(bufferObject->uvBuffer != NULL) {
+			RenderUVs(bufferObject->uvBuffer);
+		}
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glDisableVertexAttribArray(0);
 		return positionMatrix;
 	}
 
-	glm::mat4 Render::RenderQuad(GLuint vertexBuffer, const vec3& position, const vec3& scaleVec) {
-		mat4 positionMatrix = RenderVertex(vertexBuffer, position, scaleVec);
-
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glDisableVertexAttribArray(0);
-		return positionMatrix;
-	}
+	

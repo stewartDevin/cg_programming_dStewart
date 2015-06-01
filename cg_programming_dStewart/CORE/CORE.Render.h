@@ -3,6 +3,7 @@
 
 #pragma once
 #include "../Application.h"
+#include "../CORE/CORE.BufferObject.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Render
@@ -14,8 +15,10 @@ public:
 
 	//static void RenderTriangle(GLuint vertexBuffer, GLuint colorBuffer);
 
-	static glm::mat4 RenderQuad(GLuint vertexBuffer, const vec3& position, GLuint colorBuffer, const vec3& scaleVec);
+	static glm::mat4 RenderQuad(BufferObject* bufferObject, const vec3& position, const vec3& scaleVec);
 
-	static glm::mat4 RenderQuad(GLuint vertexBuffer, const vec3& position, const vec3& scaleVec);
+	//static glm::mat4 RenderQuad(GLuint vertexBuffer, const vec3& position, const vec3& scaleVec);
+
+	static void Render::RenderUVs(GLuint vertexBuffer);
 
 };

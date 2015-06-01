@@ -5,6 +5,7 @@
 
 // program id
 GLuint DataCore::programID = NULL;
+GLuint DataCore::dirtID = NULL;
 
 // screen aspect ratio
 float DataCore::aspectRatio = SCREEN_WIDTH / (float)SCREEN_HEIGHT;

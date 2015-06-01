@@ -60,6 +60,9 @@
     <ClCompile Include="CORE\CORE.Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CORE\CORE.BufferObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -110,6 +113,9 @@
     <ClInclude Include="CORE\CORE.Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CORE\CORE.BufferObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="BasicVertexShader.vertexshader">
@@ -126,9 +132,6 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Assets\Images\grass.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="grass.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

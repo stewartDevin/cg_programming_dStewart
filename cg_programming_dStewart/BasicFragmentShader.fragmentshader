@@ -1,11 +1,15 @@
 #version 330 core
 
-// output data
+in vec2 UV;
+uniform sampler2D myTextureSampler;
+
 out vec3 color;
 smooth in vec3 fragColor;
 
 void main() {
 	// output color = white
 	//color = vec3(1, 1, 1);
-	color = fragColor;
+
+	//color = fragColor;
+	color = texture2D( myTextureSampler, UV ).rgb;
 }

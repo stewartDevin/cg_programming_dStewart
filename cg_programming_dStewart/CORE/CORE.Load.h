@@ -12,6 +12,7 @@ public:
 	static string Load::LoadFile(char* str);
 
 	static GLuint& LoadQuad();
+	static GLuint& LoadUVs();
 
 	static GLuint& LoadTriangle();
 

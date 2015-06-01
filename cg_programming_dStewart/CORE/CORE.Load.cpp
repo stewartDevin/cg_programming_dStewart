@@ -163,6 +163,26 @@ GLuint Load::LoadShaders(const char* vertex_file_path, const char* fragment_file
 	return programID;
 }
 
+GLuint& Load::LoadUVs() {
+
+	GLfloat g_UV_buffer_data[] = {
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		1.0f, 1.0f,
+
+		0.0f, 0.0f,
+		1.0f, 1.0f,
+		0.0f, 1.0f
+	};
+
+	GLuint uvbuffer = 0;
+	glGenBuffers(1, &uvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_UV_buffer_data), g_UV_buffer_data, GL_STATIC_DRAW);
+
+	return uvbuffer;
+}
+
 GLuint& Load::LoadQuad() {
 	float offset = 0.5f;
 
@@ -186,6 +206,8 @@ GLuint& Load::LoadQuad() {
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+	
 
 	return vertexBuffer;
 }
