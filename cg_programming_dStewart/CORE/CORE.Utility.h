@@ -6,9 +6,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Utility
-static class Utility {
+class Utility {
 public:
-	static float& getDeltaTime();
+	static float getDeltaTime();
 
 	static vec3 NormalizeVector3(vec3 vector);
 

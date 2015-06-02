@@ -23,7 +23,7 @@
 #include <GLFW/glfw3.h>
 #include <glm.hpp>
 #include "gtc/matrix_transform.hpp"
-
+#include "SOIL.h"
 
 #define GLFW_DLL
 #define APP_NAME "Devin Stewart -- Application"

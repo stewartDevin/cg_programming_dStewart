@@ -18,7 +18,7 @@ using namespace std;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Scene
-static class Scene {
+class Scene {
 public:
 	static vector<GameObject*> listOfObjects;
 

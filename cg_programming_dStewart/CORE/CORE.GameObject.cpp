@@ -56,7 +56,7 @@ void GameObject::Run(Camera* camera) {
 }
 
 void GameObject::RunAllObjects() {
-	for (int n = 0; n < Scene::listOfObjects.size(); n++) {
+	for (unsigned int n = 0; n < Scene::listOfObjects.size(); n++) {
 		GameObject* obj = Scene::listOfObjects[n];
 		obj->Run(&DataCore::camera);
 	}

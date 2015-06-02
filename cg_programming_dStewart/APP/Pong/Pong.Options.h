@@ -13,7 +13,7 @@ using namespace glm;
 
 ///////////////////////////////////////////////////////////////////////////////
 // PongGameOptions
-static class PongGameOptions {
+class PongGameOptions {
 public:
 	static float aspectRatio;
 

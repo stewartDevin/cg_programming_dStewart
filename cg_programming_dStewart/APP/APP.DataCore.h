@@ -6,7 +6,7 @@
 #include "../Application.h"
 #include "../CORE/CORE.Camera.h"
 
-static class DataCore {
+class DataCore {
 public:
 	static int numberOfTextures;
 	static GLuint programID;

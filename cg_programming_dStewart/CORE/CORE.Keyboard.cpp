@@ -12,6 +12,8 @@ bool Keyboard::W = false;
 bool Keyboard::A = false;
 bool Keyboard::S = false;
 bool Keyboard::D = false;
+bool Keyboard::Q = false;
+bool Keyboard::E = false;
 bool Keyboard::UpArrow = false;
 bool Keyboard::LeftArrow = false;
 bool Keyboard::RightArrow = false;
@@ -48,6 +50,20 @@ void Keyboard::RunKeyboardKeys() {
 	}
 	else {
 		Keyboard::D = false;
+	}
+
+	if (glfwGetKey(DataCore::window, GLFW_KEY_Q) == GLFW_PRESS) {
+		Keyboard::Q = true;
+	}
+	else {
+		Keyboard::Q = false;
+	}
+
+	if (glfwGetKey(DataCore::window, GLFW_KEY_E) == GLFW_PRESS) {
+		Keyboard::E = true;
+	}
+	else {
+		Keyboard::E = false;
 	}
 
 	if (glfwGetKey(DataCore::window, GLFW_KEY_UP) == GLFW_PRESS) {

@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Render
-static class Render {
+class Render {
 public:
 	static glm::mat4 RenderVertex(GLuint vertexBuffer, const vec3& position, const vec3& scaleVec);
 

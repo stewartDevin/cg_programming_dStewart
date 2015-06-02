@@ -5,12 +5,14 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Keyboard
-static class Keyboard {
+class Keyboard {
 public:
 	static bool W;
 	static bool A;
 	static bool S;
 	static bool D;
+	static bool Q;
+	static bool E;
 	static bool UpArrow;
 	static bool LeftArrow;
 	static bool RightArrow;

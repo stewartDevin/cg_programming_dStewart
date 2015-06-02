@@ -12,7 +12,6 @@
 #include "Pong\Pong.Options.h"
 #include "Pong\Pong.Scene.h"
 #include "APP.DataCore.h"
-#include "SOIL.h"
 using namespace std;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,7 +34,7 @@ void LoadGrid() {
 	for (int m = 0; m < yTiles; ++m) {
 		for (int n = 0; n < xTiles; ++n) {
 
-			BufferObject bufferObj = BufferObject();
+			BufferObject bufferObj;
 			bufferObj.vertexBuffer = Load::LoadQuad();
 			bufferObj.uvBuffer = Load::LoadUVs();
 
@@ -60,7 +59,7 @@ void _LoadTexture(GLuint* texture, char* path){
 		printf("[Texture loader] \"%s\" failed to load!\n", path);
 	}
 	glActiveTexture(GL_TEXTURE0 + DataCore::numberOfTextures);
-	++DataCore::numberOfTextures;
+	DataCore::numberOfTextures++;
 	//GLuint textureID = glGetUniformLocation(DataCore::programID, "myTextureSampler");
 	//glUniform1i(textureID, 1);
 	glBindTexture(GL_TEXTURE_2D, n);
@@ -76,7 +75,7 @@ void Scene::InitializeScene() {
 
 		// load file
 		//Scene::loadedFile = Load::LoadFile(LEVEL_0);
-		//Load::LoadFile(LEVEL_0);
+		Load::LoadFile(LEVEL_0);
 		/* load an image file directly as a new OpenGL texture */
 		// grass
 		GLuint grassTexture = NULL;
@@ -93,6 +92,38 @@ void Scene::InitializeScene() {
 
 vector<GameObject*> Scene::listOfObjects;
 
+void RunControls(vec3& position, float const& speed) {
+	if (Keyboard::W || Keyboard::UpArrow) {
+		position.z -= speed * DataCore::deltaTime;
+	}
+	if (Keyboard::A || Keyboard::LeftArrow) {
+		position.y += speed * DataCore::deltaTime;
+	}
+	if (Keyboard::S || Keyboard::DownArrow) {
+		position.z += speed * DataCore::deltaTime;
+	}
+	if (Keyboard::D || Keyboard::RightArrow) {
+		position.y -= speed * DataCore::deltaTime;
+	}
+	if (Keyboard::Q) {
+		position.x -= speed * DataCore::deltaTime;
+	}
+	if (Keyboard::E) {
+		position.x += speed * DataCore::deltaTime;
+	}
+}
+
+void Update() {
+	
+	RunControls(DataCore::camera.transform.position, 1.0f);
+	// update the camera
+	DataCore::camera.Update();
+	// Run Objects
+	GameObject::RunAllObjects();
+	// Run Pong
+	//PongScene::PongMainLoop();
+}
+
 int Scene::MainLoop() {
 	Scene::InitializeScene();
 	do {
@@ -105,17 +136,10 @@ int Scene::MainLoop() {
 
 		// tell openGL to use our program...
 		glUseProgram(DataCore::programID);
-
 		// Run Keyboard Input
-		Keyboard::RunKeyboardKeys();		
-
-		DataCore::camera.Update();
-		// Run Objects
-		GameObject::RunAllObjects();
-
-		// Run Pong
-		//PongScene::PongMainLoop();
-
+		Keyboard::RunKeyboardKeys();
+		// update
+		Update();
 		// swap the screen buffers...
 		glfwSwapBuffers(DataCore::window);
 		// Run OpenGL's Event Handler...

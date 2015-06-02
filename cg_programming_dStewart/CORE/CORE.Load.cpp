@@ -35,8 +35,8 @@ static u16 GetNumCharCount(u8 *src) {
 }
 
 string Load::LoadFile(char* str) {
-	const u8 MAX_BUFFER_SIZE = 64;
-	const u8 MAX_PATH_SIZE = 32;
+	static const u8 MAX_BUFFER_SIZE = 64;
+	static const u8 MAX_PATH_SIZE = 32;
 
 	char* levelBuffer;
 	char* textureBuffer;
@@ -57,7 +57,8 @@ string Load::LoadFile(char* str) {
 
 		while ( getline (myfile,line) )
 		{
-			line.copy(buffer, len = line.length());
+			len = line.length();
+			line.copy(buffer, len);
 			buffer[len] = '\0';
 
 			if(IS_EMPTY_LINE(buffer[0])){
@@ -73,9 +74,6 @@ string Load::LoadFile(char* str) {
 			}
 			else if(LOAD_LEVELDATA(buffer[0])){
 				//Setting buffer size...
-				//levelWidth = buffer[1] - ASCII_ZERO;
-				//levelHeight = buffer[3] - ASCII_ZERO;
-
 				u8 widthCount = GetNumCharCount((u8*)&buffer[1])+1;
 
 				levelWidth = std::stoi(&buffer[1]);
@@ -107,7 +105,7 @@ string Load::LoadFile(char* str) {
 			//Found textures...
 			if(commaLen > 0){
 				//strcpy_s(path, commaLen, buffer);
-				strcpy(path, buffer);
+				strcpy_s(path, buffer);
 				path[commaLen - 1] = '\0';
 				memcpy(&textureBuffer[texIndex], &path, MAX_PATH_SIZE);
 				texIndex += MAX_PATH_SIZE - 1;
@@ -122,8 +120,10 @@ string Load::LoadFile(char* str) {
 		free(levelBuffer);
 		//return line;
 		myfile.close();
+		return line;
 	}
 	else cout << "Unable to open file"; 
+	return NULL;
 }
 
 GLuint Load::LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
@@ -216,7 +216,7 @@ GLuint Load::LoadShaders(const char* vertex_file_path, const char* fragment_file
 	return programID;
 }
 
-GLuint& Load::LoadUVs() {
+GLuint Load::LoadUVs() {
 
 	GLfloat g_UV_buffer_data[] = {
 		0.0f, 0.0f,
@@ -236,7 +236,7 @@ GLuint& Load::LoadUVs() {
 	return uvbuffer;
 }
 
-GLuint& Load::LoadQuad() {
+GLuint Load::LoadQuad() {
 	float offset = 0.5f;
 
 	GLfloat g_vertex_buffer_data[] = {
@@ -265,7 +265,7 @@ GLuint& Load::LoadQuad() {
 	return vertexBuffer;
 }
 
-GLuint& Load::LoadTriangle() {
+GLuint Load::LoadTriangle() {
 	static const GLfloat g_vertex_buffer_data[] = {
 		-1.0f, -1.0f, 0.0f,
 		1.0f, -1.0f, 0.0f,
@@ -280,7 +280,7 @@ GLuint& Load::LoadTriangle() {
 	return vertexBuffer;
 }
 
-GLuint& Load::LoadColor(vec3 rgb_color) {
+GLuint Load::LoadColor(vec3 rgb_color) {
 	static const GLfloat g_color_buffer_data[] = {
 		rgb_color.x, rgb_color.y, rgb_color.z,
 		rgb_color.x, rgb_color.y, rgb_color.z,

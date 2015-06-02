@@ -5,7 +5,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Utility
-float& Utility::getDeltaTime() {
+float Utility::getDeltaTime() {
 	static float lastTime = glfwGetTime();
 
 	float now = glfwGetTime();

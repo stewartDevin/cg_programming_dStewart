@@ -4,7 +4,7 @@
 #pragma once
 #include "..\..\CORE\CORE.GameObject.h"
 
-static class PongScene {
+class PongScene {
 public:
 	static GameObject leftPaddle;
 	static GameObject rightPaddle;
