@@ -39,9 +39,9 @@
 			);
 	}
 
-	void Render::RenderUVs(GLuint vertexBuffer) {
+	void Render::RenderUVs(GLuint uvBuffer) {
 		glEnableVertexAttribArray(2);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
 
 		glVertexAttribPointer(
 			2,			// attribute layout

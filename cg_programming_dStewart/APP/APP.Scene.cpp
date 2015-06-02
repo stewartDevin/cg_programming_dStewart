@@ -28,7 +28,7 @@ void LoadGrid() {
 	float xPos = -2.4f;
 	float yPos = 1.8f;
 	float tileScale = 0.4f;
-	float tileSpacing = 0.0f;
+	float tileSpacing = 0.01f;
 	int xTiles = 16;
 	int yTiles = 16;
 
@@ -75,15 +75,15 @@ void Scene::InitializeScene() {
 		LoadGrid();
 
 		// load file
-		Scene::loadedFile = Load::LoadFile(LEVEL_0);
-
+		//Scene::loadedFile = Load::LoadFile(LEVEL_0);
+		//Load::LoadFile(LEVEL_0);
 		/* load an image file directly as a new OpenGL texture */
 		// grass
 		GLuint grassTexture = NULL;
 		//_LoadTexture(&grassTexture, "./Assets/Images/grass.jpg");
 		_LoadTexture(&grassTexture, "./Assets/Images/grass2.png");
 		GLuint dirtTexture = NULL;
-		_LoadTexture(&dirtTexture, "./Assets/Images/dirt.jpg");
+		//_LoadTexture(&dirtTexture, "./Assets/Images/dirt.jpg");
 
 
 		// init scene variable = true;
@@ -114,7 +114,7 @@ int Scene::MainLoop() {
 		GameObject::RunAllObjects();
 
 		// Run Pong
-		PongScene::PongMainLoop();
+		//PongScene::PongMainLoop();
 
 		// swap the screen buffers...
 		glfwSwapBuffers(DataCore::window);

@@ -2,6 +2,7 @@
 //////////////////////////////////////////////////////////////////////////
 #include "CORE.Load.h"
 #include "../APP/APP.DataCore.h"
+#include "../APP/APP.Scene.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Load
@@ -13,7 +14,7 @@ unsigned char Load::FindChar(const char* buffer, const char& c) {
 
 	while(*value != '\0') {
 		++length;
-		
+
 		if(*value == c) {
 			return length;
 		}
@@ -23,54 +24,106 @@ unsigned char Load::FindChar(const char* buffer, const char& c) {
 	return length = 0;
 }
 
-string Load::LoadFile(char* str) {
-	string line;
-	ifstream myfile (str);
-	char* path = NULL;
+static u16 GetNumCharCount(u8 *src) {
+	u16 count = 0;
+	while(IS_NUMBER(*src)) {
+		++count;
+		++src;
+	}
 
-	unsigned char len = 0;
+	return count;
+}
+
+string Load::LoadFile(char* str) {
+	const u8 MAX_BUFFER_SIZE = 64;
+	const u8 MAX_PATH_SIZE = 32;
+
+	char* levelBuffer;
+	char* textureBuffer;
+	u8 numTextures, levelWidth, levelHeight;
+
+	//load world...
+	ifstream myfile(LEVEL_0);
+
+	char buffer[MAX_BUFFER_SIZE];
+	char path[MAX_PATH_SIZE];
+
 	if (myfile.is_open())
 	{
-		char buffer[256];
-		char path[256];
+		string line;
+		unsigned char len = 0;
 
-		while (getline(myfile, line))
+		bool loadLevelData = true;
+
+		while ( getline (myfile,line) )
 		{
 			line.copy(buffer, len = line.length());
 			buffer[len] = '\0';
 
-			unsigned char commaLength = FindChar(buffer, ',');
+			if(IS_EMPTY_LINE(buffer[0])){
+				continue;
+			}
+			else if(LOAD_TEXTURE(buffer[0])){
+				//Setting buffer size...
+				numTextures = buffer[1] - ASCII_ZERO;
+				textureBuffer = (char*)malloc(MAX_PATH_SIZE * numTextures);
 
-			if(buffer[0] > 47 && buffer[0] < 58) {
-				// TODO: add level data...
+				loadLevelData = false;
+				continue;
+			}
+			else if(LOAD_LEVELDATA(buffer[0])){
+				//Setting buffer size...
+				//levelWidth = buffer[1] - ASCII_ZERO;
+				//levelHeight = buffer[3] - ASCII_ZERO;
+
+				u8 widthCount = GetNumCharCount((u8*)&buffer[1])+1;
+
+				levelWidth = std::stoi(&buffer[1]);
+				levelHeight = std::stoi(&buffer[1+widthCount]);
+
+				levelBuffer = (char*)malloc(levelWidth * levelHeight);
+
+				loadLevelData = true;
+				continue;
+			}
+			else if(loadLevelData){
+				//TODO: Load level data here...
+				static u16 levelIndex = 0;
+				u8 count = 0;
+
+				for(int n = 0; count < levelWidth; ++n) {
+					if(IS_NUMBER(buffer[n])) {
+						levelBuffer[levelIndex++] = buffer[n];
+						++count;
+					}
+				}
 				continue;
 			}
 
-			if(buffer[0] == 32 || buffer[0] == '\0') {
-				// empty space
-				continue;
-			}
+			unsigned char commaLen = FindChar(buffer, ',');
 
-			if(buffer[0] == 35) {
-				// TODO: get next count
-				continue;
-			}
+			static u8 texIndex = 0;
 
-			if(commaLength > 0) {
+			//Found textures...
+			if(commaLen > 0){
+				//strcpy_s(path, commaLen, buffer);
 				strcpy(path, buffer);
-				path[commaLength - 1] = '\0';
-
+				path[commaLen - 1] = '\0';
+				memcpy(&textureBuffer[texIndex], &path, MAX_PATH_SIZE);
+				texIndex += MAX_PATH_SIZE - 1;
 				continue;
-				// TODO: Add texture data...
 			}
 
-			// load textures...
-			cout << line << '\n';
+			//load textures...
+			//string filePath = 
 		}
-		myfile.close();
-	} else cout << "Unable to open file";
 
-	return line;
+		free(textureBuffer);
+		free(levelBuffer);
+		//return line;
+		myfile.close();
+	}
+	else cout << "Unable to open file"; 
 }
 
 GLuint Load::LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
@@ -207,7 +260,7 @@ GLuint& Load::LoadQuad() {
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
-	
+
 
 	return vertexBuffer;
 }
