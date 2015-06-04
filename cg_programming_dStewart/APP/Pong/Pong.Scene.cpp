@@ -247,9 +247,9 @@ void PongScene::InitScene() {
 	bufferObj.vertexBuffer =  Load::LoadQuad();
 	bufferObj.vertexColorBuffer = Load::LoadColor(vec3(1.0f, 1.0f, 1.0f));
 
-	PongScene::leftPaddle = GameObject(PongGameOptions::leftPaddlePosition, PongGameOptions::paddleScale, bufferObj);
-	PongScene::rightPaddle = GameObject(PongGameOptions::rightPaddlePosition, PongGameOptions::paddleScale, bufferObj);
-	PongScene::ball = GameObject(PongGameOptions::ballPosition, PongGameOptions::ballScale, bufferObj);
+	PongScene::leftPaddle = GameObject(PongGameOptions::leftPaddlePosition, PongGameOptions::paddleScale, bufferObj, DataCore::grassTexture);
+	PongScene::rightPaddle = GameObject(PongGameOptions::rightPaddlePosition, PongGameOptions::paddleScale, bufferObj, DataCore::grassTexture);
+	PongScene::ball = GameObject(PongGameOptions::ballPosition, PongGameOptions::ballScale, bufferObj, DataCore::grassTexture);
 
 }
 

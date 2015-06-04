@@ -3,6 +3,7 @@
 
 #include "CORE.Render.h"
 #include "CORE.BufferObject.h"
+#include "../APP/APP.DataCore.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Render
@@ -53,7 +54,7 @@ void Render::RenderUVs(GLuint uvBuffer) {
 		);
 }
 
-glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, const vec3& scaleVec) {
+glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, const vec3& scaleVec, const GLuint& textureID) {
 	mat4 positionMatrix = RenderVertex(bufferObject->vertexBuffer, position, scaleVec);
 
 	//RenderColor(colorBuffer);
@@ -64,6 +65,12 @@ glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, c
 	if (bufferObject->uvBuffer != NULL) {
 		RenderUVs(bufferObject->uvBuffer);
 	}
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
+	glUniform1i(gl_location, 0);
+
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisableVertexAttribArray(0);

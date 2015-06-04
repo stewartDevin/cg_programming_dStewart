@@ -21,3 +21,7 @@ float DataCore::deltaTime = 0.0f;
 
 // camera
 Camera DataCore::camera = Camera(vec3(0.0f, 0.0f, 3.0f));
+
+// textures
+GLuint DataCore::dirtTexture = NULL;
+GLuint DataCore::grassTexture = NULL;

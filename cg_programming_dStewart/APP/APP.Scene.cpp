@@ -22,14 +22,17 @@ bool Scene::sceneInitialized = false;
 string Scene::loadedFile = "";
 string Scene::loadedLevel = "";
 
+
 void LoadGrid() {
 	// load grid
 	float xPos = -2.4f;
 	float yPos = 1.8f;
 	float tileScale = 0.4f;
-	float tileSpacing = 0.01f;
+	float tileSpacing = 0.0f;
 	int xTiles = 16;
 	int yTiles = 16;
+
+	int counter = 0;
 
 	for (int m = 0; m < yTiles; ++m) {
 		for (int n = 0; n < xTiles; ++n) {
@@ -38,10 +41,27 @@ void LoadGrid() {
 			bufferObj.vertexBuffer = Load::LoadQuad();
 			bufferObj.uvBuffer = Load::LoadUVs();
 
-			GameObject::CreateObject(
+			if(counter == 0) {
+				GameObject::CreateObject(
 				vec3(xPos + (n * (tileScale + tileSpacing)), yPos - (m * (tileScale + tileSpacing)), 0.0f),
 				vec3(tileScale, tileScale, 1.0f),
-				bufferObj);
+				bufferObj,
+				DataCore::grassTexture);
+				counter = 1;
+				continue;
+			}
+
+			if(counter == 1) {
+				GameObject::CreateObject(
+				vec3(xPos + (n * (tileScale + tileSpacing)), yPos - (m * (tileScale + tileSpacing)), 0.0f),
+				vec3(tileScale, tileScale, 1.0f),
+				bufferObj,
+				DataCore::dirtTexture);
+				counter = 0;
+				continue;
+			}
+
+			
 		}
 	}
 
@@ -58,32 +78,23 @@ void _LoadTexture(GLuint* texture, char* path){
 	if (*texture == NULL){
 		printf("[Texture loader] \"%s\" failed to load!\n", path);
 	}
-	glActiveTexture(GL_TEXTURE0 + DataCore::numberOfTextures);
-	DataCore::numberOfTextures++;
-	//GLuint textureID = glGetUniformLocation(DataCore::programID, "myTextureSampler");
-	//glUniform1i(textureID, 1);
-	glBindTexture(GL_TEXTURE_2D, n);
-
 }
 
 
 void Scene::InitializeScene() {
 	if (!Scene::sceneInitialized) {
-
-		// Load Grid
-		LoadGrid();
-
 		// load file
 		//Scene::loadedFile = Load::LoadFile(LEVEL_0);
 		Load::LoadFile(LEVEL_0);
-		/* load an image file directly as a new OpenGL texture */
-		// grass
-		GLuint grassTexture = NULL;
-		//_LoadTexture(&grassTexture, "./Assets/Images/grass.jpg");
-		_LoadTexture(&grassTexture, "./Assets/Images/grass2.png");
-		GLuint dirtTexture = NULL;
-		//_LoadTexture(&dirtTexture, "./Assets/Images/dirt.jpg");
 
+		/* load an image file directly as a new OpenGL texture */
+		//_LoadTexture(&grassTexture, "./Assets/Images/grass.jpg");
+		_LoadTexture(&DataCore::grassTexture, "./Assets/Images/grass2.png");
+		
+		_LoadTexture(&DataCore::dirtTexture, "./Assets/Images/dirt.jpg");
+
+		// Load Grid
+		LoadGrid();
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;

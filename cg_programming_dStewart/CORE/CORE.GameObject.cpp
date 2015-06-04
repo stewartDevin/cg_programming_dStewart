@@ -7,10 +7,11 @@
 #include "CORE.Render.h"
 #include "..\APP\APP.DataCore.h"
 
-GameObject::GameObject(vec3 position, vec3 scale, BufferObject bufferObject) {
+GameObject::GameObject(vec3 position, vec3 scale, BufferObject bufferObject, GLuint textureID) {
 	this->transform.position = position;
 	this->transform.scale = scale;
 	this->bufferObject = bufferObject;
+	this->textureID = textureID;
 	//this->objectID = objectID;
 	//this->colorID = colorID;
 	this->initialized = false;
@@ -19,12 +20,13 @@ GameObject::GameObject(vec3 position, vec3 scale, BufferObject bufferObject) {
 GameObject::GameObject() {
 	//this->objectID = NULL;
 	//this->colorID = NULL;
+	this->textureID = NULL;
 	this->bufferObject = BufferObject();
 	this->initialized = false;
 }
 
-GameObject* GameObject::CreateObject(vec3 position, vec3 scale, BufferObject bufferObject) {
-	GameObject* object = new GameObject(position, scale, bufferObject);
+GameObject* GameObject::CreateObject(vec3 position, vec3 scale, BufferObject bufferObject, GLuint textureID) {
+	GameObject* object = new GameObject(position, scale, bufferObject, textureID);
 	Scene::listOfObjects.push_back(object);
 	//Scene::listOfObjects[Scene::sizeOfListOfObjects] = object;
 	//Scene::sizeOfListOfObjects++;
@@ -49,7 +51,7 @@ void GameObject::Run(Camera* camera) {
 	}
 
 	//this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * Render::RenderQuad(this->objectID, this->transform.position, this->colorID, this->transform.scale);
-	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * Render::RenderQuad(&this->bufferObject, this->transform.position, this->transform.scale);
+	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * Render::RenderQuad(&this->bufferObject, this->transform.position, this->transform.scale, this->textureID);
 	glUniformMatrix4fv(camera->MVPMatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
 	this->transform.position += this->transform.velocity * DataCore::deltaTime;
