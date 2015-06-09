@@ -19,4 +19,7 @@ public:
 	static GLuint LoadColor(vec3 rgb_color);
 	static unsigned char FindChar(const char* buffer, const char& c);
 
+	static void _LoadTexture(GLuint* texture, char* path);
+	static void __LoadTexture(char* filePath);
+
 };

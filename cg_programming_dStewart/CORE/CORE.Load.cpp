@@ -34,19 +34,41 @@ static u16 GetNumCharCount(u8 *src) {
 	return count;
 }
 
+void Load::_LoadTexture(GLuint* texture, char* path){
+	if(texture == NULL) return;
+	GLuint n = SOIL_load_OGL_texture(path,
+		SOIL_LOAD_AUTO,
+		SOIL_CREATE_NEW_ID,
+		SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_MULTIPLY_ALPHA
+		);
+	*texture = n;
+	if (*texture == NULL) {
+		printf("[Texture loader] \"%s\" failed to load!\n", path);
+	}
+}
+
+void Load::__LoadTexture(char* filePath) {
+	GLuint textureID = NULL;
+	Load::_LoadTexture(&textureID, filePath);
+	DataCore::listOfTextures.push_back(textureID);
+}
+
 string Load::LoadFile(char* str) {
 	static const u8 MAX_BUFFER_SIZE = 64;
 	static const u8 MAX_PATH_SIZE = 32;
 
-	char* levelBuffer;
-	char* textureBuffer;
+	char* levelBuffer = NULL;
+	char* textureBuffer = NULL;
 	u8 numTextures, levelWidth, levelHeight;
 
 	//load world...
 	ifstream myfile(LEVEL_0);
 
 	char buffer[MAX_BUFFER_SIZE];
+	memset(buffer, 0, sizeof buffer);
+
 	char path[MAX_PATH_SIZE];
+	memset(path, 0, sizeof path);
 
 	if (myfile.is_open())
 	{
@@ -66,11 +88,15 @@ string Load::LoadFile(char* str) {
 			}
 			else if(LOAD_TEXTURE(buffer[0])){
 				//Setting buffer size...
-				numTextures = buffer[1] - ASCII_ZERO;
-				textureBuffer = (char*)malloc(MAX_PATH_SIZE * numTextures);
-
+				// this is being handled by the amount of textures that get loaded...
+				// continue...
 				loadLevelData = false;
 				continue;
+
+				//numTextures = buffer[1] - ASCII_ZERO;
+				//textureBuffer = (char*)malloc((sizeof (char)) * MAX_PATH_SIZE * numTextures);
+				//memset(textureBuffer, 0, sizeof textureBuffer);
+				//continue;
 			}
 			else if(LOAD_LEVELDATA(buffer[0])){
 				//Setting buffer size...
@@ -79,7 +105,11 @@ string Load::LoadFile(char* str) {
 				levelWidth = std::stoi(&buffer[1]);
 				levelHeight = std::stoi(&buffer[1+widthCount]);
 
-				levelBuffer = (char*)malloc(levelWidth * levelHeight);
+				DataCore::xAmountOfTiles = levelWidth;
+				DataCore::yAmountOfTiles = levelHeight;
+
+				levelBuffer = (char*)malloc( levelWidth * levelHeight);
+				memset(levelBuffer, 0, sizeof levelBuffer);
 
 				loadLevelData = true;
 				continue;
@@ -92,6 +122,12 @@ string Load::LoadFile(char* str) {
 				for(int n = 0; count < levelWidth; ++n) {
 					if(IS_NUMBER(buffer[n])) {
 						levelBuffer[levelIndex++] = buffer[n];
+
+						BufferObject bufferObj;
+						bufferObj.vertexBuffer = Load::LoadQuad();
+						bufferObj.uvBuffer = Load::LoadUVs();
+
+						//GameObject::CreateObject(vec3(),
 						++count;
 					}
 				}
@@ -104,21 +140,22 @@ string Load::LoadFile(char* str) {
 
 			//Found textures...
 			if(commaLen > 0){
-				//strcpy_s(path, commaLen, buffer);
 				strcpy_s(path, buffer);
 				path[commaLen - 1] = '\0';
-				memcpy(&textureBuffer[texIndex], &path, MAX_PATH_SIZE);
-				texIndex += MAX_PATH_SIZE - 1;
+
+				char assetsFolder[255];
+				memset(assetsFolder, 0, sizeof assetsFolder);
+				strcat(assetsFolder, "./Assets/Images/");
+				strcat(assetsFolder, path);
+
+				__LoadTexture(assetsFolder);
+
 				continue;
 			}
-
-			//load textures...
-			//string filePath = 
 		}
 
 		free(textureBuffer);
 		free(levelBuffer);
-		//return line;
 		myfile.close();
 		return line;
 	}

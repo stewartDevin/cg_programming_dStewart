@@ -11,9 +11,8 @@
 // GameObject
 class GameObject {
 public:
+	
 	Transform transform;
-	//GLuint objectID;
-	//GLuint colorID;
 	mat4 MVPMatrix;
 	bool initialized;
 	BufferObject bufferObject;

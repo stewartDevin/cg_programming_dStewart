@@ -8,9 +8,7 @@
 
 class DataCore {
 public:
-	static int numberOfTextures;
 	static GLuint programID;
-	//static GLuint dirtID;
 
 	// aspect ratio
 	static float aspectRatio;
@@ -24,7 +22,17 @@ public:
 	// camera
 	static Camera camera;
 
+	static vector<GLuint> listOfTextures;
+
 	//textures
 	static GLuint dirtTexture;
 	static GLuint grassTexture;
+
+	// amount of tiles
+	static int xAmountOfTiles;
+	static int yAmountOfTiles;
+	static float DataCore::xTilePos;
+	static float DataCore::yTilePos;
+	static float DataCore::tileScale;
+	static float DataCore::tileSpacing;
 };

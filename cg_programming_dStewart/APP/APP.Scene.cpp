@@ -29,13 +29,13 @@ void LoadGrid() {
 	float yPos = 1.8f;
 	float tileScale = 0.4f;
 	float tileSpacing = 0.0f;
-	int xTiles = 16;
-	int yTiles = 16;
+	//int xTiles = 16;
+	//int yTiles = 16;
 
 	int counter = 0;
 
-	for (int m = 0; m < yTiles; ++m) {
-		for (int n = 0; n < xTiles; ++n) {
+	for (int m = 0; m < DataCore::yAmountOfTiles; ++m) {
+		for (int n = 0; n < DataCore::xAmountOfTiles; ++n) {
 
 			BufferObject bufferObj;
 			bufferObj.vertexBuffer = Load::LoadQuad();
@@ -46,17 +46,17 @@ void LoadGrid() {
 				vec3(xPos + (n * (tileScale + tileSpacing)), yPos - (m * (tileScale + tileSpacing)), 0.0f),
 				vec3(tileScale, tileScale, 1.0f),
 				bufferObj,
-				DataCore::grassTexture);
+				DataCore::listOfTextures[0]);
 				counter = 1;
 				continue;
-			}
+			} 
 
 			if(counter == 1) {
 				GameObject::CreateObject(
 				vec3(xPos + (n * (tileScale + tileSpacing)), yPos - (m * (tileScale + tileSpacing)), 0.0f),
 				vec3(tileScale, tileScale, 1.0f),
 				bufferObj,
-				DataCore::dirtTexture);
+				DataCore::listOfTextures[1]);
 				counter = 0;
 				continue;
 			}
@@ -67,18 +67,7 @@ void LoadGrid() {
 
 }
 
-void _LoadTexture(GLuint* texture, char* path){
-	if(texture == NULL) return;
-	GLuint n = SOIL_load_OGL_texture(path,
-		SOIL_LOAD_AUTO,
-		SOIL_CREATE_NEW_ID,
-		SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_MULTIPLY_ALPHA
-		);
-	*texture = n;
-	if (*texture == NULL){
-		printf("[Texture loader] \"%s\" failed to load!\n", path);
-	}
-}
+
 
 
 void Scene::InitializeScene() {
@@ -88,10 +77,10 @@ void Scene::InitializeScene() {
 		Load::LoadFile(LEVEL_0);
 
 		/* load an image file directly as a new OpenGL texture */
-		//_LoadTexture(&grassTexture, "./Assets/Images/grass.jpg");
-		_LoadTexture(&DataCore::grassTexture, "./Assets/Images/grass2.png");
-		
-		_LoadTexture(&DataCore::dirtTexture, "./Assets/Images/dirt.jpg");
+		//Load::_LoadTexture(&DataCore::grassTexture, "./Assets/Images/grass2.png");
+		//Load::_LoadTexture(&DataCore::dirtTexture, "./Assets/Images/dirt.jpg");
+		//Load::__LoadTexture("./Assets/Images/grass2.png");
+		//Load::__LoadTexture("./Assets/Images/dirt.jpg");
 
 		// Load Grid
 		LoadGrid();
