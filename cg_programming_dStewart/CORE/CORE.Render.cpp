@@ -55,6 +55,10 @@ void Render::RenderUVs(GLuint uvBuffer) {
 }
 
 glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, const vec3& scaleVec, const GLuint& textureID) {
+	// Enable blending
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	mat4 positionMatrix = RenderVertex(bufferObject->vertexBuffer, position, scaleVec);
 
 	//RenderColor(colorBuffer);
@@ -66,16 +70,21 @@ glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, c
 		RenderUVs(bufferObject->uvBuffer);
 	}
 
+	
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
 	glUniform1i(gl_location, 0);
+
+	
 
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
+	glDisable(GL_BLEND);
 	return positionMatrix;
 }
 

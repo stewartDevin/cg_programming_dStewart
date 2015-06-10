@@ -48,9 +48,18 @@ Camera::Camera(vec3 position, vec3 up, vec3 forward) {
 
 // member functions
 void Camera::Update() {
+	vec3 tempVec(0.0f, 0.0f, 0.0f);
+
+	tempVec = this->transform.position;
+	tempVec.z = 1.0f;
+	
+	//float length = tempVec.length();
+	//tempVec /= length;
+	
 	this->viewMatrix = glm::lookAt(
 		this->transform.position,		// position
-		this->lookAt,		// look at
+		tempVec,
+		//this->lookAt,		// look at
 		this->up		// up
 		);
 }

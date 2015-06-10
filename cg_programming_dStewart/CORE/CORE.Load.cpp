@@ -12,10 +12,10 @@ unsigned char Load::FindChar(const char* buffer, const char& c) {
 	char* value = (char*)buffer;
 	unsigned char length = 0;
 
-	while(*value != '\0') {
+	while (*value != '\0') {
 		++length;
 
-		if(*value == c) {
+		if (*value == c) {
 			return length;
 		}
 		value++;
@@ -26,7 +26,7 @@ unsigned char Load::FindChar(const char* buffer, const char& c) {
 
 static u16 GetNumCharCount(u8 *src) {
 	u16 count = 0;
-	while(IS_NUMBER(*src)) {
+	while (IS_NUMBER(*src)) {
 		++count;
 		++src;
 	}
@@ -35,7 +35,7 @@ static u16 GetNumCharCount(u8 *src) {
 }
 
 void Load::_LoadTexture(GLuint* texture, char* path){
-	if(texture == NULL) return;
+	if (texture == NULL) return;
 	GLuint n = SOIL_load_OGL_texture(path,
 		SOIL_LOAD_AUTO,
 		SOIL_CREATE_NEW_ID,
@@ -62,7 +62,7 @@ string Load::LoadFile(char* str) {
 	u8 numTextures, levelWidth, levelHeight;
 
 	//load world...
-	ifstream myfile(LEVEL_0);
+	ifstream myfile(str);
 
 	char buffer[MAX_BUFFER_SIZE];
 	memset(buffer, 0, sizeof buffer);
@@ -77,16 +77,16 @@ string Load::LoadFile(char* str) {
 
 		bool loadLevelData = true;
 
-		while ( getline (myfile,line) )
+		while (getline(myfile, line))
 		{
 			len = line.length();
 			line.copy(buffer, len);
 			buffer[len] = '\0';
 
-			if(IS_EMPTY_LINE(buffer[0])){
+			if (IS_EMPTY_LINE(buffer[0])){
 				continue;
 			}
-			else if(LOAD_TEXTURE(buffer[0])){
+			else if (LOAD_TEXTURE(buffer[0])){
 				//Setting buffer size...
 				// this is being handled by the amount of textures that get loaded...
 				// continue...
@@ -98,54 +98,71 @@ string Load::LoadFile(char* str) {
 				//memset(textureBuffer, 0, sizeof textureBuffer);
 				//continue;
 			}
-			else if(LOAD_LEVELDATA(buffer[0])){
+			else if (LOAD_LEVELDATA(buffer[0])){
 				//Setting buffer size...
-				u8 widthCount = GetNumCharCount((u8*)&buffer[1])+1;
+				u8 widthCount = GetNumCharCount((u8*)&buffer[1]) + 1;
 
 				levelWidth = std::stoi(&buffer[1]);
-				levelHeight = std::stoi(&buffer[1+widthCount]);
+				levelHeight = std::stoi(&buffer[1 + widthCount]);
 
 				DataCore::xAmountOfTiles = levelWidth;
 				DataCore::yAmountOfTiles = levelHeight;
 
-				levelBuffer = (char*)malloc( levelWidth * levelHeight);
+				levelBuffer = (char*)malloc(levelWidth * levelHeight);
 				memset(levelBuffer, 0, sizeof levelBuffer);
 
 				loadLevelData = true;
 				continue;
 			}
-			else if(loadLevelData){
+			else if (loadLevelData){
 				//TODO: Load level data here...
-				static u16 levelIndex = 0;
+				static int levelIndex = 0;
+				static int xIndex = 0;
+				static int yIndex = 0;
+				static int textureIndexCounter = 0;
 				u8 count = 0;
 
-				for(int n = 0; count < levelWidth; ++n) {
-					if(IS_NUMBER(buffer[n])) {
+				for (int n = 0; count < levelWidth; ++n) {
+					if (IS_NUMBER(buffer[n])) {
 						levelBuffer[levelIndex++] = buffer[n];
 
 						BufferObject bufferObj;
 						bufferObj.vertexBuffer = Load::LoadQuad();
 						bufferObj.uvBuffer = Load::LoadUVs();
 
-						//GameObject::CreateObject(vec3(),
+						
+						textureIndexCounter = levelIndex - 1;
+						if (textureIndexCounter < 0) textureIndexCounter = 0;
+						int textureIndex = std::stoi(&levelBuffer[textureIndexCounter]);
+
+						GameObject::CreateObject(
+							vec3(DataCore::xTilePos + (xIndex * (DataCore::tileScale + DataCore::tileSpacing)), DataCore::yTilePos - (yIndex * (DataCore::tileScale + DataCore::tileSpacing)), 0.0f),
+							vec3(DataCore::tileScale, DataCore::tileScale, 1.0f),
+							bufferObj,
+							DataCore::listOfTextures[textureIndex]);
 						++count;
+						xIndex++;
+						if (xIndex == levelWidth) {
+							xIndex = 0;
+							yIndex++;
+						}
 					}
+
 				}
 				continue;
 			}
 
 			unsigned char commaLen = FindChar(buffer, ',');
 
-			static u8 texIndex = 0;
 
 			//Found textures...
-			if(commaLen > 0){
+			if (commaLen > 0){
 				strcpy_s(path, buffer);
 				path[commaLen - 1] = '\0';
 
-				char assetsFolder[255];
+				char assetsFolder[256];
 				memset(assetsFolder, 0, sizeof assetsFolder);
-				strcat(assetsFolder, "./Assets/Images/");
+				strcat(assetsFolder, IMAGES_FOLDER_FILE_PATH);
 				strcat(assetsFolder, path);
 
 				__LoadTexture(assetsFolder);
@@ -159,7 +176,7 @@ string Load::LoadFile(char* str) {
 		myfile.close();
 		return line;
 	}
-	else cout << "Unable to open file"; 
+	else cout << "Unable to open file";
 	return NULL;
 }
 

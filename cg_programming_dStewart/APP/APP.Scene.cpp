@@ -25,65 +25,76 @@ string Scene::loadedLevel = "";
 
 void LoadGrid() {
 	// load grid
-	float xPos = -2.4f;
+	/*float xPos = -2.4f;
 	float yPos = 1.8f;
 	float tileScale = 0.4f;
-	float tileSpacing = 0.0f;
-	//int xTiles = 16;
-	//int yTiles = 16;
+	float tileSpacing = 0.0f;*/
+	int xTiles = 16;
+	int yTiles = 16;
 
 	int counter = 0;
 
-	for (int m = 0; m < DataCore::yAmountOfTiles; ++m) {
-		for (int n = 0; n < DataCore::xAmountOfTiles; ++n) {
+	for (int m = 0; m < yTiles; ++m) {
+		for (int n = 0; n < xTiles; ++n) {
 
 			BufferObject bufferObj;
 			bufferObj.vertexBuffer = Load::LoadQuad();
 			bufferObj.uvBuffer = Load::LoadUVs();
 
-			if(counter == 0) {
+			if (counter == 0) {
 				GameObject::CreateObject(
-				vec3(xPos + (n * (tileScale + tileSpacing)), yPos - (m * (tileScale + tileSpacing)), 0.0f),
-				vec3(tileScale, tileScale, 1.0f),
-				bufferObj,
-				DataCore::listOfTextures[0]);
+					vec3(DataCore::xTilePos + (n * (DataCore::tileScale + DataCore::tileSpacing)), DataCore::yTilePos - (m * (DataCore::tileScale + DataCore::tileSpacing)), 0.0f),
+					vec3(DataCore::tileScale, DataCore::tileScale, 1.0f),
+					bufferObj,
+					DataCore::listOfTextures[0]);
 				counter = 1;
 				continue;
-			} 
+			}
 
-			if(counter == 1) {
+			if (counter == 1) {
 				GameObject::CreateObject(
-				vec3(xPos + (n * (tileScale + tileSpacing)), yPos - (m * (tileScale + tileSpacing)), 0.0f),
-				vec3(tileScale, tileScale, 1.0f),
-				bufferObj,
-				DataCore::listOfTextures[1]);
+					vec3(DataCore::xTilePos + (n * (DataCore::tileScale + DataCore::tileSpacing)), DataCore::yTilePos - (m * (DataCore::tileScale + DataCore::tileSpacing)), 0.0f),
+					vec3(DataCore::tileScale, DataCore::tileScale, 1.0f),
+					bufferObj,
+					DataCore::listOfTextures[1]);
 				counter = 0;
 				continue;
 			}
 
-			
+
 		}
 	}
 
 }
 
-
+GameObject* gObj;
 
 
 void Scene::InitializeScene() {
 	if (!Scene::sceneInitialized) {
-		// load file
-		//Scene::loadedFile = Load::LoadFile(LEVEL_0);
-		Load::LoadFile(LEVEL_0);
-
 		/* load an image file directly as a new OpenGL texture */
 		//Load::_LoadTexture(&DataCore::grassTexture, "./Assets/Images/grass2.png");
+		
 		//Load::_LoadTexture(&DataCore::dirtTexture, "./Assets/Images/dirt.jpg");
 		//Load::__LoadTexture("./Assets/Images/grass2.png");
 		//Load::__LoadTexture("./Assets/Images/dirt.jpg");
 
+		// load file
+		Load::LoadFile(LEVEL_2);
 		// Load Grid
-		LoadGrid();
+		//LoadGrid();
+
+		Load::_LoadTexture(&DataCore::bushTexture, "./Assets/Images/bush1.png");
+
+		/*BufferObject bufferObj;
+		bufferObj.vertexBuffer = Load::LoadQuad();
+		bufferObj.uvBuffer = Load::LoadUVs();
+
+		gObj = GameObject::CreateObject(
+			vec3(1.0, 1.0, 0.0f),
+			vec3(1.0f, 1.0f, 1.0f),
+			bufferObj,
+			DataCore::bushTexture);*/
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
@@ -92,30 +103,48 @@ void Scene::InitializeScene() {
 
 vector<GameObject*> Scene::listOfObjects;
 
-void RunControls(vec3& position, float const& speed) {
-	if (Keyboard::W || Keyboard::UpArrow) {
+void RunControls1(vec3& position, float const& speed) {
+	if (Keyboard::Q) {
 		position.z -= speed * DataCore::deltaTime;
 	}
-	if (Keyboard::A || Keyboard::LeftArrow) {
+	if (Keyboard::W) {
 		position.y += speed * DataCore::deltaTime;
 	}
-	if (Keyboard::S || Keyboard::DownArrow) {
+	if (Keyboard::E) {
 		position.z += speed * DataCore::deltaTime;
 	}
-	if (Keyboard::D || Keyboard::RightArrow) {
+	if (Keyboard::S) {
 		position.y -= speed * DataCore::deltaTime;
 	}
-	if (Keyboard::Q) {
+	if (Keyboard::A) {
 		position.x -= speed * DataCore::deltaTime;
 	}
-	if (Keyboard::E) {
+	if (Keyboard::D) {
 		position.x += speed * DataCore::deltaTime;
+	}
+}
+void RunControls2(vec3& position, float const& speed) {
+	if (Keyboard::LeftArrow) {
+		position.x -= speed * DataCore::deltaTime;
+	}
+	if (Keyboard::UpArrow) {
+		position.y += speed * DataCore::deltaTime;
+	}
+	if (Keyboard::RightArrow) {
+		position.x += speed * DataCore::deltaTime;
+	}
+	if (Keyboard::DownArrow) {
+		position.y -= speed * DataCore::deltaTime;
 	}
 }
 
 void Update() {
+
+	RunControls2(DataCore::camera.transform.position, 2.0f);
 	
-	RunControls(DataCore::camera.transform.position, 1.0f);
+	int objIndex = Scene::listOfObjects.size();
+	RunControls1(Scene::listOfObjects[objIndex-1]->transform.position, 1.0f);
+	//RunControls(gObj->transform.position, 1.0f);
 	// update the camera
 	DataCore::camera.Update();
 	// Run Objects

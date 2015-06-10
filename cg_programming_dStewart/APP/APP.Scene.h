@@ -7,7 +7,13 @@
 #include "../CORE/CORE.GameObject.h"
 using namespace std;
 
+#define ASSETS_FOLDER_FILE_PATH "./Assets/"
+#define IMAGES_FOLDER_FILE_PATH "./Assets/Images/"
+#define LEVELS_FOLDER_FILE_PATH "./Assets/Levels/"
+
 #define LEVEL_0 "Assets/Levels/level_0.txt"
+#define LEVEL_1 "Assets/Levels/level_1.txt"
+#define LEVEL_2 "Assets/Levels/level_2.txt"
 
 #define ASCII_ZERO 48
 

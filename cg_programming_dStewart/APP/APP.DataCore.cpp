@@ -24,6 +24,7 @@ vector<GLuint> DataCore::listOfTextures;
 // textures
 GLuint DataCore::dirtTexture = NULL;
 GLuint DataCore::grassTexture = NULL;
+GLuint DataCore::bushTexture = NULL;
 
 // amount of tiles
 int DataCore::xAmountOfTiles = 0;
