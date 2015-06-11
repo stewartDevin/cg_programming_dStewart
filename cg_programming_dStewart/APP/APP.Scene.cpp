@@ -23,49 +23,49 @@ string Scene::loadedFile = "";
 string Scene::loadedLevel = "";
 
 
-void LoadGrid() {
-	// load grid
-	/*float xPos = -2.4f;
-	float yPos = 1.8f;
-	float tileScale = 0.4f;
-	float tileSpacing = 0.0f;*/
-	int xTiles = 16;
-	int yTiles = 16;
-
-	int counter = 0;
-
-	for (int m = 0; m < yTiles; ++m) {
-		for (int n = 0; n < xTiles; ++n) {
-
-			BufferObject bufferObj;
-			bufferObj.vertexBuffer = Load::LoadQuad();
-			bufferObj.uvBuffer = Load::LoadUVs();
-
-			if (counter == 0) {
-				GameObject::CreateObject(
-					vec3(DataCore::xTilePos + (n * (DataCore::tileScale + DataCore::tileSpacing)), DataCore::yTilePos - (m * (DataCore::tileScale + DataCore::tileSpacing)), 0.0f),
-					vec3(DataCore::tileScale, DataCore::tileScale, 1.0f),
-					bufferObj,
-					DataCore::listOfTextures[0]);
-				counter = 1;
-				continue;
-			}
-
-			if (counter == 1) {
-				GameObject::CreateObject(
-					vec3(DataCore::xTilePos + (n * (DataCore::tileScale + DataCore::tileSpacing)), DataCore::yTilePos - (m * (DataCore::tileScale + DataCore::tileSpacing)), 0.0f),
-					vec3(DataCore::tileScale, DataCore::tileScale, 1.0f),
-					bufferObj,
-					DataCore::listOfTextures[1]);
-				counter = 0;
-				continue;
-			}
-
-
-		}
-	}
-
-}
+//void LoadGrid() {
+//	// load grid
+//	/*float xPos = -2.4f;
+//	float yPos = 1.8f;
+//	float tileScale = 0.4f;
+//	float tileSpacing = 0.0f;*/
+//	int xTiles = 16;
+//	int yTiles = 16;
+//
+//	int counter = 0;
+//
+//	for (int m = 0; m < yTiles; ++m) {
+//		for (int n = 0; n < xTiles; ++n) {
+//
+//			BufferObject bufferObj;
+//			bufferObj.vertexBuffer = Load::LoadQuad();
+//			bufferObj.uvBuffer = Load::LoadUVs();
+//
+//			if (counter == 0) {
+//				GameObject::CreateObject(
+//					vec3(DataCore::xTilePos + (n * (DataCore::tileScale + DataCore::tileSpacing)), DataCore::yTilePos - (m * (DataCore::tileScale + DataCore::tileSpacing)), 0.0f),
+//					vec3(DataCore::tileScale, DataCore::tileScale, 1.0f),
+//					bufferObj,
+//					DataCore::listOfTextures[0]);
+//				counter = 1;
+//				continue;
+//			}
+//
+//			if (counter == 1) {
+//				GameObject::CreateObject(
+//					vec3(DataCore::xTilePos + (n * (DataCore::tileScale + DataCore::tileSpacing)), DataCore::yTilePos - (m * (DataCore::tileScale + DataCore::tileSpacing)), 0.0f),
+//					vec3(DataCore::tileScale, DataCore::tileScale, 1.0f),
+//					bufferObj,
+//					DataCore::listOfTextures[1]);
+//				counter = 0;
+//				continue;
+//			}
+//
+//
+//		}
+//	}
+//
+//}
 
 GameObject* gObj;
 
@@ -80,21 +80,26 @@ void Scene::InitializeScene() {
 		//Load::__LoadTexture("./Assets/Images/dirt.jpg");
 
 		// load file
-		Load::LoadFile(LEVEL_2);
+		Load::LoadFile(LEVEL_1);
 		// Load Grid
 		//LoadGrid();
 
-		Load::_LoadTexture(&DataCore::bushTexture, "./Assets/Images/bush1.png");
+		//Load::__LoadTexture("./Assets/Images/bush1.png");
 
 		BufferObject bufferObj;
 		bufferObj.vertexBuffer = Load::LoadQuad();
 		bufferObj.uvBuffer = Load::LoadUVs();
 
+		int thi = DataCore::listOfTextures.back()-1;
+		DataCore::bushTexture = thi;
+
 		gObj = GameObject::CreateObject(
 			vec3(-2.4f, 1.4f, 0.0f),
 			vec3(DataCore::tileScale, DataCore::tileScale, 1.0f),
 			bufferObj,
-			DataCore::bushTexture+1);
+			DataCore::listOfTextures[thi]);
+
+		
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
@@ -123,6 +128,7 @@ void RunControls1(vec3& position, float const& speed) {
 		position.x += speed * DataCore::deltaTime;
 	}
 }
+
 void RunControls2(vec3& position, float const& speed) {
 	if (Keyboard::LeftArrow) {
 		position.x -= speed * DataCore::deltaTime;
@@ -143,12 +149,16 @@ void Update() {
 	RunControls2(DataCore::camera.transform.position, 2.0f);
 	
 	int objIndex = Scene::listOfObjects.size();
-	RunControls1(Scene::listOfObjects[objIndex-1]->transform.position, 1.0f);
-	//RunControls(gObj->transform.position, 1.0f);
+	GameObject* player = Scene::listOfObjects[objIndex-1];
+	RunControls1(gObj->transform.position, 1.0f);
+
 	// update the camera
 	DataCore::camera.Update();
+	DataCore::camera.Follow(gObj->transform.position, 0.03f);
+	gObj->textureID = DataCore::bushTexture;
 	// Run Objects
 	GameObject::RunAllObjects();
+	
 	// Run Pong
 	//PongScene::PongMainLoop();
 }

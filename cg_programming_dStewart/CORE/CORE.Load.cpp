@@ -116,6 +116,7 @@ string Load::LoadFile(char* str) {
 			}
 			else if (loadLevelData){
 				//TODO: Load level data here...
+				
 				static int levelIndex = 0;
 				static int xIndex = 1;
 				static int yIndex = 1;
@@ -129,7 +130,6 @@ string Load::LoadFile(char* str) {
 						BufferObject bufferObj;
 						bufferObj.vertexBuffer = Load::LoadQuad();
 						bufferObj.uvBuffer = Load::LoadUVs();
-
 						
 						textureIndexCounter = levelIndex - 1;
 						//if (textureIndexCounter < 0) textureIndexCounter = 0;

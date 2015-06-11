@@ -14,6 +14,7 @@ public:
 	mat4 projectionMatrix;
 	mat4 viewMatrix;
 	GLuint MVPMatrixID;
+	float followSpeed;
 
 	// constructor functions
 	Camera::Camera();
@@ -22,4 +23,5 @@ public:
 
 	// member functions
 	void Update();
+	void Follow(vec3 position, float speed);
 };

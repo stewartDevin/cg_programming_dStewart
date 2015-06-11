@@ -13,7 +13,6 @@ using namespace std;
 
 #define LEVEL_0 "Assets/Levels/level_0.txt"
 #define LEVEL_1 "Assets/Levels/level_1.txt"
-#define LEVEL_2 "Assets/Levels/level_2.txt"
 
 #define ASCII_ZERO 48
 

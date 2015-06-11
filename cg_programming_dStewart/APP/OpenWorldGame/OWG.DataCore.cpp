@@ -1,0 +1,6 @@
+// OWG.DataCore.cpp
+/////////////////////////////////////////////////////////////////
+
+#include "OWG.DataCore.h"
+
+Player OWG_DATACORE::player;

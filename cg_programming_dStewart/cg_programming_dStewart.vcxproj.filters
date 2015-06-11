@@ -63,6 +63,12 @@
     <ClCompile Include="CORE\CORE.BufferObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="APP\OpenWorldGame\OWG.Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="APP\OpenWorldGame\OWG.DataCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -114,6 +120,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CORE\CORE.BufferObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="APP\OpenWorldGame\OWG.Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="APP\OpenWorldGame\OWG.DataCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
