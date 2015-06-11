@@ -86,15 +86,15 @@ void Scene::InitializeScene() {
 
 		Load::_LoadTexture(&DataCore::bushTexture, "./Assets/Images/bush1.png");
 
-		/*BufferObject bufferObj;
+		BufferObject bufferObj;
 		bufferObj.vertexBuffer = Load::LoadQuad();
 		bufferObj.uvBuffer = Load::LoadUVs();
 
 		gObj = GameObject::CreateObject(
-			vec3(1.0, 1.0, 0.0f),
-			vec3(1.0f, 1.0f, 1.0f),
+			vec3(-2.4f, 1.4f, 0.0f),
+			vec3(DataCore::tileScale, DataCore::tileScale, 1.0f),
 			bufferObj,
-			DataCore::bushTexture);*/
+			DataCore::bushTexture+1);
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;

@@ -70,15 +70,10 @@ glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, c
 		RenderUVs(bufferObject->uvBuffer);
 	}
 
-	
-
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
 	glUniform1i(gl_location, 0);
-
-	
-
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisableVertexAttribArray(0);

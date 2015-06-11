@@ -117,8 +117,8 @@ string Load::LoadFile(char* str) {
 			else if (loadLevelData){
 				//TODO: Load level data here...
 				static int levelIndex = 0;
-				static int xIndex = 0;
-				static int yIndex = 0;
+				static int xIndex = 1;
+				static int yIndex = 1;
 				static int textureIndexCounter = 0;
 				u8 count = 0;
 
@@ -132,7 +132,7 @@ string Load::LoadFile(char* str) {
 
 						
 						textureIndexCounter = levelIndex - 1;
-						if (textureIndexCounter < 0) textureIndexCounter = 0;
+						//if (textureIndexCounter < 0) textureIndexCounter = 0;
 						int textureIndex = std::stoi(&levelBuffer[textureIndexCounter]);
 
 						GameObject::CreateObject(
@@ -141,7 +141,7 @@ string Load::LoadFile(char* str) {
 							bufferObj,
 							DataCore::listOfTextures[textureIndex]);
 						++count;
-						xIndex++;
+						++xIndex;
 						if (xIndex == levelWidth) {
 							xIndex = 0;
 							yIndex++;
@@ -313,8 +313,6 @@ GLuint Load::LoadQuad() {
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-
-
 
 	return vertexBuffer;
 }
