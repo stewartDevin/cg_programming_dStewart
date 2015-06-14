@@ -67,7 +67,7 @@ string Scene::loadedLevel = "";
 //
 //}
 
-GameObject* gObj;
+//GameObject gObj;
 
 
 void Scene::InitializeScene() {
@@ -93,13 +93,11 @@ void Scene::InitializeScene() {
 		int thi = DataCore::listOfTextures.back()-1;
 		DataCore::bushTexture = thi;
 
-		gObj = GameObject::CreateObject(
+		GameObject::CreateObject(
 			vec3(-2.4f, 1.4f, 0.0f),
 			vec3(DataCore::tileScale, DataCore::tileScale, 1.0f),
 			bufferObj,
 			DataCore::listOfTextures[thi]);
-
-		
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
@@ -150,12 +148,12 @@ void Update() {
 	
 	int objIndex = Scene::listOfObjects.size();
 	GameObject* player = Scene::listOfObjects[objIndex-1];
-	RunControls1(gObj->transform.position, 1.0f);
+	RunControls1(player->transform.position, 1.0f);
 
 	// update the camera
 	DataCore::camera.Update();
-	DataCore::camera.Follow(gObj->transform.position, 0.03f);
-	gObj->textureID = DataCore::bushTexture;
+	DataCore::camera.Follow(player->transform.position, 0.03f);
+	player->textureID = DataCore::bushTexture;
 	// Run Objects
 	GameObject::RunAllObjects();
 	

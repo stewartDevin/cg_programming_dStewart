@@ -146,10 +146,11 @@ string Load::LoadFile(char* str) {
 							xIndex = 0;
 							yIndex++;
 						}
+						continue;
 					}
-
+					
 				}
-				continue;
+				
 			}
 
 			unsigned char commaLen = FindChar(buffer, ',');
