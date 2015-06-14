@@ -23,5 +23,5 @@ public:
 
 	// member functions
 	void Update();
-	void Follow(vec3 position, float speed);
+	void Follow(vec3 targetPosition, float speed);
 };

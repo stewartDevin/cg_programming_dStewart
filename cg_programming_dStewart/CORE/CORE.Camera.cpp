@@ -64,8 +64,8 @@ void Camera::Update() {
 		);
 }
 
-void Camera::Follow(vec3 position, float speed) {
+void Camera::Follow(vec3 targetPosition, float speed) {
 	this->followSpeed = speed;
-	this->transform.position.x += this->followSpeed * (position.x - this->transform.position.x);
-	this->transform.position.y += this->followSpeed * (position.y - this->transform.position.y);
+	this->transform.position.x += (this->followSpeed * (targetPosition.x - this->transform.position.x)) * DataCore::deltaTime/4;
+	this->transform.position.y += (this->followSpeed * (targetPosition.y - this->transform.position.y)) * DataCore::deltaTime/4;
 }

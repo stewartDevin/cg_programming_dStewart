@@ -1,9 +1,10 @@
-#4
+#6
 grass.jpg, 0
 dotTest.png, 1
 dirt.jpg, 2
 grass2.png, 3
 bush1.png, 4
+dirt.jpg, 5
 
 (20,100)
 4 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 

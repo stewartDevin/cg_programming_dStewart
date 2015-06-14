@@ -28,6 +28,7 @@ public:
 	static GLuint dirtTexture;
 	static GLuint grassTexture;
 	static GLuint bushTexture;
+	static GLuint playerTexture;
 
 	// amount of tiles
 	static int xAmountOfTiles;

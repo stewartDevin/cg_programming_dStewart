@@ -84,20 +84,17 @@ void Scene::InitializeScene() {
 		// Load Grid
 		//LoadGrid();
 
-		//Load::__LoadTexture("./Assets/Images/bush1.png");
-
+		Load::_LoadTexture(&DataCore::playerTexture, "./Assets/Images/player.png");
+		
 		BufferObject bufferObj;
 		bufferObj.vertexBuffer = Load::LoadQuad();
 		bufferObj.uvBuffer = Load::LoadUVs();
-
-		int thi = DataCore::listOfTextures.back()-1;
-		DataCore::bushTexture = thi;
 
 		GameObject::CreateObject(
 			vec3(-2.4f, 1.4f, 0.0f),
 			vec3(DataCore::tileScale, DataCore::tileScale, 1.0f),
 			bufferObj,
-			DataCore::listOfTextures[thi]);
+			DataCore::playerTexture);
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
@@ -152,7 +149,7 @@ void Update() {
 
 	// update the camera
 	DataCore::camera.Update();
-	DataCore::camera.Follow(player->transform.position, 0.03f);
+	DataCore::camera.Follow(player->transform.position, 6.0f);
 	player->textureID = DataCore::bushTexture;
 	// Run Objects
 	GameObject::RunAllObjects();
@@ -166,6 +163,7 @@ int Scene::MainLoop() {
 	do {
 		// clear the screen...
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 
 		// get the deltaTime...
 		//fprintf(stdout, "Delta Time: %f", getDeltaTime()); 

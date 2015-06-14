@@ -53,7 +53,7 @@ void Load::__LoadTexture(char* filePath) {
 	DataCore::listOfTextures.push_back(textureID);
 }
 
-string Load::LoadFile(char* str) {
+void Load::LoadFile(char* str) {
 	static const u8 MAX_BUFFER_SIZE = 64;
 	static const u8 MAX_PATH_SIZE = 32;
 
@@ -146,7 +146,7 @@ string Load::LoadFile(char* str) {
 							xIndex = 0;
 							yIndex++;
 						}
-						continue;
+						//continue;
 					}
 					
 				}
@@ -175,10 +175,8 @@ string Load::LoadFile(char* str) {
 		free(textureBuffer);
 		free(levelBuffer);
 		myfile.close();
-		return line;
 	}
 	else cout << "Unable to open file";
-	return NULL;
 }
 
 GLuint Load::LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {

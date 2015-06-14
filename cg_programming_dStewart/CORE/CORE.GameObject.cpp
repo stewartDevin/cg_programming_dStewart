@@ -54,6 +54,8 @@ void GameObject::Run(Camera* camera) {
 	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * Render::RenderQuad(&this->bufferObject, this->transform.position, this->transform.scale, this->textureID);
 	glUniformMatrix4fv(camera->MVPMatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
+
+
 	this->transform.position += this->transform.velocity * DataCore::deltaTime;
 }
 
