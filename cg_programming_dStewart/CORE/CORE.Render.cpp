@@ -75,7 +75,6 @@ glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, c
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glCullFace(GL_BACK);
 
-
 	GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
 	glUniform1i(gl_location, 0);
 
@@ -83,7 +82,6 @@ glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, c
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
-	
 	
 	return positionMatrix;
 }
