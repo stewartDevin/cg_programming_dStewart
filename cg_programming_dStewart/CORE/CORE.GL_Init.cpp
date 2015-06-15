@@ -42,6 +42,15 @@ int GL_Init::InitWindow() {
 
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(DataCore::window, GLFW_STICKY_KEYS, GL_TRUE);
+	// 
+	glDepthFunc(GL_LESS);
+	glEnable( GL_DEPTH_TEST );
+	glEnable( GL_BLEND );
+	//glEnable( GL_COLOR_MATERIAL );
+	//glColorMaterial( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//	glBlendEquation( GL_FUNC_ADD );
+	
 
 	return EXIT_WITH_SUCCESS;
 }

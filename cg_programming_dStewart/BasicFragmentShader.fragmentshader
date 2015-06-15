@@ -12,5 +12,6 @@ void main() {
 
 	//color = fragColor;
 	color = texture2D( myTextureSampler, UV ).rgba;
+
 	//color.a = 1.00;
 }

@@ -16,7 +16,7 @@ GLFWwindow* DataCore::window = NULL;
 float DataCore::deltaTime = 0.0f;
 
 // camera
-Camera DataCore::camera = Camera(vec3(0.0f, 0.0f, 2.5f));
+Camera DataCore::camera = Camera(vec3(0.0f, 0.0f, 4.5f));
 
 // list of textures
 vector<GLuint> DataCore::listOfTextures;
@@ -35,5 +35,5 @@ int DataCore::yAmountOfTiles = 0;
 
 float DataCore::xTilePos = -2.4f;
 float DataCore::yTilePos = 1.8f;
-float DataCore::tileScale = 0.4f;
+float DataCore::tileScale = 0.8f;
 float DataCore::tileSpacing = -0.02f;

@@ -39,7 +39,7 @@ void Load::_LoadTexture(GLuint* texture, char* path){
 	GLuint n = SOIL_load_OGL_texture(path,
 		SOIL_LOAD_AUTO,
 		SOIL_CREATE_NEW_ID,
-		SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_MULTIPLY_ALPHA
+		SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y
 		);
 	*texture = n;
 	if (*texture == NULL) {

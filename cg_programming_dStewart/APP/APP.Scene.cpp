@@ -67,14 +67,14 @@ string Scene::loadedLevel = "";
 //
 //}
 
-//GameObject gObj;
+GameObject* gObj = NULL;
 
 
 void Scene::InitializeScene() {
 	if (!Scene::sceneInitialized) {
 		/* load an image file directly as a new OpenGL texture */
 		//Load::_LoadTexture(&DataCore::grassTexture, "./Assets/Images/grass2.png");
-		
+
 		//Load::_LoadTexture(&DataCore::dirtTexture, "./Assets/Images/dirt.jpg");
 		//Load::__LoadTexture("./Assets/Images/grass2.png");
 		//Load::__LoadTexture("./Assets/Images/dirt.jpg");
@@ -83,18 +83,17 @@ void Scene::InitializeScene() {
 		Load::LoadFile(LEVEL_1);
 		// Load Grid
 		//LoadGrid();
-
 		Load::_LoadTexture(&DataCore::playerTexture, "./Assets/Images/player.png");
-		
+
 		BufferObject bufferObj;
 		bufferObj.vertexBuffer = Load::LoadQuad();
 		bufferObj.uvBuffer = Load::LoadUVs();
-
-		GameObject::CreateObject(
-			vec3(-2.4f, 1.4f, 0.0f),
+		gObj = GameObject::CreateObject(
+			vec3(-2.4f, 1.4f, 0.01f),
 			vec3(DataCore::tileScale, DataCore::tileScale, 1.0f),
 			bufferObj,
-			DataCore::playerTexture);
+			DataCore::playerTexture
+		);
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
@@ -142,18 +141,17 @@ void RunControls2(vec3& position, float const& speed) {
 void Update() {
 
 	RunControls2(DataCore::camera.transform.position, 2.0f);
-	
-	int objIndex = Scene::listOfObjects.size();
-	GameObject* player = Scene::listOfObjects[objIndex-1];
-	RunControls1(player->transform.position, 1.0f);
+
+	//GameObject* player = Scene::listOfObjects[Scene::listOfObjects.size()-1];
+	RunControls1(gObj->transform.position, 1.0f);
+	//gObj->transform.scale = vec3(0.6f, 0.6f, 0.6f);
 
 	// update the camera
 	DataCore::camera.Update();
-	DataCore::camera.Follow(player->transform.position, 6.0f);
-	player->textureID = DataCore::bushTexture;
+	DataCore::camera.Follow(gObj->transform.position, 6.0f);
 	// Run Objects
 	GameObject::RunAllObjects();
-	
+
 	// Run Pong
 	//PongScene::PongMainLoop();
 }
@@ -163,7 +161,7 @@ int Scene::MainLoop() {
 	do {
 		// clear the screen...
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		glEnable(GL_DEPTH_TEST);
 
 		// get the deltaTime...
 		//fprintf(stdout, "Delta Time: %f", getDeltaTime()); 

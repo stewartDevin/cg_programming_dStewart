@@ -58,8 +58,7 @@ glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, c
 	// Enable blending
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 
 	mat4 positionMatrix = RenderVertex(bufferObject->vertexBuffer, position, scaleVec);
 
@@ -72,7 +71,11 @@ glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, c
 		RenderUVs(bufferObject->uvBuffer);
 	}
 
-	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glCullFace(GL_BACK);
+
+
 	GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
 	glUniform1i(gl_location, 0);
 
@@ -80,9 +83,7 @@ glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, c
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
-	glDisable(GL_BLEND);
-	glDisable(GL_TEXTURE0);
-
+	
 	
 	return positionMatrix;
 }
