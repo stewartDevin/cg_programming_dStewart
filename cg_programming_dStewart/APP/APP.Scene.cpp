@@ -143,12 +143,13 @@ void Update() {
 	RunControls2(DataCore::camera.transform.position, 2.0f);
 
 	//GameObject* player = Scene::listOfObjects[Scene::listOfObjects.size()-1];
-	RunControls1(gObj->transform.position, 1.0f);
+	RunControls1(gObj->transform.position, 2.0f);
 	//gObj->transform.scale = vec3(0.6f, 0.6f, 0.6f);
 
 	// update the camera
 	DataCore::camera.Update();
 	DataCore::camera.Follow(gObj->transform.position, 6.0f);
+	DataCore::camera.ConstrainMovement(0.0f, 0.0f, 11.0f, -11.0f);
 	// Run Objects
 	GameObject::RunAllObjects();
 

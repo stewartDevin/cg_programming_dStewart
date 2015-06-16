@@ -24,4 +24,6 @@ public:
 	// member functions
 	void Update();
 	void Follow(vec3 targetPosition, float speed);
+	void ConstrainMovement(float left, float top, float right, float bottom);
+
 };

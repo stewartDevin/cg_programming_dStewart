@@ -50,6 +50,21 @@ Camera::Camera(vec3 position, vec3 up, vec3 forward) {
 }
 
 // member functions
+void Camera::ConstrainMovement(float left, float top, float right, float bottom) {
+	if(this->transform.position.x <= left) {
+		this->transform.position.x = left;
+	}
+	if(this->transform.position.y >= top) {
+		this->transform.position.y = top;
+	}
+	if(this->transform.position.x >= right) {
+		this->transform.position.x = right;
+	}
+	if(this->transform.position.y <= bottom) {
+		this->transform.position.y = bottom;
+	}
+}
+
 void Camera::Update() {
 	vec3 forward(0.0f, 0.0f, 0.0f);
 
