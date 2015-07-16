@@ -116,7 +116,7 @@ void Load::LoadFile(char* str) {
 			}
 			else if (loadLevelData){
 				//TODO: Load level data here...
-				
+
 				static int levelIndex = 0;
 				static int xIndex = 1;
 				static int yIndex = 1;
@@ -130,7 +130,7 @@ void Load::LoadFile(char* str) {
 						BufferObject bufferObj;
 						bufferObj.vertexBuffer = Load::LoadQuad();
 						bufferObj.uvBuffer = Load::LoadUVs();
-						
+
 						textureIndexCounter = levelIndex - 1;
 						//if (textureIndexCounter < 0) textureIndexCounter = 0;
 						int textureIndex = std::stoi(&levelBuffer[textureIndexCounter]);
@@ -148,9 +148,9 @@ void Load::LoadFile(char* str) {
 						}
 						//continue;
 					}
-					
+
 				}
-				
+
 			}
 
 			unsigned char commaLen = FindChar(buffer, ',');
@@ -289,10 +289,59 @@ GLuint Load::LoadUVs() {
 	return uvbuffer;
 }
 
+GLuint Load::LoadCubeUVs() {
+
+	static const GLfloat g_uv_buffer_data[] = {
+    0.000059f, 1.0f-0.000004f,
+    0.000103f, 1.0f-0.336048f,
+    0.335973f, 1.0f-0.335903f,
+    1.000023f, 1.0f-0.000013f,
+    0.667979f, 1.0f-0.335851f,
+    0.999958f, 1.0f-0.336064f,
+    0.667979f, 1.0f-0.335851f,
+    0.336024f, 1.0f-0.671877f,
+    0.667969f, 1.0f-0.671889f,
+    1.000023f, 1.0f-0.000013f,
+    0.668104f, 1.0f-0.000013f,
+    0.667979f, 1.0f-0.335851f,
+    0.000059f, 1.0f-0.000004f,
+    0.335973f, 1.0f-0.335903f,
+    0.336098f, 1.0f-0.000071f,
+    0.667979f, 1.0f-0.335851f,
+    0.335973f, 1.0f-0.335903f,
+    0.336024f, 1.0f-0.671877f,
+    1.000004f, 1.0f-0.671847f,
+    0.999958f, 1.0f-0.336064f,
+    0.667979f, 1.0f-0.335851f,
+    0.668104f, 1.0f-0.000013f,
+    0.335973f, 1.0f-0.335903f,
+    0.667979f, 1.0f-0.335851f,
+    0.335973f, 1.0f-0.335903f,
+    0.668104f, 1.0f-0.000013f,
+    0.336098f, 1.0f-0.000071f,
+    0.000103f, 1.0f-0.336048f,
+    0.000004f, 1.0f-0.671870f,
+    0.336024f, 1.0f-0.671877f,
+    0.000103f, 1.0f-0.336048f,
+    0.336024f, 1.0f-0.671877f,
+    0.335973f, 1.0f-0.335903f,
+    0.667969f, 1.0f-0.671889f,
+    1.000004f, 1.0f-0.671847f,
+    0.667979f, 1.0f-0.335851f
+};
+
+	GLuint uvbuffer = 0;
+	glGenBuffers(1, &uvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
+
+	return uvbuffer;
+}
+
 GLuint Load::LoadQuad() {
 	float offset = 0.5f;
 
-	GLfloat g_vertex_buffer_data[] = {
+	static GLfloat g_vertex_buffer_data[] = {
 		0.0f, 0.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
 		1.0f, 1.0f, 0.0f,
@@ -307,6 +356,72 @@ GLuint Load::LoadQuad() {
 		f -= offset;
 		continue;
 	}
+
+	GLuint vertexBuffer = 0;
+	glGenBuffers(1, &vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+	return vertexBuffer;
+}
+
+GLuint Load::LoadCube() {
+	float offset = 0.5f;
+
+	/*GLfloat g_vertex_buffer_data[] = {
+	0.0f, 0.0f, 0.0f,
+	1.0f, 0.0f, 0.0f,
+	1.0f, 1.0f, 0.0f,
+
+	0.0f, 0.0f, 0.0f,
+	1.0f, 1.0f, 0.0f,
+	0.0f, 1.0f, 0.0f
+	};*/
+
+	static const GLfloat g_vertex_buffer_data[] = {
+		-1.0f,-1.0f,-1.0f, // triangle 1 : begin
+		-1.0f,-1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f, // triangle 1 : end
+		1.0f, 1.0f,-1.0f, // triangle 2 : begin
+		-1.0f,-1.0f,-1.0f,
+		-1.0f, 1.0f,-1.0f, // triangle 2 : end
+		1.0f,-1.0f, 1.0f,
+		-1.0f,-1.0f,-1.0f,
+		1.0f,-1.0f,-1.0f,
+		1.0f, 1.0f,-1.0f,
+		1.0f,-1.0f,-1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f,-1.0f,
+		1.0f,-1.0f, 1.0f,
+		-1.0f,-1.0f, 1.0f,
+		-1.0f,-1.0f,-1.0f,
+		-1.0f, 1.0f, 1.0f,
+		-1.0f,-1.0f, 1.0f,
+		1.0f,-1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f,-1.0f,-1.0f,
+		1.0f, 1.0f,-1.0f,
+		1.0f,-1.0f,-1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f,-1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f,-1.0f,
+		-1.0f, 1.0f,-1.0f,
+		1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f,-1.0f,
+		-1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f,
+		-1.0f, 1.0f, 1.0f,
+		1.0f,-1.0f, 1.0f
+	};
+
+	/*for (int n = 0, size = 108; n < size; n++) {
+		float &f = g_vertex_buffer_data[n];
+		f -= offset;
+		continue;
+	}*/
 
 	GLuint vertexBuffer = 0;
 	glGenBuffers(1, &vertexBuffer);

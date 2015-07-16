@@ -130,21 +130,23 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="BasicVertexShader.vertexshader">
-      <Filter>Resource Files</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="BasicFragmentShader.fragmentshader">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="Assets\Images\grassTile01.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Assets\Images\grass.png">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TextureFragmentShader.fragmentshader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="BasicFragmentShader.fragmentshader" />
+    <None Include="BasicVertexShader.vertexshader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="TextureVertexShader.vertexshader">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

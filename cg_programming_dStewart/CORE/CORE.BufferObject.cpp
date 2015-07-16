@@ -9,4 +9,5 @@ BufferObject::BufferObject() {
 	this->vertexColorBuffer = NULL;
 	this->uvBuffer = NULL;
 	this->vertexNormalBuffer = NULL;
+	this->type = 0;
 }

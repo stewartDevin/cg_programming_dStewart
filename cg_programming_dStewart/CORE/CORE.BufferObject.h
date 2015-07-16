@@ -11,6 +11,7 @@ public:
 	GLuint vertexColorBuffer;
 	GLuint uvBuffer;
 	GLuint vertexNormalBuffer;
+	int type;
 
 	BufferObject::BufferObject();
 };

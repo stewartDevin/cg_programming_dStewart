@@ -5,6 +5,8 @@
 #include "CORE.BufferObject.h"
 #include "../APP/APP.DataCore.h"
 
+float num = 0.0f;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Render
 glm::mat4 Render::RenderVertex(GLuint vertexBuffer, const vec3& position, const vec3& scaleVec) {
@@ -20,10 +22,15 @@ glm::mat4 Render::RenderVertex(GLuint vertexBuffer, const vec3& position, const 
 		(void*)0	// array buffer offset...
 		);
 
+	num += 1.0f * DataCore::deltaTime;
+
 	mat4 identityMatrix = mat4(1.0f);
-	mat4 positionMatrix = translate(identityMatrix, position);
-	mat4 scaleMatrix = scale(positionMatrix, scaleVec);
-	return scaleMatrix;
+	mat4 scaleMatrix = glm::scale(identityMatrix, scaleVec);
+	mat4 translateMatrix = glm::translate(identityMatrix, position);
+	mat4 rotationMatrix = glm::rotate(identityMatrix, num, vec3(0.0f, 0.5f, 0.5f));
+	mat4 modelToWorldMatrix = translateMatrix * rotationMatrix * scaleMatrix * identityMatrix;
+
+	return modelToWorldMatrix;
 }
 
 void Render::RenderColor(GLuint colorBuffer) {
@@ -78,7 +85,7 @@ glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, c
 	GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
 	glUniform1i(gl_location, 0);
 
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);

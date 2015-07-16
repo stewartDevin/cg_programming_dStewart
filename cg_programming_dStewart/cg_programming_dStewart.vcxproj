@@ -118,10 +118,12 @@
     <ClInclude Include="Main.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="BasicVertexShader.vertexshader" />
+    <Text Include="TextureVertexShader.vertexshader" />
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicFragmentShader.fragmentshader" />
+    <None Include="BasicVertexShader.vertexshader" />
+    <None Include="TextureFragmentShader.fragmentshader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Images\grass.png" />

@@ -27,7 +27,7 @@ int main() {
 	glBindVertexArray(vertexArrayID);
 
 	// Create and compile glsl from shaders.
-	DataCore::programID = Load::LoadShaders("BasicVertexShader.vertexshader", "BasicFragmentShader.fragmentshader");
+	DataCore::programID = Load::LoadShaders("TextureVertexShader.vertexshader", "TextureFragmentShader.fragmentshader");
 	//DataCore::dirtID = Load::LoadShaders("BasicVertexShader.vertexshader", "BasicFragmentShader.fragmentshader");
 
 	// init camera.
@@ -37,6 +37,9 @@ int main() {
 
 	// init perspective.
 	DataCore::camera.projectionMatrix = perspective(FIELD_OF_VIEW, DataCore::aspectRatio, Z_NEAR, Z_FAR);
+
+	// render lines...
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINES);
 
 	// run the main loop of the program.
 	if (Scene::MainLoop() == EXIT_WITH_ERROR) return EXIT_WITH_ERROR;

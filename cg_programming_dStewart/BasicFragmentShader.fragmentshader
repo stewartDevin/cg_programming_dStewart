@@ -1,17 +1,9 @@
 #version 330 core
 
-in vec2 UV;
-uniform sampler2D myTextureSampler;
+// Ouput data
+out vec3 color;
 
-out vec4 color;
-smooth in vec3 fragColor;
-
-void main() {
-	// output color = white
-	//color = vec3(1, 1, 1);
-
-	//color = fragColor;
-	color = texture2D( myTextureSampler, UV ).rgba;
-
-	//color.a = 1.00;
+void main()
+{
+	color = vec3(1, 1, 1);
 }

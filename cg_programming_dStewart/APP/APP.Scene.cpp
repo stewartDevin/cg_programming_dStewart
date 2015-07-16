@@ -80,17 +80,18 @@ void Scene::InitializeScene() {
 		//Load::__LoadTexture("./Assets/Images/dirt.jpg");
 
 		// load file
-		Load::LoadFile(LEVEL_1);
+		//Load::LoadFile(LEVEL_1);
 		// Load Grid
 		//LoadGrid();
-		Load::_LoadTexture(&DataCore::playerTexture, "./Assets/Images/player.png");
+		Load::_LoadTexture(&DataCore::playerTexture, "./Assets/Images/grass.jpg");
 
 		BufferObject bufferObj;
-		bufferObj.vertexBuffer = Load::LoadQuad();
-		bufferObj.uvBuffer = Load::LoadUVs();
+		//bufferObj.vertexBuffer = Load::LoadQuad();
+		bufferObj.vertexBuffer = Load::LoadCube();
+		bufferObj.uvBuffer = Load::LoadCubeUVs();
 		gObj = GameObject::CreateObject(
-			vec3(-2.4f, 1.4f, 0.01f),
-			vec3(DataCore::tileScale, DataCore::tileScale, 1.0f),
+			vec3(0.0f, 0.0f, -1.0f),
+			vec3(1.0f, 1.0f, 1.0f),
 			bufferObj,
 			DataCore::playerTexture
 		);
@@ -143,13 +144,13 @@ void Update() {
 	RunControls2(DataCore::camera.transform.position, 2.0f);
 
 	//GameObject* player = Scene::listOfObjects[Scene::listOfObjects.size()-1];
-	RunControls1(gObj->transform.position, 2.0f);
+	//RunControls1(gObj->transform.position, 2.0f);
 	//gObj->transform.scale = vec3(0.6f, 0.6f, 0.6f);
 
 	// update the camera
 	DataCore::camera.Update();
-	DataCore::camera.Follow(gObj->transform.position, 6.0f);
-	DataCore::camera.ConstrainMovement(0.0f, 0.0f, 11.0f, -11.0f);
+	//DataCore::camera.Follow(gObj->transform.position, 6.0f);
+	//DataCore::camera.ConstrainMovement(0.0f, 0.0f, 11.0f, -11.0f);
 	// Run Objects
 	GameObject::RunAllObjects();
 

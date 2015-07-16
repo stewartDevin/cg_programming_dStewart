@@ -12,7 +12,9 @@ public:
 	static void Load::LoadFile(char* str);
 
 	static GLuint LoadQuad();
+	static GLuint LoadCube();
 	static GLuint LoadUVs();
+	static GLuint LoadCubeUVs();
 
 	static GLuint LoadTriangle();
 
