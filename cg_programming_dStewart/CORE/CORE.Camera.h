@@ -15,6 +15,7 @@ public:
 	mat4 viewMatrix;
 	GLuint MVPMatrixID;
 	float followSpeed;
+	bool followTargetSet;
 
 	// constructor functions
 	Camera::Camera();
@@ -25,5 +26,6 @@ public:
 	void Update();
 	void Follow(vec3 targetPosition, float speed);
 	void ConstrainMovement(float left, float top, float right, float bottom);
+	void LookAtTarget(vec3 targetPosition);
 
 };

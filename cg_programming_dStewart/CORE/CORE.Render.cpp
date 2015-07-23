@@ -85,7 +85,39 @@ glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, c
 	GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
 	glUniform1i(gl_location, 0);
 
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDrawArrays(GL_TRIANGLES, 0, 500000);
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	
+	return positionMatrix;
+}
+
+glm::mat4 Render::RenderQuad(GameObject* gameObj) {
+	// Enable blending
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+
+	mat4 positionMatrix = RenderVertex(gameObj->bufferObject.vertexBuffer, gameObj->transform.position, gameObj->transform.scale);
+
+	//RenderColor(colorBuffer);
+
+	if (gameObj->bufferObject.vertexColorBuffer != NULL) {
+		RenderColor(gameObj->bufferObject.vertexColorBuffer);
+	}
+	if (gameObj->bufferObject.uvBuffer != NULL) {
+		RenderUVs(gameObj->bufferObject.uvBuffer);
+	}
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, gameObj->textureID);
+	glCullFace(GL_BACK);
+
+	GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
+	glUniform1i(gl_location, 0);
+
+	glDrawArrays(GL_TRIANGLES, 0, gameObj->numIndices);
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);

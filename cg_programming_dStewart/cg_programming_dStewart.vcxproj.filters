@@ -69,6 +69,12 @@
     <ClCompile Include="APP\OpenWorldGame\OWG.DataCore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CORE\CORE.OBJ_Loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CORE\CORE.Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -128,6 +134,12 @@
     <ClInclude Include="APP\OpenWorldGame\OWG.DataCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CORE\CORE.OBJ_Loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CORE\CORE.Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Images\grassTile01.png">
@@ -148,5 +160,6 @@
     <Text Include="TextureVertexShader.vertexshader">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="Assets\Models\torus.txt" />
   </ItemGroup>
 </Project>

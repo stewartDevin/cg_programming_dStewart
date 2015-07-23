@@ -87,14 +87,28 @@ void Scene::InitializeScene() {
 
 		BufferObject bufferObj;
 		//bufferObj.vertexBuffer = Load::LoadQuad();
-		bufferObj.vertexBuffer = Load::LoadCube();
+		/*bufferObj.vertexBuffer = Load::LoadCube();
 		bufferObj.uvBuffer = Load::LoadCubeUVs();
 		gObj = GameObject::CreateObject(
 			vec3(0.0f, 0.0f, -1.0f),
 			vec3(1.0f, 1.0f, 1.0f),
 			bufferObj,
 			DataCore::playerTexture
-		);
+		);*/
+
+		bufferObj.vertexBuffer = Load::_LoadVertsMesh();
+		bufferObj.uvBuffer = Load::_LoadUVsMesh();
+
+		
+		gObj = GameObject::CreateMeshOBJObject(
+			vec3(0.0f, 0.0f, -1.0f),
+			vec3(1.0f, 1.0f, 1.0f),
+			bufferObj,
+			DataCore::playerTexture
+			);
+		//Load::_LoadMesh();
+
+
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
@@ -105,13 +119,13 @@ vector<GameObject*> Scene::listOfObjects;
 
 void RunControls1(vec3& position, float const& speed) {
 	if (Keyboard::Q) {
-		position.z -= speed * DataCore::deltaTime;
+		position.z += speed * DataCore::deltaTime;
 	}
 	if (Keyboard::W) {
 		position.y += speed * DataCore::deltaTime;
 	}
 	if (Keyboard::E) {
-		position.z += speed * DataCore::deltaTime;
+		position.z -= speed * DataCore::deltaTime;
 	}
 	if (Keyboard::S) {
 		position.y -= speed * DataCore::deltaTime;
@@ -141,7 +155,7 @@ void RunControls2(vec3& position, float const& speed) {
 
 void Update() {
 
-	RunControls2(DataCore::camera.transform.position, 2.0f);
+	RunControls1(DataCore::camera.transform.position, 4.0f);
 
 	//GameObject* player = Scene::listOfObjects[Scene::listOfObjects.size()-1];
 	//RunControls1(gObj->transform.position, 2.0f);

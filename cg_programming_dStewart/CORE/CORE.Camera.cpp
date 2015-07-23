@@ -16,7 +16,8 @@ Camera::Camera() {
 		this->lookAt,		// look at
 		this->up		// up
 		);
-	GLuint MVPMatrixID = NULL;
+	this->MVPMatrixID = NULL;
+	this->followTargetSet = false;
 }
 
 Camera::Camera(vec3 position) {
@@ -31,7 +32,8 @@ Camera::Camera(vec3 position) {
 		this->lookAt,		// look at
 		this->up		// up
 		);
-	GLuint MVPMatrixID = NULL;
+	this->MVPMatrixID = NULL;
+	this->followTargetSet = false;
 }
 
 Camera::Camera(vec3 position, vec3 up, vec3 forward) {
@@ -46,7 +48,8 @@ Camera::Camera(vec3 position, vec3 up, vec3 forward) {
 		this->lookAt,		// look at
 		this->up		// up
 		);
-	GLuint MVPMatrixID = NULL;
+	this->MVPMatrixID = NULL;
+	this->followTargetSet = false;
 }
 
 // member functions
@@ -79,8 +82,12 @@ void Camera::Update() {
 		);
 }
 
+void LookAtTarget(vec3 targetPosition) {
+
+}
+
 void Camera::Follow(vec3 targetPosition, float speed) {
 	this->followSpeed = speed;
-	this->transform.position.x += (this->followSpeed * (targetPosition.x - this->transform.position.x)) * DataCore::deltaTime/4;
-	this->transform.position.y += (this->followSpeed * (targetPosition.y - this->transform.position.y)) * DataCore::deltaTime/4;
+	this->transform.position.x += (this->followSpeed * (targetPosition.x - this->transform.position.x)) * DataCore::deltaTime;
+	this->transform.position.y += (this->followSpeed * (targetPosition.y - this->transform.position.y)) * DataCore::deltaTime;
 }

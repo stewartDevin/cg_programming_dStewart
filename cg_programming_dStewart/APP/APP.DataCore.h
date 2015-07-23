@@ -6,6 +6,7 @@
 #include "../Application.h"
 #include "../CORE/CORE.Camera.h"
 
+
 class DataCore {
 public:
 	static GLuint programID;
@@ -37,4 +38,10 @@ public:
 	static float DataCore::yTilePos;
 	static float DataCore::tileScale;
 	static float DataCore::tileSpacing;
+
+	// Read our .obj file
+	static std::vector< glm::vec3 > vertices;
+	static std::vector< glm::vec2 > uvs;
+	static std::vector< glm::vec3 > normals; // Won't be used at the moment.
+	static bool res;
 };

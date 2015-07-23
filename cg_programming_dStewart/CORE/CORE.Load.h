@@ -24,4 +24,7 @@ public:
 	static void _LoadTexture(GLuint* texture, char* path);
 	static void __LoadTexture(char* filePath);
 
+	static GLuint _LoadVertsMesh();
+	static GLuint _LoadUVsMesh();
+
 };

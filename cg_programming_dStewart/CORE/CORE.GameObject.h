@@ -17,12 +17,15 @@ public:
 	bool initialized;
 	BufferObject bufferObject;
 	GLuint textureID;
+	int numIndices;
 
 	GameObject::GameObject(vec3 position, vec3 scale, BufferObject bufferObject, GLuint textureID);
 
 	GameObject::GameObject();
 
 	static GameObject* GameObject::CreateObject(vec3 position, vec3 scale, BufferObject bufferObject, GLuint textureID);
+
+	static GameObject* GameObject::CreateMeshOBJObject(vec3 position, vec3 scale, BufferObject bufferObject, GLuint textureID);
 
 	static void GameObject::DeleteObject(GameObject* object);
 

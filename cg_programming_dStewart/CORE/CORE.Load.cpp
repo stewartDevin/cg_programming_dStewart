@@ -365,6 +365,27 @@ GLuint Load::LoadQuad() {
 	return vertexBuffer;
 }
 
+GLuint Load::_LoadVertsMesh() {
+
+	GLuint vertexBuffer = 0;
+	glGenBuffers(1, &vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, DataCore::vertices.size() * sizeof(glm::vec3), &DataCore::vertices[0], GL_STATIC_DRAW);
+
+	return vertexBuffer;
+}
+
+GLuint Load::_LoadUVsMesh() {
+
+	GLuint uvBuffer = 0;
+	glGenBuffers(1, &uvBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+	glBufferData(GL_ARRAY_BUFFER, DataCore::uvs.size() * sizeof(glm::vec2), &DataCore::uvs[0], GL_STATIC_DRAW);
+
+	return uvBuffer;
+
+}
+
 GLuint Load::LoadCube() {
 	float offset = 0.5f;
 
