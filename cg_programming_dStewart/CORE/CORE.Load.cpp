@@ -370,6 +370,8 @@ GLuint Load::_LoadVertsMesh() {
 	GLuint vertexBuffer = 0;
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	if (DataCore::vertices.size() == 0) return NULL;
+
 	glBufferData(GL_ARRAY_BUFFER, DataCore::vertices.size() * sizeof(glm::vec3), &DataCore::vertices[0], GL_STATIC_DRAW);
 
 	return vertexBuffer;
@@ -380,6 +382,7 @@ GLuint Load::_LoadUVsMesh() {
 	GLuint uvBuffer = 0;
 	glGenBuffers(1, &uvBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
+	if (DataCore::uvs.size() == 0) return NULL;
 	glBufferData(GL_ARRAY_BUFFER, DataCore::uvs.size() * sizeof(glm::vec2), &DataCore::uvs[0], GL_STATIC_DRAW);
 
 	return uvBuffer;

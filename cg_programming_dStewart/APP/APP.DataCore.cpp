@@ -43,4 +43,4 @@ float DataCore::tileSpacing = -0.02f;
 std::vector< glm::vec3 > DataCore::vertices;
 std::vector< glm::vec2 > DataCore::uvs;
 std::vector< glm::vec3 > DataCore::normals; // Won't be used at the moment.
-bool DataCore::res = OBJ_Loader::LoadOBJ("./Assets/Models/torus.obj", vertices, uvs, normals);
+bool DataCore::res = OBJ_Loader::LoadOBJ("./Assets/Models/pillar.obj", vertices, uvs, normals);
