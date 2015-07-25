@@ -12,15 +12,11 @@
 
 # Build results
 *.tlog
-#[Dd]ebug/
 [Dd]ebugPublic/
-#[Rr]eleases/
 x64/
 x86/
 build/
 bld/
-#[Bb]in/
-*.tlog
 
 # Visual Studo 2015 cache/options directory
 .vs/
