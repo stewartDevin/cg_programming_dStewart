@@ -90,6 +90,7 @@
     <ClCompile Include="CORE\CORE.GL_Init.cpp" />
     <ClCompile Include="CORE\CORE.Keyboard.cpp" />
     <ClCompile Include="CORE\CORE.Load.cpp" />
+    <ClCompile Include="CORE\CORE.Material.cpp" />
     <ClCompile Include="CORE\CORE.Matrix.cpp" />
     <ClCompile Include="CORE\CORE.Mesh.cpp" />
     <ClCompile Include="CORE\CORE.OBJ_Loader.cpp" />
@@ -113,6 +114,7 @@
     <ClInclude Include="CORE\CORE.GL_Init.h" />
     <ClInclude Include="CORE\CORE.Keyboard.h" />
     <ClInclude Include="CORE\CORE.Load.h" />
+    <ClInclude Include="CORE\CORE.Material.h" />
     <ClInclude Include="CORE\CORE.Matrix.h" />
     <ClInclude Include="CORE\CORE.Mesh.h" />
     <ClInclude Include="CORE\CORE.OBJ_Loader.h" />

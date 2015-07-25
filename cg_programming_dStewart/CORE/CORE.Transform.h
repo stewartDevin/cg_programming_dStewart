@@ -17,4 +17,5 @@ public:
 
 	Transform::Transform();
 	Transform::Transform(vec3 position, vec3 scale, vec3 rotation, vec3 velocity);
+	Transform::Transform(vec3 position);
 };

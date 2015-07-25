@@ -54,16 +54,16 @@ void GameObject::Init() {
 }
 
 void GameObject::Run(Camera* camera) {
-	if (!this->initialized) {
-		this->Init();
-		this->initialized = true;
-	}
-
-	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * Render::RenderQuad(&this->bufferObject, this->transform.position, this->transform.scale, this->textureID);
-	glUniformMatrix4fv(camera->MVPMatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
-
-	this->transform.position += this->transform.velocity * DataCore::deltaTime;
-	this->transform.angle += this->transform.rotationSpeed * DataCore::deltaTime;
+//	if (!this->initialized) {
+//		this->Init();
+//		this->initialized = true;
+//	}
+//
+////	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * Render::RenderQuad(&this->bufferObject, this->transform.position, this->transform.scale, this->textureID);
+//	glUniformMatrix4fv(camera->MVPMatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
+//
+//	this->transform.position += this->transform.velocity * DataCore::deltaTime;
+//	this->transform.angle += this->transform.rotationSpeed * DataCore::deltaTime;
 }
 
 void GameObject::RunAllObjects() {

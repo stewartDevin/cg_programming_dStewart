@@ -3,6 +3,7 @@
 #include "CORE.Load.h"
 #include "../APP/APP.DataCore.h"
 #include "../APP/APP.Scene.h"
+#include <vector>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Load
@@ -365,27 +366,27 @@ GLuint Load::LoadQuad() {
 	return vertexBuffer;
 }
 
-GLuint Load::_LoadVertsMesh() {
+GLuint Load::_LoadVertsMesh(std::vector < glm::vec3 >& verticesBuffer) {
 
 	GLuint vertexBuffer = 0;
 	glGenBuffers(1, &vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	if (DataCore::vertices.size() == 0) return NULL;
+	//if (DataCore::vertices.size() == 0) return NULL;
 
-	glBufferData(GL_ARRAY_BUFFER, DataCore::vertices.size() * sizeof(glm::vec3), &DataCore::vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, verticesBuffer.size() * sizeof(glm::vec3), &verticesBuffer[0], GL_STATIC_DRAW);
 
 	return vertexBuffer;
 }
 
-GLuint Load::_LoadUVsMesh() {
+GLuint Load::_LoadUVsMesh(std::vector < glm::vec2 >& uvBuffer) {
 
-	GLuint uvBuffer = 0;
-	glGenBuffers(1, &uvBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
-	if (DataCore::uvs.size() == 0) return NULL;
-	glBufferData(GL_ARRAY_BUFFER, DataCore::uvs.size() * sizeof(glm::vec2), &DataCore::uvs[0], GL_STATIC_DRAW);
+	GLuint uvBufferID = 0;
+	glGenBuffers(1, &uvBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, uvBufferID);
+	//if (DataCore::uvs.size() == 0) return NULL;
+	glBufferData(GL_ARRAY_BUFFER, uvBuffer.size() * sizeof(glm::vec2), &uvBuffer[0], GL_STATIC_DRAW);
 
-	return uvBuffer;
+	return uvBufferID;
 
 }
 

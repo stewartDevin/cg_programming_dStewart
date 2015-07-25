@@ -12,6 +12,8 @@
 #include "Pong\Pong.Options.h"
 #include "Pong\Pong.Scene.h"
 #include "APP.DataCore.h"
+#include "..\CORE\CORE.Material.h"
+#include "..\CORE\CORE.Mesh.h"
 using namespace std;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -67,8 +69,10 @@ string Scene::loadedLevel = "";
 //
 //}
 
-GameObject* gObj = NULL;
-
+Material* sceneMaterial = NULL;
+Transform transform1(vec3(0.0f, 0.0f, 0.0f));
+Transform transform2(vec3(0.0f, 0.0f, 0.0f));
+Transform transform3(vec3(4.0f, 0.0f, 0.0f));
 
 void Scene::InitializeScene() {
 	if (!Scene::sceneInitialized) {
@@ -83,9 +87,9 @@ void Scene::InitializeScene() {
 		//Load::LoadFile(LEVEL_1);
 		// Load Grid
 		//LoadGrid();
-		Load::_LoadTexture(&DataCore::playerTexture, "./Assets/Images/grass.jpg");
+		//Load::_LoadTexture(&DataCore::playerTexture, "./Assets/Images/floorPillarStairs_Diffuse.png");
 
-		BufferObject bufferObj;
+		//BufferObject bufferObj;
 		//bufferObj.vertexBuffer = Load::LoadQuad();
 		/*bufferObj.vertexBuffer = Load::LoadCube();
 		bufferObj.uvBuffer = Load::LoadCubeUVs();
@@ -96,19 +100,22 @@ void Scene::InitializeScene() {
 			DataCore::playerTexture
 		);*/
 
-		bufferObj.vertexBuffer = Load::_LoadVertsMesh();
-		bufferObj.uvBuffer = Load::_LoadUVsMesh();
+		// tell openGL to use our program...
+		glUseProgram(DataCore::programID);
+
+		sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
 
 		
-		gObj = GameObject::CreateMeshOBJObject(
-			vec3(0.0f, 0.0f, -1.0f),
-			vec3(1.0f, 1.0f, 1.0f),
-			bufferObj,
-			DataCore::playerTexture
-			);
-		//Load::_LoadMesh();
 
+		// floor
+		Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, transform1);
+		// stairs
+		Mesh::CreateMeshObject("./Assets/Models/stairs1.obj", *sceneMaterial, transform2);
 
+		// pillars
+		Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, transform3);
+		//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 0.0f)));
+		//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 0.0f)));
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
@@ -173,6 +180,7 @@ void Update() {
 }
 
 int Scene::MainLoop() {
+	
 	Scene::InitializeScene();
 	do {
 		// clear the screen...
@@ -183,8 +191,7 @@ int Scene::MainLoop() {
 		//fprintf(stdout, "Delta Time: %f", getDeltaTime()); 
 		DataCore::deltaTime = Utility::getDeltaTime();
 
-		// tell openGL to use our program...
-		glUseProgram(DataCore::programID);
+		
 		// Run Keyboard Input
 		Keyboard::RunKeyboardKeys();
 		// update

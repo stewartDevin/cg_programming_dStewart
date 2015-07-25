@@ -35,5 +35,5 @@ public:
 
 	void Init();
 
-	void Run(Camera* camera);
+	void virtual Run(Camera* camera);
 };

@@ -24,7 +24,7 @@ public:
 	static void _LoadTexture(GLuint* texture, char* path);
 	static void __LoadTexture(char* filePath);
 
-	static GLuint _LoadVertsMesh();
-	static GLuint _LoadUVsMesh();
+	static GLuint _LoadVertsMesh(std::vector < glm::vec3 >& verticesBuffer);
+	static GLuint _LoadUVsMesh(std::vector < glm::vec2 >& uvBuffer);
 
 };
