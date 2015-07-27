@@ -6,20 +6,36 @@
 
 /////////////////////////////////////////////////
 // static variables
-double Mouse::X = 0;
-double Mouse::Y = 0;
+double Mouse::X = 0.0;
+double Mouse::Y = 0.0;
+
+double Mouse::xScroll = 0.0;
+double Mouse::yScroll = 0.0;
 
 bool Mouse::LEFT_BUTTON_DOWN = false;
 
+float Mouse::sensitivity = 0.05f;
+
 /////////////////////////////////////////////////
 // static functions
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	Mouse::xScroll = xoffset;
+	Mouse::yScroll = yoffset;
+}
+
+
+void Mouse::InitMouse() {
+	glfwSetScrollCallback(DataCore::window, scroll_callback);
+}
 
 // get mouse position
 vec2 Mouse::GetMousePosition() {
 	if (DataCore::window != NULL) {
 
 		glfwGetCursorPos(DataCore::window, &Mouse::X, &Mouse::Y);
-		//fprintf(stdout, "Mouse Position: %f %f", Mouse::X, Mouse::Y);
+		//fprintf(stdout, "Mouse Position: %f %f \r\n", Mouse::X, Mouse::Y);
 		return vec2(Mouse::X, Mouse::Y);
 	}
 	else {
@@ -29,3 +45,20 @@ vec2 Mouse::GetMousePosition() {
 	
 }
 
+void Mouse::LockMousePosition() {
+	// Reset mouse position for next frame
+	glfwSetCursorPos(DataCore::window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+
+}
+
+void Mouse::RunFPSMouseMovement(Camera* camera) {
+	// Compute new orientation
+	camera->horizontalAngle += Mouse::sensitivity * DataCore::deltaTime * float(SCREEN_WIDTH / 2 - Mouse::X);
+	camera->verticalAngle += Mouse::sensitivity * DataCore::deltaTime * float(SCREEN_HEIGHT / 2 - Mouse::Y);
+
+}
+
+void Mouse::RunFPSMouse() {
+	Mouse::LockMousePosition();
+	Mouse::RunFPSMouseMovement(&DataCore::camera);
+}

@@ -3,17 +3,19 @@
 
 #include "CORE.Camera.h"
 #include "..\APP\APP.DataCore.h"
+#include "CORE.Mouse.h"
+#include "CORE.Keyboard.h"
 
 // camera constructor functions.
 Camera::Camera() {
 	this->followSpeed = 0.0f;
 	this->transform = Transform();
 	this->up = vec3(0.0f, 1.0f, 0.0f);
-	this->lookAt = vec3(0.0f, 0.0f, 0.0f);
-	this->projectionMatrix = perspective(FIELD_OF_VIEW, DataCore::aspectRatio, Z_NEAR, Z_FAR);
+	this->right = vec3(1.0f, 0.0f, 0.0f);
+	this->forward = vec3(0.0f, 0.0f, 0.0f);
 	this->viewMatrix = glm::lookAt(
 		this->transform.position,		// position
-		this->lookAt,		// look at
+		this->transform.position+this->forward,		// look at
 		this->up		// up
 		);
 	this->MVPMatrixID = NULL;
@@ -23,9 +25,10 @@ Camera::Camera() {
 	// vertical angle : 0, look at the horizon
 	this->verticalAngle = 0.0f;
 	this->isInitialized = false;
-	this->initialFoV = 45.0f;
+	this->initialFoV = FIELD_OF_VIEW;
+	this->projectionMatrix = perspective(this->initialFoV, DataCore::aspectRatio, Z_NEAR, Z_FAR);
 	this->moveSpeed = 3.0f; // 3 units / second
-	this->mouseSpeed = 0.005f;
+	this->FoV = this->initialFoV;
 }
 
 Camera::Camera(vec3 position) {
@@ -33,11 +36,11 @@ Camera::Camera(vec3 position) {
 	this->transform = Transform();
 	this->transform.position = position;
 	this->up = vec3(0.0f, 1.0f, 0.0f);
-	this->lookAt = vec3(0.0f, 0.0f, 0.0f);
-	this->projectionMatrix = perspective(FIELD_OF_VIEW, DataCore::aspectRatio, Z_NEAR, Z_FAR);
+	this->right = vec3(1.0f, 0.0f, 0.0f);
+	this->forward = vec3(0.0f, 0.0f, 0.0f);
 	this->viewMatrix = glm::lookAt(
 		this->transform.position,		// position
-		this->lookAt,		// look at
+		this->transform.position + this->forward,		// look at
 		this->up		// up
 		);
 	this->MVPMatrixID = NULL;
@@ -47,9 +50,10 @@ Camera::Camera(vec3 position) {
 	// vertical angle : 0, look at the horizon
 	this->verticalAngle = 0.0f;
 	this->isInitialized = false;
-	this->initialFoV = 45.0f;
+	this->initialFoV = FIELD_OF_VIEW;
+	this->projectionMatrix = perspective(this->initialFoV, DataCore::aspectRatio, Z_NEAR, Z_FAR);
 	this->moveSpeed = 3.0f; // 3 units / second
-	this->mouseSpeed = 0.005f;
+	this->FoV = this->initialFoV;
 }
 
 Camera::Camera(vec3 position, vec3 up, vec3 forward) {
@@ -57,11 +61,12 @@ Camera::Camera(vec3 position, vec3 up, vec3 forward) {
 	this->transform = Transform();
 	this->transform.position = position;
 	this->up = up;
-	this->lookAt = forward;
-	this->projectionMatrix = perspective(FIELD_OF_VIEW, DataCore::aspectRatio, Z_NEAR, Z_FAR);
+	this->right = vec3(1.0f, 0.0f, 0.0f);
+	this->forward = forward;
+	
 	this->viewMatrix = glm::lookAt(
 		this->transform.position,		// position
-		this->lookAt,		// look at
+		this->transform.position + this->forward,		// look at
 		this->up		// up
 		);
 	this->MVPMatrixID = NULL;
@@ -71,9 +76,10 @@ Camera::Camera(vec3 position, vec3 up, vec3 forward) {
 	// vertical angle : 0, look at the horizon
 	this->verticalAngle = 0.0f;
 	this->isInitialized = false;
-	this->initialFoV = 45.0f;
+	this->initialFoV = FIELD_OF_VIEW;
+	this->projectionMatrix = perspective(this->initialFoV, DataCore::aspectRatio, Z_NEAR, Z_FAR);
 	this->moveSpeed = 3.0f; // 3 units / second
-	this->mouseSpeed = 0.005f;
+	this->FoV = this->initialFoV;
 }
 
 // member functions
@@ -95,18 +101,43 @@ void Camera::ConstrainMovement(float left, float top, float right, float bottom)
 void Camera::Update() {
 	if (!this->isInitialized) this->Init();
 
-	vec3 forward = vec3(0.0f, 0.0f, 0.0f);
+	//vec3 forward = vec3(0.0f, 0.0f, 0.0f);
 
 	// get the forward of the camera
-	forward = this->transform.position;
-	forward.z = 1.0f;
+	//forward = this->transform.position;
+	//forward.z = 1.0f;
 	
 	//forward = DataCore::playerMesh->transform.position;
+	//if (Mouse::yScroll != 0.0)
+	//this->FoV = this->initialFoV - 0.8 * (Mouse::yScroll);
+	
+	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+	//this->projectionMatrix = glm::perspective(this->FoV, 4.0f / 3.0f, 0.1f, 100.0f);
+
+	///////////////////////////////////////////////
+	// for FPS camera
+	// forward : Spherical coordinates to Cartesian coordinates conversion
+	this->forward = vec3(
+		cos(this->verticalAngle) * sin(this->horizontalAngle),
+		sin(this->verticalAngle),
+		cos(this->verticalAngle) * cos(this->horizontalAngle)
+		);
+	////////////////////////////
+
+	// Right vector
+	this->right = glm::vec3(
+		sin(this->horizontalAngle - 3.14f / 2.0f),
+		0,
+		cos(this->horizontalAngle - 3.14f / 2.0f)
+		);
+
+	// Up vector : perpendicular to both direction and right
+	this->up = glm::cross(this->right, this->forward);
+
 
 	this->viewMatrix = glm::lookAt(
 		this->transform.position,	 // position
-		//forward,        // look at
-		this->lookAt,        
+		this->transform.position + this->forward, // look at
 		this->up		// up
 		);
 }
@@ -123,6 +154,28 @@ void Camera::Init() {
 }
 
 void LookAtTarget(vec3 targetPosition) {
+
+}
+
+void Camera::MoveWithFPSControls() {
+	if (Keyboard::Q) {
+		this->transform.position -= this->up * DataCore::deltaTime * this->moveSpeed;
+	}
+	if (Keyboard::W) {
+		this->transform.position += this->forward * DataCore::deltaTime * this->moveSpeed;
+	}
+	if (Keyboard::E) {
+		this->transform.position += this->up * DataCore::deltaTime * this->moveSpeed;
+	}
+	if (Keyboard::A) {
+		this->transform.position -= this->right * DataCore::deltaTime * this->moveSpeed;
+	}
+	if (Keyboard::S) {
+		this->transform.position -= this->forward * DataCore::deltaTime * this->moveSpeed;
+	}
+	if (Keyboard::D) {
+		this->transform.position += this->right * DataCore::deltaTime * this->moveSpeed;
+	}
 
 }
 

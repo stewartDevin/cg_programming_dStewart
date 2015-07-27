@@ -154,10 +154,12 @@ void RunControls2(vec3& position, float const& speed) {
 	}
 }
 
+
+
 void Update() {
 
-	RunControls1(DataCore::camera.transform.position, 4.0f);
-	RunControls2(DataCore::playerMesh->transform.position, 4.0f);
+	//RunControls1(DataCore::camera.transform.position, 4.0f);
+	//RunControls2(DataCore::playerMesh->transform.position, 4.0f);
 
 	//GameObject* player = Scene::listOfObjects[Scene::listOfObjects.size()-1];
 	//RunControls1(gObj->transform.position, 2.0f);
@@ -165,6 +167,7 @@ void Update() {
 
 	// update the camera
 	DataCore::camera.Update();
+	DataCore::camera.MoveWithFPSControls();
 	//DataCore::camera.Follow(gObj->transform.position, 6.0f);
 	//DataCore::camera.ConstrainMovement(0.0f, 0.0f, 11.0f, -11.0f);
 	// Run Objects
@@ -177,6 +180,7 @@ void Update() {
 int Scene::MainLoop() {
 	
 	Scene::InitializeScene();
+	Mouse::InitMouse();
 	do {
 		// clear the screen...
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -189,6 +193,7 @@ int Scene::MainLoop() {
 		
 		// Run Keyboard Input
 		Mouse::GetMousePosition();
+		Mouse::RunFPSMouse();
 		Keyboard::RunKeyboardKeys();
 		// update
 		Update();
