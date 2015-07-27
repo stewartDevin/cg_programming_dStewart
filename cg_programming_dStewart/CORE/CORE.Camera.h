@@ -41,6 +41,7 @@ public:
 	void ConstrainMovement(float left, float top, float right, float bottom);
 	void LookAtTarget(vec3 targetPosition);
 	void MoveWithFPSControls();
+	void CalculateVectors();
 
 	// private section
 private:

@@ -108,21 +108,26 @@ void Camera::Update() {
 	//forward.z = 1.0f;
 	
 	//forward = DataCore::playerMesh->transform.position;
-	//if (Mouse::yScroll != 0.0)
-	//this->FoV = this->initialFoV - 0.8 * (Mouse::yScroll);
-	
-	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-	//this->projectionMatrix = glm::perspective(this->FoV, 4.0f / 3.0f, 0.1f, 100.0f);
 
 	///////////////////////////////////////////////
 	// for FPS camera
+	
+	this->CalculateVectors();
+
+	this->viewMatrix = glm::lookAt(
+		this->transform.position,	 // position
+		this->transform.position + this->forward, // look at
+		this->up		// up
+		);
+}
+
+void Camera::CalculateVectors() {
 	// forward : Spherical coordinates to Cartesian coordinates conversion
 	this->forward = vec3(
 		cos(this->verticalAngle) * sin(this->horizontalAngle),
 		sin(this->verticalAngle),
 		cos(this->verticalAngle) * cos(this->horizontalAngle)
 		);
-	////////////////////////////
 
 	// Right vector
 	this->right = glm::vec3(
@@ -134,12 +139,6 @@ void Camera::Update() {
 	// Up vector : perpendicular to both direction and right
 	this->up = glm::cross(this->right, this->forward);
 
-
-	this->viewMatrix = glm::lookAt(
-		this->transform.position,	 // position
-		this->transform.position + this->forward, // look at
-		this->up		// up
-		);
 }
 
 void Camera::Init() {
@@ -151,10 +150,6 @@ void Camera::Init() {
 
 	// initialized = true;
 	this->isInitialized = true;
-}
-
-void LookAtTarget(vec3 targetPosition) {
-
 }
 
 void Camera::MoveWithFPSControls() {
