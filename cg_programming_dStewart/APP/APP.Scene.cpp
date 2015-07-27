@@ -14,6 +14,7 @@
 #include "APP.DataCore.h"
 #include "..\CORE\CORE.Material.h"
 #include "..\CORE\CORE.Mesh.h"
+#include "..\CORE\CORE.Mouse.h"
 using namespace std;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -89,16 +90,6 @@ void Scene::InitializeScene() {
 		//LoadGrid();
 		//Load::_LoadTexture(&DataCore::playerTexture, "./Assets/Images/floorPillarStairs_Diffuse.png");
 
-		//BufferObject bufferObj;
-		//bufferObj.vertexBuffer = Load::LoadQuad();
-		/*bufferObj.vertexBuffer = Load::LoadCube();
-		bufferObj.uvBuffer = Load::LoadCubeUVs();
-		gObj = GameObject::CreateObject(
-			vec3(0.0f, 0.0f, -1.0f),
-			vec3(1.0f, 1.0f, 1.0f),
-			bufferObj,
-			DataCore::playerTexture
-		);*/
 
 		// tell openGL to use our program...
 		glUseProgram(DataCore::programID);
@@ -197,6 +188,7 @@ int Scene::MainLoop() {
 
 		
 		// Run Keyboard Input
+		Mouse::GetMousePosition();
 		Keyboard::RunKeyboardKeys();
 		// update
 		Update();

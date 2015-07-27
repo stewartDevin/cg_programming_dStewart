@@ -22,6 +22,10 @@ Camera::Camera() {
 	this->horizontalAngle = 3.14f;
 	// vertical angle : 0, look at the horizon
 	this->verticalAngle = 0.0f;
+	this->isInitialized = false;
+	this->initialFoV = 45.0f;
+	this->moveSpeed = 3.0f; // 3 units / second
+	this->mouseSpeed = 0.005f;
 }
 
 Camera::Camera(vec3 position) {
@@ -42,6 +46,10 @@ Camera::Camera(vec3 position) {
 	this->horizontalAngle = 3.14f;
 	// vertical angle : 0, look at the horizon
 	this->verticalAngle = 0.0f;
+	this->isInitialized = false;
+	this->initialFoV = 45.0f;
+	this->moveSpeed = 3.0f; // 3 units / second
+	this->mouseSpeed = 0.005f;
 }
 
 Camera::Camera(vec3 position, vec3 up, vec3 forward) {
@@ -62,6 +70,10 @@ Camera::Camera(vec3 position, vec3 up, vec3 forward) {
 	this->horizontalAngle = 3.14f;
 	// vertical angle : 0, look at the horizon
 	this->verticalAngle = 0.0f;
+	this->isInitialized = false;
+	this->initialFoV = 45.0f;
+	this->moveSpeed = 3.0f; // 3 units / second
+	this->mouseSpeed = 0.005f;
 }
 
 // member functions
@@ -81,6 +93,8 @@ void Camera::ConstrainMovement(float left, float top, float right, float bottom)
 }
 
 void Camera::Update() {
+	if (!this->isInitialized) this->Init();
+
 	vec3 forward = vec3(0.0f, 0.0f, 0.0f);
 
 	// get the forward of the camera
@@ -95,6 +109,17 @@ void Camera::Update() {
 		this->lookAt,        
 		this->up		// up
 		);
+}
+
+void Camera::Init() {
+	// init MVP Matrix ID
+	this->MVPMatrixID = glGetUniformLocation(DataCore::programID, "MVP");
+
+	// init perspective.
+	this->projectionMatrix = perspective(this->initialFoV, DataCore::aspectRatio, Z_NEAR, Z_FAR);
+
+	// initialized = true;
+	this->isInitialized = true;
 }
 
 void LookAtTarget(vec3 targetPosition) {

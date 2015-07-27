@@ -16,11 +16,17 @@ public:
 	GLuint MVPMatrixID;
 	float followSpeed;
 	bool followTargetSet;
+	bool isInitialized;
 
 	// horizontal angle : toward -Z
 	float horizontalAngle;
 	// vertical angle : 0, look at the horizon
 	float verticalAngle;
+	// Initial Field of View
+	float initialFoV;
+
+	float moveSpeed; // 3 units / second
+	float mouseSpeed;
 
 	// constructor functions
 	Camera::Camera();
@@ -32,5 +38,10 @@ public:
 	void Follow(vec3 targetPosition, float speed);
 	void ConstrainMovement(float left, float top, float right, float bottom);
 	void LookAtTarget(vec3 targetPosition);
+
+	// private section
+private:
+	// private member functions
+	void Init();
 
 };
