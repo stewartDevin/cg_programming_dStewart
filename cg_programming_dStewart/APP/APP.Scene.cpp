@@ -71,50 +71,6 @@ vector<GameObject*> Scene::listOfObjects;
 //
 //}
 
-Material* sceneMaterial = NULL;
-Mesh* pillar1 = NULL;
-
-void Scene::InitializeScene() {
-	if (!Scene::sceneInitialized) {
-		/* load an image file directly as a new OpenGL texture */
-		//Load::_LoadTexture(&DataCore::grassTexture, "./Assets/Images/grass2.png");
-
-		//Load::_LoadTexture(&DataCore::dirtTexture, "./Assets/Images/dirt.jpg");
-		//Load::__LoadTexture("./Assets/Images/grass2.png");
-		//Load::__LoadTexture("./Assets/Images/dirt.jpg");
-
-		// load file
-		//Load::LoadFile(LEVEL_1);
-		// Load Grid
-		//LoadGrid();
-		//Load::_LoadTexture(&DataCore::playerTexture, "./Assets/Images/floorPillarStairs_Diffuse.png");
-
-
-		// tell openGL to use our program...
-		glUseProgram(DataCore::programID);
-
-		sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
-
-		
-		// floor
-		Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
-		// stairs
-		Mesh::CreateMeshObject("./Assets/Models/stairs1.obj",*sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
-		//// pillars
-		//first row
-		Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
-		Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 0.0f)));
-		Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 0.0f)));
-		//second row
-		Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 5.8f)));
-		Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 5.8f)));
-		DataCore::playerMesh = Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 5.8f)));
-
-		// init scene variable = true;
-		Scene::sceneInitialized = true;
-	}
-}
-
 
 
 void RunControls1(vec3& position, float const& speed) {
@@ -153,49 +109,82 @@ void RunControls2(vec3& position, float const& speed) {
 	}
 }
 
+Material* sceneMaterial = NULL;
+Mesh* floorMesh = NULL;
+
+void Scene::LoadLevelOne() {
+	sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
+
+	floorMesh = Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	// floor
+	//Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	// stairs
+	Mesh::CreateMeshObject("./Assets/Models/stairs1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	//// pillars
+	//first row
+	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 0.0f)));
+	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 0.0f)));
+	//second row
+	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 5.8f)));
+	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 5.8f)));
+	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 5.8f)));
+}
+
+void Scene::InitializeScene() {
+	if (!Scene::sceneInitialized) {
+
+		// tell openGL to use our program...
+		glUseProgram(DataCore::programID);
+		// enable the depth test for 3d
+		glEnable(GL_DEPTH_TEST);
+		// init the mouse
+		Mouse::InitMouse();
+
+		Scene::LoadLevelOne();
+
+		// init scene variable = true;
+		Scene::sceneInitialized = true;
+	}
+}
+
 
 
 void Update() {
 
-	//RunControls1(DataCore::camera.transform.position, 4.0f);
-	//RunControls2(DataCore::playerMesh->transform.position, 4.0f);
+	// clear the screen...
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//GameObject* player = Scene::listOfObjects[Scene::listOfObjects.size()-1];
-	//RunControls1(gObj->transform.position, 2.0f);
-	//gObj->transform.scale = vec3(0.6f, 0.6f, 0.6f);
+	// get the deltaTime...
+	DataCore::deltaTime = Utility::getDeltaTime();
+	//fprintf(stdout, "Delta Time: %f", getDeltaTime()); 
+	
+
+	//RunControls1(DataCore::camera.transform.position, 4.0f);
 
 	// update the camera
 	DataCore::camera.Update();
+	// move with FPS controls
 	DataCore::camera.MoveWithFPSControls();
-	//DataCore::camera.Follow(gObj->transform.position, 6.0f);
-	//DataCore::camera.ConstrainMovement(0.0f, 0.0f, 11.0f, -11.0f);
+	
+	// Run FPS mouse look
+	Mouse::RunFPSMouse();
+	// Run Keyboard Input
+	Keyboard::RunKeyboardKeys();
 	// Run Objects
 	GameObject::RunAllObjects();
 
-	// Run Pong
-	//PongScene::PongMainLoop();
 }
 
 int Scene::MainLoop() {
 	
 	Scene::InitializeScene();
-	Mouse::InitMouse();
+
 	do {
-		// clear the screen...
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glEnable(GL_DEPTH_TEST);
-
-		// get the deltaTime...
-		//fprintf(stdout, "Delta Time: %f", getDeltaTime()); 
-		DataCore::deltaTime = Utility::getDeltaTime();
-
 		
-		// Run Keyboard Input
-		Mouse::GetMousePosition();
-		Mouse::RunFPSMouse();
-		Keyboard::RunKeyboardKeys();
 		// update
 		Update();
+		
 		// swap the screen buffers...
 		glfwSwapBuffers(DataCore::window);
 		// Run OpenGL's Event Handler...
@@ -204,12 +193,14 @@ int Scene::MainLoop() {
 	} while (glfwGetKey(DataCore::window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 		glfwWindowShouldClose(DataCore::window) == 0);
 
+
 	int save_result = SOIL_save_screenshot
 		(
 		"screenshot.bmp",
 		SOIL_SAVE_TYPE_BMP,
 		0, 0, 1024, 768
 		);
+
 
 	return EXIT_WITH_SUCCESS;
 }

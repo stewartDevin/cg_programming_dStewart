@@ -61,6 +61,8 @@ void Mouse::RunFPSMouseMovement(Camera* camera) {
 }
 
 void Mouse::RunFPSMouse() {
+	// get the mouse position
+	Mouse::GetMousePosition();
 	Mouse::LockMousePosition();
 	Mouse::RunFPSMouseMovement(&DataCore::camera);
 }

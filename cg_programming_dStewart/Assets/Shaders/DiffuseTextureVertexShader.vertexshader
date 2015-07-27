@@ -11,9 +11,12 @@ smooth out vec3 fragColor;
 // model view projection matrix...
 uniform mat4 MVP;
 
+out vec3 Normal_cameraspace;
+out vec3 LightDirection_cameraspace;
+
 void main() {
 	// Output position of the vertex, in clip space : MVP * position
-	gl_Position =  MVP * vec4(model_space_pos,1);
+	gl_Position =  MVP * vec4(model_space_pos, 1);
  
 	// Position of the vertex, in worldspace : M * position
 	Position_worldspace = (M * vec4(model_space_pos,1)).xyz;

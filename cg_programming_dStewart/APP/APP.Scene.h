@@ -36,4 +36,5 @@ public:
 	static void InitializeScene();
 	
 	static int Scene::MainLoop();
+	static void LoadLevelOne();
 };

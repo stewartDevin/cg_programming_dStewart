@@ -53,7 +53,7 @@ void Mesh::LoadMesh() {
 Mesh* Mesh::CreateMeshObject(const char* objFilePath, Material material, Transform transform) {
 	//Load::_LoadTexture(&material.diffuseImageID, material.diffuseImageFilePath);
 	Mesh* mesh = new Mesh(objFilePath, material);
-	
+
 	OBJ_Loader::LoadOBJ(objFilePath, mesh->verticesBuffer, mesh->uvsBuffer, mesh->normalsBuffer);
 	mesh->numIndices = mesh->verticesBuffer.size();
 	mesh->verticesBufferID = Load::_LoadVertsMesh(mesh->verticesBuffer);
@@ -61,7 +61,22 @@ Mesh* Mesh::CreateMeshObject(const char* objFilePath, Material material, Transfo
 	mesh->normalsBufferID = Load::_LoadNormalsMesh(mesh->normalsBuffer);
 	mesh->transform = transform;
 	Scene::listOfObjects.push_back(mesh);
-	
+
+	return mesh;
+}
+
+Mesh* Mesh::CreateMeshObjectDontPush(const char* objFilePath, Material material, Transform transform) {
+	//Load::_LoadTexture(&material.diffuseImageID, material.diffuseImageFilePath);
+	Mesh* mesh = new Mesh(objFilePath, material);
+
+	OBJ_Loader::LoadOBJ(objFilePath, mesh->verticesBuffer, mesh->uvsBuffer, mesh->normalsBuffer);
+	mesh->numIndices = mesh->verticesBuffer.size();
+	mesh->verticesBufferID = Load::_LoadVertsMesh(mesh->verticesBuffer);
+	mesh->uvsBufferID = Load::_LoadUVsMesh(mesh->uvsBuffer);
+	mesh->normalsBufferID = Load::_LoadNormalsMesh(mesh->normalsBuffer);
+	mesh->transform = transform;
+	//Scene::listOfObjects.push_back(mesh);
+
 	return mesh;
 }
 

@@ -86,6 +86,7 @@
     <ClCompile Include="APP\Pong\Pong.Scene.cpp" />
     <ClCompile Include="CORE\CORE.BufferObject.cpp" />
     <ClCompile Include="CORE\CORE.Camera.cpp" />
+    <ClCompile Include="CORE\CORE.Light.cpp" />
     <ClCompile Include="CORE\CORE.GameObject.cpp" />
     <ClCompile Include="CORE\CORE.GL_Init.cpp" />
     <ClCompile Include="CORE\CORE.Keyboard.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="APP\Pong\Pong.Scene.h" />
     <ClInclude Include="CORE\CORE.BufferObject.h" />
     <ClInclude Include="CORE\CORE.Camera.h" />
+    <ClInclude Include="CORE\CORE.Light.h" />
     <ClInclude Include="CORE\CORE.GameObject.h" />
     <ClInclude Include="CORE\CORE.GL_Init.h" />
     <ClInclude Include="CORE\CORE.Keyboard.h" />

@@ -25,6 +25,7 @@ public:
 	// member functions
 	void Mesh::Run(Camera* camera);
 	static Mesh* Mesh::CreateMeshObject(const char* objFilePath, Material material, Transform transform);
+	static Mesh* Mesh::CreateMeshObjectDontPush(const char* objFilePath, Material material, Transform transform);
 	void Mesh::LoadMesh();
 	glm::mat4 RenderMesh();
 };
