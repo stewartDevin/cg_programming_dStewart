@@ -24,6 +24,8 @@ bool Scene::sceneInitialized = false;
 string Scene::loadedFile = "";
 string Scene::loadedLevel = "";
 
+vector<GameObject*> Scene::listOfObjects;
+
 
 //void LoadGrid() {
 //	// load grid
@@ -70,9 +72,7 @@ string Scene::loadedLevel = "";
 //}
 
 Material* sceneMaterial = NULL;
-Transform transform1(vec3(0.0f, 0.0f, 0.0f));
-Transform transform2(vec3(0.0f, 0.0f, 0.0f));
-Transform transform3(vec3(4.0f, 0.0f, 0.0f));
+Mesh* pillar1 = NULL;
 
 void Scene::InitializeScene() {
 	if (!Scene::sceneInitialized) {
@@ -105,15 +105,14 @@ void Scene::InitializeScene() {
 
 		sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
 
-		
-
-		// floor
-		Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, transform1);
 		// stairs
-		Mesh::CreateMeshObject("./Assets/Models/stairs1.obj", *sceneMaterial, transform2);
-
+		Mesh::CreateMeshObject("./Assets/Models/stairs1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+		// floor
+		Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+		
 		// pillars
-		Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, transform3);
+		Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+		pillar1 = Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 0.0f)));
 		//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 0.0f)));
 		//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 0.0f)));
 
@@ -122,7 +121,7 @@ void Scene::InitializeScene() {
 	}
 }
 
-vector<GameObject*> Scene::listOfObjects;
+
 
 void RunControls1(vec3& position, float const& speed) {
 	if (Keyboard::Q) {
@@ -163,6 +162,7 @@ void RunControls2(vec3& position, float const& speed) {
 void Update() {
 
 	RunControls1(DataCore::camera.transform.position, 4.0f);
+	RunControls2(pillar1->transform.position, 4.0f);
 
 	//GameObject* player = Scene::listOfObjects[Scene::listOfObjects.size()-1];
 	//RunControls1(gObj->transform.position, 2.0f);

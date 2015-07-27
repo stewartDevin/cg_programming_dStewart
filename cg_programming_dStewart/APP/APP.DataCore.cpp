@@ -17,7 +17,7 @@ GLFWwindow* DataCore::window = NULL;
 float DataCore::deltaTime = 0.0f;
 
 // camera
-Camera DataCore::camera = Camera(vec3(0.0f, 0.0f, 4.5f));
+Camera DataCore::camera = Camera(vec3(0.0f, 1.0f, 8.0f));
 
 // list of textures
 vector<GLuint> DataCore::listOfTextures;

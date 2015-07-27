@@ -16,6 +16,7 @@ GameObject::GameObject(vec3 position, vec3 scale, BufferObject bufferObject, GLu
 	//this->colorID = colorID;
 	this->initialized = false;
 	this->numIndices = 0;
+	this->positionMatrix = mat4(1.0f);
 }
 
 GameObject::GameObject() {
@@ -25,6 +26,7 @@ GameObject::GameObject() {
 	this->bufferObject = BufferObject();
 	this->initialized = false;
 	this->numIndices = 0;
+	this->positionMatrix = mat4(1.0f);
 }
 
 GameObject* GameObject::CreateObject(vec3 position, vec3 scale, BufferObject bufferObject, GLuint textureID) {
@@ -35,12 +37,12 @@ GameObject* GameObject::CreateObject(vec3 position, vec3 scale, BufferObject buf
 	return object;
 }
 
-GameObject* GameObject::CreateMeshOBJObject(vec3 position, vec3 scale, BufferObject bufferObject, GLuint textureID) {
-	GameObject* object = new GameObject(position, scale, bufferObject, textureID);
-	Scene::listOfObjects.push_back(object);
-
-	return object;
-}
+//GameObject* GameObject::CreateMeshOBJObject(vec3 position, vec3 scale, BufferObject bufferObject, GLuint textureID) {
+//	GameObject* object = new GameObject(position, scale, bufferObject, textureID);
+//	Scene::listOfObjects.push_back(object);
+//
+//	return object;
+//}
 
 void GameObject::DeleteObject(GameObject* object) {
 	delete(object);
@@ -67,7 +69,7 @@ void GameObject::Run(Camera* camera) {
 }
 
 void GameObject::RunAllObjects() {
-	for (int n = 0; n < Scene::listOfObjects.size(); n++) {
+	for (int n = Scene::listOfObjects.size()-1; n >= 0; n--) {
 		GameObject* obj = Scene::listOfObjects[n];
 		obj->Run(&DataCore::camera);
 	}

@@ -16,7 +16,7 @@ Mesh::Mesh(const char* objFilePath, Material material) {
 	this->verticesBufferID = NULL;
 	this->uvsBufferID = NULL;
 	this->normalsBufferID = NULL;
-	
+	this->positionMatrix = mat4(1.0f);
 }
 
 Mesh::Mesh() {
@@ -26,6 +26,7 @@ Mesh::Mesh() {
 	this->verticesBufferID = NULL;
 	this->uvsBufferID = NULL;
 	this->normalsBufferID = NULL;
+	this->positionMatrix = mat4(1.0f);
 }
 
 void Mesh::Run(Camera* camera) {
@@ -34,12 +35,13 @@ void Mesh::Run(Camera* camera) {
 		this->initialized = true;
 	}
 
-	//this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * Render::RenderQuad(&this->bufferObject, this->transform.position, this->transform.scale, this->textureID);
-	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * Render::RenderQuad(this);
-	glUniformMatrix4fv(camera->MVPMatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
-
 	this->transform.position += this->transform.velocity * DataCore::deltaTime;
 	//this->transform.angle += this->transform.rotationSpeed * DataCore::deltaTime;
+
+	this->RenderMesh();
+
+	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * this->positionMatrix;
+	glUniformMatrix4fv(camera->MVPMatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
 }
 
@@ -57,5 +59,41 @@ Mesh* Mesh::CreateMeshObject(const char* objFilePath, Material material, Transfo
 	mesh->uvsBufferID = Load::_LoadUVsMesh(mesh->uvsBuffer);
 	mesh->transform = transform;
 	Scene::listOfObjects.push_back(mesh);
+	
 	return mesh;
+}
+
+glm::mat4 Mesh::RenderMesh() {
+	
+		// Enable blending
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+
+		//mat4 positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
+		this->positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, this->material.diffuseImageID);
+		glCullFace(GL_BACK);
+
+		if (this->uvsBufferID != NULL) {
+			Render::RenderUVs(this->uvsBufferID);
+		}
+
+		
+
+		GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
+		glUniform1i(gl_location, 0);
+
+		glDrawArrays(GL_TRIANGLES, 0, this->numIndices);
+		
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
+
+		//return positionMatrix;
+		return this->positionMatrix;
+	
+
 }
