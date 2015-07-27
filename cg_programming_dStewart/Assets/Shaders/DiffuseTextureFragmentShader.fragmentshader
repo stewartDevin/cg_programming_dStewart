@@ -7,11 +7,18 @@ out vec4 color;
 smooth in vec3 fragColor;
 
 void main() {
-	// output color = white
-	//color = vec3(1, 1, 1);
+	
 
-	//color = fragColor;
-	color = texture2D( myTextureSampler, UV ).rgba;
+	// Normal of the computed fragment, in camera space
+	vec3 n = normalize( Normal_cameraspace );
 
-	//color.a = 1.00;
+	// Direction of the light (from the fragment to the light)
+	vec3 l = normalize( LightDirection_cameraspace );
+
+	float cosTheta = clamp( dot( n,l ), 0,1 );
+
+	vec4 LightColor = vec4(1.0, 1.0, 1.0, 1.0);
+
+	color = (texture2D( myTextureSampler, UV ).rgba) * LightColor * LightPower * cosTheta / (distance*distance);
+
 }

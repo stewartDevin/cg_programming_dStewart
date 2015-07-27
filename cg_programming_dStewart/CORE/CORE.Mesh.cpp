@@ -41,6 +41,7 @@ void Mesh::Run(Camera* camera) {
 	this->RenderMesh();
 
 	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * this->positionMatrix;
+
 	glUniformMatrix4fv(camera->MVPMatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
 }

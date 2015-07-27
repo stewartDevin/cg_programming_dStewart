@@ -27,7 +27,6 @@ string Scene::loadedLevel = "";
 
 vector<GameObject*> Scene::listOfObjects;
 
-
 //void LoadGrid() {
 //	// load grid
 //	/*float xPos = -2.4f;

@@ -28,6 +28,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 void Mouse::InitMouse() {
 	glfwSetScrollCallback(DataCore::window, scroll_callback);
+	glfwSetInputMode(DataCore::window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 }
 
 // get mouse position
@@ -48,6 +49,7 @@ vec2 Mouse::GetMousePosition() {
 void Mouse::LockMousePosition() {
 	// Reset mouse position for next frame
 	glfwSetCursorPos(DataCore::window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+
 
 }
 
