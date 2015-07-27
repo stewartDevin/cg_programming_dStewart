@@ -21,5 +21,6 @@ public:
 	static glm::mat4 Render::RenderQuad(Mesh* mesh);
 
 	static void Render::RenderUVs(GLuint vertexBuffer);
+	static void Render::RenderNormals(GLuint normalBuffer);
 
 };

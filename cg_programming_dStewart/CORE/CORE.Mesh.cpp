@@ -57,6 +57,7 @@ Mesh* Mesh::CreateMeshObject(const char* objFilePath, Material material, Transfo
 	mesh->numIndices = mesh->verticesBuffer.size();
 	mesh->verticesBufferID = Load::_LoadVertsMesh(mesh->verticesBuffer);
 	mesh->uvsBufferID = Load::_LoadUVsMesh(mesh->uvsBuffer);
+	mesh->normalsBufferID = Load::_LoadNormalsMesh(mesh->normalsBuffer);
 	mesh->transform = transform;
 	Scene::listOfObjects.push_back(mesh);
 	
@@ -81,7 +82,9 @@ glm::mat4 Mesh::RenderMesh() {
 			Render::RenderUVs(this->uvsBufferID);
 		}
 
-		
+		if (this->normalsBufferID != NULL) {
+			Render::RenderNormals(this->normalsBufferID);
+		}
 
 		GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
 		glUniform1i(gl_location, 0);
@@ -91,6 +94,7 @@ glm::mat4 Mesh::RenderMesh() {
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
+		glDisableVertexAttribArray(3);
 
 		//return positionMatrix;
 		return this->positionMatrix;

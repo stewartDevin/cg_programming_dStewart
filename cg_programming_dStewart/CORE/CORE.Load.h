@@ -26,5 +26,6 @@ public:
 
 	static GLuint _LoadVertsMesh(std::vector < glm::vec3 >& verticesBuffer);
 	static GLuint _LoadUVsMesh(std::vector < glm::vec2 >& uvBuffer);
+	static GLuint _LoadNormalsMesh(std::vector < glm::vec3 >& normalBuffer);
 
 };

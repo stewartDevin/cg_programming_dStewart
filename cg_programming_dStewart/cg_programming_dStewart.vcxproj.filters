@@ -167,6 +167,8 @@
     <None Include="Assets\Shaders\TextureFragmentShader.fragmentshader">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Assets\Shaders\DiffuseTextureFragmentShader.fragmentshader" />
+    <None Include="Assets\Shaders\DiffuseTextureVertexShader.vertexshader" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Models\torus.txt" />

@@ -132,6 +132,8 @@
   <ItemGroup>
     <None Include="Assets\Shaders\BasicFragmentShader.fragmentshader" />
     <None Include="Assets\Shaders\BasicVertexShader.vertexshader" />
+    <None Include="Assets\Shaders\DiffuseTextureFragmentShader.fragmentshader" />
+    <None Include="Assets\Shaders\DiffuseTextureVertexShader.vertexshader" />
     <None Include="Assets\Shaders\TextureFragmentShader.fragmentshader" />
   </ItemGroup>
   <ItemGroup>

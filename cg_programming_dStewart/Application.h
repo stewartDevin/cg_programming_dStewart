@@ -30,8 +30,8 @@
 #define EXIT_WITH_SUCCESS 0
 #define OPEN_GL_VERSION 3
 #define ANTIALIASING 4
-#define SCREEN_WIDTH 1024
-#define SCREEN_HEIGHT 768
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 800
 #define FIELD_OF_VIEW 45.0f
 #define Z_NEAR 0.1f
 #define Z_FAR 100.0f

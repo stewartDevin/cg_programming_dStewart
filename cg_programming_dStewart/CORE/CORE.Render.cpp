@@ -64,6 +64,20 @@ void Render::RenderUVs(GLuint uvBuffer) {
 		);
 }
 
+void Render::RenderNormals(GLuint normalBuffer) {
+	glEnableVertexAttribArray(3);
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+
+	glVertexAttribPointer(
+		3,			// attribute layout
+		3,			// how many elements in array? 
+		GL_FLOAT,   // what datatype?
+		GL_FALSE,   // normalized?
+		0,			// stride...
+		(void*)0	// array buffer offset...
+		);
+}
+
 //glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, const vec3& scaleVec, const GLuint& textureID) {
 //	// Enable blending
 //	glEnable(GL_BLEND);

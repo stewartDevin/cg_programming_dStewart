@@ -390,6 +390,18 @@ GLuint Load::_LoadUVsMesh(std::vector < glm::vec2 >& uvBuffer) {
 
 }
 
+GLuint Load::_LoadNormalsMesh(std::vector < glm::vec3 >& normalBuffer) {
+
+	GLuint normalsBufferID = 0;
+	glGenBuffers(1, &normalsBufferID);
+	glBindBuffer(GL_ARRAY_BUFFER, normalsBufferID);
+	//if (DataCore::uvs.size() == 0) return NULL;
+	glBufferData(GL_ARRAY_BUFFER, normalBuffer.size() * sizeof(glm::vec3), &normalBuffer[0], GL_STATIC_DRAW);
+
+	return normalsBufferID;
+
+}
+
 GLuint Load::LoadCube() {
 	float offset = 0.5f;
 
