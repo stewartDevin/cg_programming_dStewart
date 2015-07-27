@@ -156,16 +156,16 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TextureFragmentShader.fragmentshader">
+    <None Include="Assets\Shaders\BasicFragmentShader.fragmentshader" />
+    <None Include="Assets\Shaders\BasicVertexShader.vertexshader" />
+    <None Include="Assets\Shaders\TextureFragmentShader.fragmentshader">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="BasicFragmentShader.fragmentshader" />
-    <None Include="BasicVertexShader.vertexshader" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="TextureVertexShader.vertexshader">
+    <Text Include="Assets\Models\torus.txt" />
+    <Text Include="Assets\Shaders\TextureVertexShader.vertexshader">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="Assets\Models\torus.txt" />
   </ItemGroup>
 </Project>

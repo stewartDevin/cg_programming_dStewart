@@ -125,12 +125,12 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Models\torus.txt" />
-    <Text Include="TextureVertexShader.vertexshader" />
+    <Text Include="Assets\Shaders\TextureVertexShader.vertexshader" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="BasicFragmentShader.fragmentshader" />
-    <None Include="BasicVertexShader.vertexshader" />
-    <None Include="TextureFragmentShader.fragmentshader" />
+    <None Include="Assets\Shaders\BasicFragmentShader.fragmentshader" />
+    <None Include="Assets\Shaders\BasicVertexShader.vertexshader" />
+    <None Include="Assets\Shaders\TextureFragmentShader.fragmentshader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Images\grass.png" />

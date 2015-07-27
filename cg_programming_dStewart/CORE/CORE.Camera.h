@@ -17,6 +17,11 @@ public:
 	float followSpeed;
 	bool followTargetSet;
 
+	// horizontal angle : toward -Z
+	float horizontalAngle;
+	// vertical angle : 0, look at the horizon
+	float verticalAngle;
+
 	// constructor functions
 	Camera::Camera();
 	Camera::Camera(vec3 position);

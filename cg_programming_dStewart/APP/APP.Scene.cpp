@@ -105,16 +105,20 @@ void Scene::InitializeScene() {
 
 		sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
 
-		// stairs
-		Mesh::CreateMeshObject("./Assets/Models/stairs1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+		
 		// floor
 		Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
-		
-		// pillars
+		// stairs
+		Mesh::CreateMeshObject("./Assets/Models/stairs1.obj",*sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+		//// pillars
+		//first row
 		Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
-		pillar1 = Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 0.0f)));
-		//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 0.0f)));
-		//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 0.0f)));
+		Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 0.0f)));
+		Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 0.0f)));
+		//second row
+		Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 5.8f)));
+		Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 5.8f)));
+		DataCore::playerMesh = Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 5.8f)));
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
@@ -162,7 +166,7 @@ void RunControls2(vec3& position, float const& speed) {
 void Update() {
 
 	RunControls1(DataCore::camera.transform.position, 4.0f);
-	RunControls2(pillar1->transform.position, 4.0f);
+	RunControls2(DataCore::playerMesh->transform.position, 4.0f);
 
 	//GameObject* player = Scene::listOfObjects[Scene::listOfObjects.size()-1];
 	//RunControls1(gObj->transform.position, 2.0f);

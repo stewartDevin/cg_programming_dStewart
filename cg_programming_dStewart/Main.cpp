@@ -27,7 +27,7 @@ int main() {
 	glBindVertexArray(vertexArrayID);
 
 	// Create and compile glsl from shaders.
-	DataCore::programID = Load::LoadShaders("TextureVertexShader.vertexshader", "TextureFragmentShader.fragmentshader");
+	DataCore::programID = Load::LoadShaders("./Assets/Shaders/TextureVertexShader.vertexshader", "./Assets/Shaders/TextureFragmentShader.fragmentshader");
 	//DataCore::dirtID = Load::LoadShaders("BasicVertexShader.vertexshader", "BasicFragmentShader.fragmentshader");
 
 	// init camera.

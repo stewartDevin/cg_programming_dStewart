@@ -5,6 +5,7 @@
 
 #include "../Application.h"
 #include "../CORE/CORE.Camera.h"
+#include "../CORE/CORE.Mesh.h"
 
 
 class DataCore {
@@ -44,4 +45,7 @@ public:
 	static std::vector< glm::vec2 > uvs;
 	static std::vector< glm::vec3 > normals; // Won't be used at the moment.
 	static bool res;
+
+	//playerMesh
+	static Mesh* playerMesh;
 };

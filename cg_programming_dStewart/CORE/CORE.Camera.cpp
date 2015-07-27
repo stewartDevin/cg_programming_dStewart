@@ -18,6 +18,10 @@ Camera::Camera() {
 		);
 	this->MVPMatrixID = NULL;
 	this->followTargetSet = false;
+	// horizontal angle : toward -Z
+	this->horizontalAngle = 3.14f;
+	// vertical angle : 0, look at the horizon
+	this->verticalAngle = 0.0f;
 }
 
 Camera::Camera(vec3 position) {
@@ -34,6 +38,10 @@ Camera::Camera(vec3 position) {
 		);
 	this->MVPMatrixID = NULL;
 	this->followTargetSet = false;
+	// horizontal angle : toward -Z
+	this->horizontalAngle = 3.14f;
+	// vertical angle : 0, look at the horizon
+	this->verticalAngle = 0.0f;
 }
 
 Camera::Camera(vec3 position, vec3 up, vec3 forward) {
@@ -50,6 +58,10 @@ Camera::Camera(vec3 position, vec3 up, vec3 forward) {
 		);
 	this->MVPMatrixID = NULL;
 	this->followTargetSet = false;
+	// horizontal angle : toward -Z
+	this->horizontalAngle = 3.14f;
+	// vertical angle : 0, look at the horizon
+	this->verticalAngle = 0.0f;
 }
 
 // member functions
@@ -69,15 +81,18 @@ void Camera::ConstrainMovement(float left, float top, float right, float bottom)
 }
 
 void Camera::Update() {
-	vec3 forward(0.0f, 0.0f, 0.0f);
+	vec3 forward = vec3(0.0f, 0.0f, 0.0f);
 
 	// get the forward of the camera
 	forward = this->transform.position;
 	forward.z = 1.0f;
 	
+	//forward = DataCore::playerMesh->transform.position;
+
 	this->viewMatrix = glm::lookAt(
 		this->transform.position,	 // position
-		forward,        // look at
+		//forward,        // look at
+		this->lookAt,        
 		this->up		// up
 		);
 }

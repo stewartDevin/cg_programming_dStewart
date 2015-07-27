@@ -3,6 +3,7 @@
 
 #include "APP.DataCore.h"
 #include "../CORE/CORE.OBJ_Loader.h"
+#include "../CORE/CORE.Mesh.h"
 
 // program id
 GLuint DataCore::programID = NULL;
@@ -38,6 +39,9 @@ float DataCore::xTilePos = -2.4f;
 float DataCore::yTilePos = 1.8f;
 float DataCore::tileScale = 0.8f;
 float DataCore::tileSpacing = -0.02f;
+
+// playerMesh
+Mesh* DataCore::playerMesh = NULL;
 
 // Read our .obj file
 //std::vector< glm::vec3 > DataCore::vertices;
