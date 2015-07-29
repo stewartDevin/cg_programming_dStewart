@@ -38,12 +38,10 @@ void Mesh::Run(Camera* camera) {
 	this->transform.position += this->transform.velocity * DataCore::deltaTime;
 	//this->transform.angle += this->transform.rotationSpeed * DataCore::deltaTime;
 
-	this->RenderMesh();
-
 	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * this->positionMatrix;
-
 	glUniformMatrix4fv(camera->MVPMatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
+	this->RenderMesh();
 }
 
 void Mesh::LoadMesh() {
