@@ -101,28 +101,19 @@ void Camera::ConstrainMovement(float left, float top, float right, float bottom)
 void Camera::Update() {
 	if (!this->isInitialized) this->Init();
 
-	//vec3 forward = vec3(0.0f, 0.0f, 0.0f);
-
-	// get the forward of the camera
-	//forward = this->transform.position;
-	//forward.z = 1.0f;
-	
-	//forward = DataCore::playerMesh->transform.position;
-
 	///////////////////////////////////////////////
 	// for FPS camera
-	
 	this->CalculateVectors();
 
 	this->viewMatrix = glm::lookAt(
-		this->transform.position,	 // position
-		this->transform.position + this->forward, // look at
-		this->up		// up
+		this->transform.position,	 // position.
+		this->transform.position + this->forward, // look at.
+		this->up		// up.
 		);
 }
 
 void Camera::CalculateVectors() {
-	// forward : Spherical coordinates to Cartesian coordinates conversion
+	// forward : Spherical coordinates to Cartesian coordinates conversion.
 	this->forward = vec3(
 		cos(this->verticalAngle) * sin(this->horizontalAngle),
 		sin(this->verticalAngle),
@@ -136,7 +127,7 @@ void Camera::CalculateVectors() {
 		cos(this->horizontalAngle - 3.14f / 2.0f)
 		);
 
-	// Up vector : perpendicular to both direction and right
+	// Up vector : perpendicular to both direction and right.
 	this->up = glm::cross(this->right, this->forward);
 
 }
@@ -171,7 +162,6 @@ void Camera::MoveWithFPSControls() {
 	if (Keyboard::D) {
 		this->transform.position += this->right * DataCore::deltaTime * this->moveSpeed;
 	}
-
 }
 
 void Camera::Follow(vec3 targetPosition, float speed) {

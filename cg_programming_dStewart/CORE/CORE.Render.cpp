@@ -30,7 +30,7 @@ glm::mat4 Render::RenderVertex(GLuint vertexBuffer, Transform& transform) {
 	mat4 scaleMatrix = glm::scale(identityMatrix, transform.scale);
 	mat4 translateMatrix = glm::translate(identityMatrix, transform.position);
 	// TODO: check here to see if rotation of 0 is causing a problem...
-	mat4 rotationMatrix = glm::rotate(identityMatrix, transform.angle, vec3(0.0f, 0.5f, 0.5f));
+	mat4 rotationMatrix = glm::rotate(identityMatrix, transform.angle, vec3(0.0f, 1.0f, 0.0f));
 	mat4 modelToWorldMatrix = translateMatrix * rotationMatrix * scaleMatrix * identityMatrix;
 
 	return modelToWorldMatrix;

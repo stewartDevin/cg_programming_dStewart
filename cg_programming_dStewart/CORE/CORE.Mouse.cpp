@@ -41,7 +41,6 @@ vec2 Mouse::GetMousePosition() {
 	}
 	else {
 		fprintf(stderr, "Can't get mouse position.");
-
 	}
 	
 }
@@ -49,7 +48,6 @@ vec2 Mouse::GetMousePosition() {
 void Mouse::LockMousePosition() {
 	// Reset mouse position for next frame
 	glfwSetCursorPos(DataCore::window, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-
 
 }
 

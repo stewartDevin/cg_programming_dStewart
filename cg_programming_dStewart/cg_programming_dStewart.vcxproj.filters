@@ -175,6 +175,8 @@
     </None>
     <None Include="Assets\Shaders\DiffuseTextureFragmentShader.fragmentshader" />
     <None Include="Assets\Shaders\DiffuseTextureVertexShader.vertexshader" />
+    <None Include="Assets\Shaders\FlattenTextureVertexShader.vertexshader" />
+    <None Include="Assets\Shaders\FlattenTextureFragmentShader.fragmentshader" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Models\torus.txt" />

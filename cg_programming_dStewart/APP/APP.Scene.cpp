@@ -27,6 +27,9 @@ string Scene::loadedLevel = "";
 
 vector<GameObject*> Scene::listOfObjects;
 
+GLfloat timer = 0.0f;
+GLint timeLoc = NULL;
+
 //void LoadGrid() {
 //	// load grid
 //	/*float xPos = -2.4f;
@@ -110,16 +113,20 @@ void RunControls2(vec3& position, float const& speed) {
 }
 
 Material* sceneMaterial = NULL;
+Material* bunnyMaterial = NULL;
 Mesh* floorMesh = NULL;
+Mesh* bunnyMesh = NULL;
 
 void Scene::LoadLevelOne() {
 	sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
+	bunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
 
 	floorMesh = Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
 	// floor
 	//Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
 	// stairs
 	Mesh::CreateMeshObject("./Assets/Models/stairs1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.obj", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
 	//// pillars
 	//first row
 	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
@@ -143,6 +150,8 @@ void Scene::InitializeScene() {
 
 		Scene::LoadLevelOne();
 
+		timeLoc = glGetUniformLocationARB(DataCore::programID, "timer");
+
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
 	}
@@ -151,29 +160,32 @@ void Scene::InitializeScene() {
 
 
 void Update() {
-
+	
 	// clear the screen...
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	// get the deltaTime...
 	DataCore::deltaTime = Utility::getDeltaTime();
 	//fprintf(stdout, "Delta Time: %f", getDeltaTime()); 
-	
-
-	//RunControls1(DataCore::camera.transform.position, 4.0f);
-
 	// update the camera
 	DataCore::camera.Update();
 	// move with FPS controls
 	DataCore::camera.MoveWithFPSControls();
-	
 	// Run FPS mouse look
 	Mouse::RunFPSMouse();
 	// Run Keyboard Input
 	Keyboard::RunKeyboardKeys();
+	
+	bunnyMesh->transform.angle += 1.0f * DataCore::deltaTime;
+	
 	// Run Objects
 	GameObject::RunAllObjects();
 
+
+
+	//send the timer to the vertex Shader
+	glUniform1fARB(timeLoc, timer);
+
+	timer += 2.0f * DataCore::deltaTime;
 }
 
 int Scene::MainLoop() {
@@ -181,26 +193,21 @@ int Scene::MainLoop() {
 	Scene::InitializeScene();
 
 	do {
-		
-		// update
-		Update();
-		
-		// swap the screen buffers...
-		glfwSwapBuffers(DataCore::window);
 		// Run OpenGL's Event Handler...
 		glfwPollEvents();
+		// update
+		Update();
+		// swap the screen buffers...
+		glfwSwapBuffers(DataCore::window);
 
-	} while (glfwGetKey(DataCore::window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
-		glfwWindowShouldClose(DataCore::window) == 0);
+	} while (!Keyboard::Escape && glfwWindowShouldClose(DataCore::window) == 0);
 
-
-	int save_result = SOIL_save_screenshot
+	SOIL_save_screenshot
 		(
 		"screenshot.bmp",
 		SOIL_SAVE_TYPE_BMP,
-		0, 0, 1024, 768
+		0, 0, 1200, 800
 		);
-
 
 	return EXIT_WITH_SUCCESS;
 }

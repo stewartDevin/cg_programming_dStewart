@@ -1,0 +1,27 @@
+#version 330 core
+
+layout(location = 0) in vec3 model_space_pos;
+layout(location = 1) in vec3 vertex_color;
+layout(location = 2) in vec2 vertexUV;
+
+out vec2 UV;
+smooth out vec3 fragColor;
+
+// model view projection matrix...
+uniform mat4 MVP;
+
+uniform float timer;
+
+void main() {
+	vec4 v = vec4(model_space_pos, 1);
+	v.x = sin(5.0*v.y + timer)*0.25;
+	v = MVP * v;
+	gl_Position = v;
+
+	//fragColor = vertex_color;
+
+	// UV of the vertex. No special space for this one.
+	UV = vertexUV;
+}
+
+

@@ -8,6 +8,7 @@
 #include "../APP/Pong/Pong.Options.h"
 #include "../APP/APP.DataCore.h"
 
+bool Keyboard::Escape = false;
 bool Keyboard::W = false;
 bool Keyboard::A = false;
 bool Keyboard::S = false;
@@ -92,5 +93,12 @@ void Keyboard::RunKeyboardKeys() {
 	}
 	else {
 		Keyboard::RightArrow = false;
+	}
+
+	if (glfwGetKey(DataCore::window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+		Keyboard::Escape = true;
+	}
+	else {
+		Keyboard::Escape = false;
 	}
 }

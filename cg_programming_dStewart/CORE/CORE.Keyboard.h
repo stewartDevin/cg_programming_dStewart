@@ -7,6 +7,7 @@
 // Keyboard
 class Keyboard {
 public:
+	static bool Escape;
 	static bool W;
 	static bool A;
 	static bool S;
@@ -17,6 +18,7 @@ public:
 	static bool LeftArrow;
 	static bool RightArrow;
 	static bool DownArrow;
+	
 
 	Keyboard::Keyboard();
 
