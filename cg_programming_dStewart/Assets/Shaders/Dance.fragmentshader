@@ -1,0 +1,114 @@
+#version 330 core
+
+in vec2 UV;
+uniform sampler2D myTextureSampler;
+
+out vec4 color;
+smooth in vec3 fragColor;
+
+uniform float timer;
+
+//////////////////////////////////////////////
+// toon shader variables
+float first1 = 0.0f;
+float first2 = 0.25f;
+float firstResult = 0.2f;
+
+float second1 = 0.25f;
+float second2 = 0.5f;
+float secondResult = 0.375f;
+
+float third1 = 0.5f;
+float third2 = 0.75f;
+float thirdResult = 0.635f;
+
+float fourth1 = 0.75f;
+float fourth2 = 1.0f;
+float fourthResult = 0.8f;
+
+
+
+/////////////////////////////////////////
+// main function
+void main() {
+
+	//color = vec3(1, 1, 1);
+
+	// get the color from the texture
+	color = texture2D( myTextureSampler, UV ).rgba;
+
+	////////////////////////////////////////////
+	//// red
+	//if(color.r > first1) {
+	//	if(color.r < first2) {
+	//		color.r = firstResult;
+	//	}
+	//}
+	//if(color.r > second1) {
+	//	if(color.r < second2) {
+	//		color.r = secondResult;
+	//	}
+	//}
+	//if(color.r > third1) {
+	//	if(color.r < third2) {
+	//		color.r = thirdResult;
+	//	}
+	//}
+	//if(color.r > fourth1) {
+	//	if(color.r < fourth2) {
+	//		color.r = fourthResult;
+	//	}
+	//}
+	//
+	////////////////////////////////////////
+	//// green
+	//if(color.g > first1) {
+	//	if(color.g < first2) {
+	//		color.g = firstResult;
+	//	}
+	//}
+	//if(color.g > second1) {
+	//	if(color.g < second2) {
+	//		color.g = secondResult;
+	//	}
+	//}
+	//if(color.g > third1) {
+	//	if(color.g < third2) {
+	//		color.g = thirdResult;
+	//	}
+	//}
+	//if(color.g > fourth1) {
+	//	if(color.g < fourth2) {
+	//		color.g = fourthResult;
+	//	}
+	//}
+	//
+	///////////////////////////////////////////
+	//// blue
+	//if(color.b > first1) {
+	//	if(color.b < first2) {
+	//		color.b = firstResult;
+	//	}
+	//}
+	//if(color.b > second1) {
+	//	if(color.b < second2) {
+	//		color.b = secondResult;
+	//	}
+	//}
+	//if(color.b > third1) {
+	//	if(color.b < third2) {
+	//		color.b = thirdResult;
+	//	}
+	//}
+	//if(color.b > fourth1) {
+	//	if(color.b < fourth2) {
+	//		color.b = fourthResult;
+	//	}
+	//}
+
+	color.r = color.r * sin(timer);
+	color.g = color.g * cos(timer);
+	color.b = color.b * -sin(timer);
+
+
+}

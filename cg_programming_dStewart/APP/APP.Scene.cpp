@@ -27,9 +27,6 @@ string Scene::loadedLevel = "";
 
 vector<GameObject*> Scene::listOfObjects;
 
-GLfloat timer = 0.0f;
-GLint timeLoc = NULL;
-
 //void LoadGrid() {
 //	// load grid
 //	/*float xPos = -2.4f;
@@ -126,7 +123,7 @@ void Scene::LoadLevelOne() {
 	//Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
 	// stairs
 	Mesh::CreateMeshObject("./Assets/Models/stairs1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
-	bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.obj", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	bunnyMesh = Mesh::CreateMeshObjectDontPush("./Assets/Models/bunny.txt", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
 	//// pillars
 	//first row
 	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
@@ -150,7 +147,7 @@ void Scene::InitializeScene() {
 
 		Scene::LoadLevelOne();
 
-		timeLoc = glGetUniformLocationARB(DataCore::programID, "timer");
+		
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
@@ -160,12 +157,12 @@ void Scene::InitializeScene() {
 
 
 void Update() {
-	
+	bunnyMesh->Run(&DataCore::camera);
 	// clear the screen...
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// get the deltaTime...
 	DataCore::deltaTime = Utility::getDeltaTime();
-	//fprintf(stdout, "Delta Time: %f", getDeltaTime()); 
+	// fprintf(stdout, "Delta Time: %f", getDeltaTime()); 
 	// update the camera
 	DataCore::camera.Update();
 	// move with FPS controls
@@ -174,17 +171,26 @@ void Update() {
 	Mouse::RunFPSMouse();
 	// Run Keyboard Input
 	Keyboard::RunKeyboardKeys();
-	
-	bunnyMesh->transform.angle += 1.0f * DataCore::deltaTime;
+
+	// make the bunny mesh spin
+	if (bunnyMesh != NULL) bunnyMesh->transform.angle += 1.0f * DataCore::deltaTime;
 	
 	// Run Objects
 	GameObject::RunAllObjects();
 
+	// create a timer
+	static GLfloat timer = 0.0f;
 
+	// get random float
+	//timer = Utility::GetRandomFloat(0.1f, 1.0f);
 
-	//send the timer to the vertex Shader
+	// get the timer variable on the video card
+	GLint timeLoc = glGetUniformLocationARB(DataCore::programID, "timer");
+
+	// send the timer to the vertex Shader
 	glUniform1fARB(timeLoc, timer);
 
+	//increment the timer
 	timer += 2.0f * DataCore::deltaTime;
 }
 
@@ -202,6 +208,7 @@ int Scene::MainLoop() {
 
 	} while (!Keyboard::Escape && glfwWindowShouldClose(DataCore::window) == 0);
 
+	// save a screenshot
 	SOIL_save_screenshot
 		(
 		"screenshot.bmp",

@@ -18,13 +18,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -134,11 +134,15 @@
   <ItemGroup>
     <None Include="Assets\Shaders\BasicFragmentShader.fragmentshader" />
     <None Include="Assets\Shaders\BasicVertexShader.vertexshader" />
+    <None Include="Assets\Shaders\Dance.fragmentshader" />
+    <None Include="Assets\Shaders\Dance.vertexshader" />
     <None Include="Assets\Shaders\DiffuseTextureFragmentShader.fragmentshader" />
     <None Include="Assets\Shaders\DiffuseTextureVertexShader.vertexshader" />
     <None Include="Assets\Shaders\FlattenTextureFragmentShader.fragmentshader" />
     <None Include="Assets\Shaders\FlattenTextureVertexShader.vertexshader" />
     <None Include="Assets\Shaders\TextureFragmentShader.fragmentshader" />
+    <None Include="Assets\Shaders\Toon.fragmentshader" />
+    <None Include="Assets\Shaders\Toon.vertexshader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Images\grass.png" />

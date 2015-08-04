@@ -15,5 +15,5 @@ public:
 	static vec3 CalculateReflectionVector(vec3 vector, vec3 normal);
 
 	static int GetRandomInt(int from, int to);
-
+	static float GetRandomFloat(float a, float b);
 };
