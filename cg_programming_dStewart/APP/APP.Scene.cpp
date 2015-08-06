@@ -113,17 +113,25 @@ Material* sceneMaterial = NULL;
 Material* bunnyMaterial = NULL;
 Mesh* floorMesh = NULL;
 Mesh* bunnyMesh = NULL;
+Mesh* skyBox = NULL;
 
 void Scene::LoadLevelOne() {
 	sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
 	bunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
 
-	floorMesh = Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	skyBox = Mesh::CreateMeshObjectDontPush("./Assets/Models/cube.obj", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 0.0f), vec3(1.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
+
+	//Mesh::CreateMeshObject("./Assets/Models/torus_NO_UVS.obj", *bunnyMaterial, Transform(vec3(-6.0f, 0.0f, 0.0f), vec3(0.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
+
+	//Mesh::CreateMeshObject("./Assets/Models/candy.obj", *bunnyMaterial, Transform(vec3(6.0f, 0.0f, 0.0f)));
+	//Mesh::CreateMeshObject("./Assets/Models/head2.obj", *bunnyMaterial, Transform(vec3(0.0f, 4.0f, 0.0f), vec3(0.25f, 0.25f, 0.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
+
 	// floor
-	//Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	floorMesh = Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	
 	// stairs
 	Mesh::CreateMeshObject("./Assets/Models/stairs1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
-	bunnyMesh = Mesh::CreateMeshObjectDontPush("./Assets/Models/bunny.txt", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 6.0f)));
 	//// pillars
 	//first row
 	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
@@ -135,6 +143,7 @@ void Scene::LoadLevelOne() {
 	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 5.8f)));
 }
 
+
 void Scene::InitializeScene() {
 	if (!Scene::sceneInitialized) {
 
@@ -142,22 +151,21 @@ void Scene::InitializeScene() {
 		glUseProgram(DataCore::programID);
 		// enable the depth test for 3d
 		glEnable(GL_DEPTH_TEST);
+		// enable backface culling
+		glEnable(GL_CULL_FACE);
+		
 		// init the mouse
 		Mouse::InitMouse();
 
 		Scene::LoadLevelOne();
-
-		
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
 	}
 }
 
-
-
 void Update() {
-	bunnyMesh->Run(&DataCore::camera);
+	//bunnyMesh->Run(&DataCore::camera);
 	// clear the screen...
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// get the deltaTime...
@@ -172,11 +180,17 @@ void Update() {
 	// Run Keyboard Input
 	Keyboard::RunKeyboardKeys();
 
-	// make the bunny mesh spin
-	if (bunnyMesh != NULL) bunnyMesh->transform.angle += 1.0f * DataCore::deltaTime;
+	glCullFace(GL_FRONT);
+	// draw the background mesh
+	skyBox->Run(&DataCore::camera);
+	
+	glCullFace(GL_BACK);
 	
 	// Run Objects
 	GameObject::RunAllObjects();
+
+	// make the bunny mesh spin
+	if (bunnyMesh != NULL) bunnyMesh->transform.angle += 1.0f * DataCore::deltaTime;
 
 	// create a timer
 	static GLfloat timer = 0.0f;

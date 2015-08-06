@@ -38,80 +38,100 @@ void Mesh::Run(Camera* camera) {
 	this->transform.position += this->transform.velocity * DataCore::deltaTime;
 	//this->transform.angle += this->transform.rotationSpeed * DataCore::deltaTime;
 
+	this->RenderMesh();
+
 	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * this->positionMatrix;
 	glUniformMatrix4fv(camera->MVPMatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
-	this->RenderMesh();
+	glDrawArrays(GL_TRIANGLES, 0, this->numIndices);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
 }
 
 void Mesh::LoadMesh() {
 
 }
 
-Mesh* Mesh::CreateMeshObject(const char* objFilePath, Material material, Transform transform) {
-	//Load::_LoadTexture(&material.diffuseImageID, material.diffuseImageFilePath);
-	Mesh* mesh = new Mesh(objFilePath, material);
-
-	OBJ_Loader::LoadOBJ(objFilePath, mesh->verticesBuffer, mesh->uvsBuffer, mesh->normalsBuffer);
-	mesh->numIndices = mesh->verticesBuffer.size();
-	mesh->verticesBufferID = Load::_LoadVertsMesh(mesh->verticesBuffer);
-	mesh->uvsBufferID = Load::_LoadUVsMesh(mesh->uvsBuffer);
-	mesh->normalsBufferID = Load::_LoadNormalsMesh(mesh->normalsBuffer);
-	mesh->transform = transform;
-	Scene::listOfObjects.push_back(mesh);
-
-	return mesh;
-}
-
 Mesh* Mesh::CreateMeshObjectDontPush(const char* objFilePath, Material material, Transform transform) {
-	//Load::_LoadTexture(&material.diffuseImageID, material.diffuseImageFilePath);
 	Mesh* mesh = new Mesh(objFilePath, material);
 
-	OBJ_Loader::LoadOBJ(objFilePath, mesh->verticesBuffer, mesh->uvsBuffer, mesh->normalsBuffer);
-	mesh->numIndices = mesh->verticesBuffer.size();
-	mesh->verticesBufferID = Load::_LoadVertsMesh(mesh->verticesBuffer);
-	mesh->uvsBufferID = Load::_LoadUVsMesh(mesh->uvsBuffer);
-	mesh->normalsBufferID = Load::_LoadNormalsMesh(mesh->normalsBuffer);
-	mesh->transform = transform;
-	//Scene::listOfObjects.push_back(mesh);
+	bool success = OBJ_Loader::LoadOBJ(objFilePath, mesh->verticesBuffer, mesh->uvsBuffer, mesh->normalsBuffer);
 
+	if(success) {
+		mesh->numIndices = mesh->verticesBuffer.size();
+		mesh->transform = transform;
+
+		if(mesh->verticesBuffer.size() > 0) {
+			mesh->verticesBufferID = Load::_LoadVertsMesh(mesh->verticesBuffer);
+		} else {
+			printf("Mesh doesn't have any vertices.\n");
+		}
+
+		if(mesh->uvsBuffer.size() > 0) {
+			mesh->uvsBufferID = Load::_LoadUVsMesh(mesh->uvsBuffer);
+		} else {
+			printf("Mesh doesn't have any UV's.\n");
+		}
+
+		if(mesh->normalsBuffer.size() > 0) {
+			mesh->normalsBufferID = Load::_LoadNormalsMesh(mesh->normalsBuffer);
+		} else {
+			printf("Mesh doesn't have any normals.\n");
+		}
+		
+		//Scene::listOfObjects.push_back(mesh);
+
+		return mesh;
+	} else {
+		//printf("Mesh didn't load properly.\n");
+		return NULL;
+	}
+}
+
+Mesh* Mesh::CreateMeshObject(const char* objFilePath, Material material, Transform transform) {
+	Mesh* mesh = Mesh::CreateMeshObjectDontPush(objFilePath, material, transform);
+	Scene::listOfObjects.push_back(mesh);
 	return mesh;
 }
+
+
 
 glm::mat4 Mesh::RenderMesh() {
-	
-		// Enable blending
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 
-		//mat4 positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
-		this->positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
+	// Enable blending
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, this->material.diffuseImageID);
-		glCullFace(GL_BACK);
+	//mat4 positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
+	this->positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
 
-		if (this->uvsBufferID != NULL) {
-			Render::RenderUVs(this->uvsBufferID);
-		}
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, this->material.diffuseImageID);
 
-		if (this->normalsBufferID != NULL) {
-			Render::RenderNormals(this->normalsBufferID);
-		}
+	if (this->uvsBufferID != NULL) {
+		Render::RenderUVs(this->uvsBufferID);
+	}
 
-		GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
-		glUniform1i(gl_location, 0);
+	if (this->normalsBufferID != NULL) {
+		Render::RenderNormals(this->normalsBufferID);
+	}
 
-		glDrawArrays(GL_TRIANGLES, 0, this->numIndices);
-		
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(2);
-		glDisableVertexAttribArray(3);
+	GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
+	glUniform1i(gl_location, 0);
 
-		//return positionMatrix;
-		return this->positionMatrix;
-	
+	/*glDrawArrays(GL_TRIANGLES, 0, this->numIndices);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);*/
+
+	//return positionMatrix;
+	return this->positionMatrix;
+
 
 }

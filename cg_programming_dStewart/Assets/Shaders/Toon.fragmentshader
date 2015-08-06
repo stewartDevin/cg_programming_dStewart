@@ -37,7 +37,28 @@ void main() {
 	// get the color from the texture
 	color = texture2D( myTextureSampler, UV ).rgba;
 
-	
+	//////////////////////////////////////
+	// red
+	if(color.r > first1) {
+		if(color.r < first2) {
+			color.r = firstResult;
+		}
+	}
+	if(color.r > second1) {
+		if(color.r < second2) {
+			color.r = secondResult;
+		}
+	}
+	if(color.r > third1) {
+		if(color.r < third2) {
+			color.r = thirdResult;
+		}
+	}
+	if(color.r > fourth1) {
+		if(color.r < fourth2) {
+			color.r = fourthResult;
+		}
+	}
 
 	//////////////////////////////////////
 	// green

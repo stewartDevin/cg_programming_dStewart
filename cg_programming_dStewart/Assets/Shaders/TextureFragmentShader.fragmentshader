@@ -8,10 +8,12 @@ smooth in vec3 fragColor;
 
 void main() {
 	// output color = white
-	//color = vec3(1, 1, 1);
+	
 
 	//color = fragColor;
 	color = texture2D( myTextureSampler, UV ).rgba;
 
-	//color.a = 1.00;
+	if(UV == 0) {
+		color = vec4(0.5, 1, 1, 1);
+	}
 }

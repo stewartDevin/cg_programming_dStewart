@@ -134,10 +134,10 @@ glm::mat4 Render::RenderQuad(Mesh* mesh) {
 	GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
 	glUniform1i(gl_location, 0);
 
-	glDrawArrays(GL_TRIANGLES, 0, mesh->numIndices);
+	/*glDrawArrays(GL_TRIANGLES, 0, mesh->numIndices);
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(2);*/
 	
 	return positionMatrix;
 }
