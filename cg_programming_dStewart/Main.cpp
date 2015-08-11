@@ -2,11 +2,11 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "Application.h"
-#include "APP\APP.Scene.h"
-#include "CORE\CORE.GL_Init.h"
-#include "APP\APP.DataCore.h"
-#include "CORE\CORE.Load.h"
-#include "CORE\CORE.Matrix.h"
+#include "Assets\Code\APP\APP.Scene.h"
+#include "Assets\Code\CORE\CORE.GL_Init.h"
+#include "Assets\Code\APP\APP.DataCore.h"
+#include "Assets\Code\CORE\CORE.Load.h"
+#include "Assets\Code\CORE\CORE.Matrix.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // main

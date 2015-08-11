@@ -18,13 +18,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -77,54 +77,54 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="APP\APP.DataCore.cpp" />
-    <ClCompile Include="APP\APP.GameOptions.cpp" />
-    <ClCompile Include="APP\APP.Scene.cpp" />
-    <ClCompile Include="APP\OpenWorldGame\OWG.DataCore.cpp" />
-    <ClCompile Include="APP\OpenWorldGame\OWG.Player.cpp" />
-    <ClCompile Include="APP\Pong\Pong.Options.cpp" />
-    <ClCompile Include="APP\Pong\Pong.Scene.cpp" />
-    <ClCompile Include="CORE\CORE.BufferObject.cpp" />
-    <ClCompile Include="CORE\CORE.Camera.cpp" />
-    <ClCompile Include="CORE\CORE.Light.cpp" />
-    <ClCompile Include="CORE\CORE.GameObject.cpp" />
-    <ClCompile Include="CORE\CORE.GL_Init.cpp" />
-    <ClCompile Include="CORE\CORE.Keyboard.cpp" />
-    <ClCompile Include="CORE\CORE.Load.cpp" />
-    <ClCompile Include="CORE\CORE.Material.cpp" />
-    <ClCompile Include="CORE\CORE.Matrix.cpp" />
-    <ClCompile Include="CORE\CORE.Mesh.cpp" />
-    <ClCompile Include="CORE\CORE.Mouse.cpp" />
-    <ClCompile Include="CORE\CORE.OBJ_Loader.cpp" />
-    <ClCompile Include="CORE\CORE.Render.cpp" />
-    <ClCompile Include="CORE\CORE.Transform.cpp" />
-    <ClCompile Include="CORE\CORE.Utility.cpp" />
+    <ClCompile Include="Assets\Code\APP\APP.DataCore.cpp" />
+    <ClCompile Include="Assets\Code\APP\APP.GameOptions.cpp" />
+    <ClCompile Include="Assets\Code\APP\APP.Scene.cpp" />
+    <ClCompile Include="Assets\Code\APP\OpenWorldGame\OWG.DataCore.cpp" />
+    <ClCompile Include="Assets\Code\APP\OpenWorldGame\OWG.Player.cpp" />
+    <ClCompile Include="Assets\Code\APP\Pong\Pong.Options.cpp" />
+    <ClCompile Include="Assets\Code\APP\Pong\Pong.Scene.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.BufferObject.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.Camera.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.Light.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.GameObject.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.GL_Init.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.Keyboard.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.Load.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.Material.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.Matrix.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.Mesh.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.Mouse.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.OBJ_Loader.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.Render.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.Transform.cpp" />
+    <ClCompile Include="Assets\Code\CORE\CORE.Utility.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="APP\APP.DataCore.h" />
-    <ClInclude Include="APP\APP.GameOptions.h" />
-    <ClInclude Include="APP\APP.Scene.h" />
-    <ClInclude Include="APP\OpenWorldGame\OWG.DataCore.h" />
-    <ClInclude Include="APP\OpenWorldGame\OWG.Player.h" />
-    <ClInclude Include="APP\Pong\Pong.Options.h" />
-    <ClInclude Include="APP\Pong\Pong.Scene.h" />
-    <ClInclude Include="CORE\CORE.BufferObject.h" />
-    <ClInclude Include="CORE\CORE.Camera.h" />
-    <ClInclude Include="CORE\CORE.Light.h" />
-    <ClInclude Include="CORE\CORE.GameObject.h" />
-    <ClInclude Include="CORE\CORE.GL_Init.h" />
-    <ClInclude Include="CORE\CORE.Keyboard.h" />
-    <ClInclude Include="CORE\CORE.Load.h" />
-    <ClInclude Include="CORE\CORE.Material.h" />
-    <ClInclude Include="CORE\CORE.Matrix.h" />
-    <ClInclude Include="CORE\CORE.Mesh.h" />
-    <ClInclude Include="CORE\CORE.Mouse.h" />
-    <ClInclude Include="CORE\CORE.OBJ_Loader.h" />
-    <ClInclude Include="CORE\CORE.Render.h" />
-    <ClInclude Include="CORE\CORE.Transform.h" />
-    <ClInclude Include="CORE\CORE.Utility.h" />
+    <ClInclude Include="Assets\Code\APP\APP.DataCore.h" />
+    <ClInclude Include="Assets\Code\APP\APP.GameOptions.h" />
+    <ClInclude Include="Assets\Code\APP\APP.Scene.h" />
+    <ClInclude Include="Assets\Code\APP\OpenWorldGame\OWG.DataCore.h" />
+    <ClInclude Include="Assets\Code\APP\OpenWorldGame\OWG.Player.h" />
+    <ClInclude Include="Assets\Code\APP\Pong\Pong.Options.h" />
+    <ClInclude Include="Assets\Code\APP\Pong\Pong.Scene.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.BufferObject.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.Camera.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.Light.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.GameObject.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.GL_Init.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.Keyboard.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.Load.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.Material.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.Matrix.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.Mesh.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.Mouse.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.OBJ_Loader.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.Render.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.Transform.h" />
+    <ClInclude Include="Assets\Code\CORE\CORE.Utility.h" />
     <ClInclude Include="Main.h" />
   </ItemGroup>
   <ItemGroup>
