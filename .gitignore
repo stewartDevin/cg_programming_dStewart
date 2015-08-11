@@ -34,6 +34,12 @@ TestResult.xml
 [Rr]eleasePS/
 dlldata.c
 
+# Ignore compiled files
+*.objs
+
+# Don't want to ignore .objs files in Assets
+!Assets/Models/*.objs
+
 *_i.c
 *_p.c
 *_i.h
