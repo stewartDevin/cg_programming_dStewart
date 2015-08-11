@@ -35,10 +35,10 @@ TestResult.xml
 dlldata.c
 
 # Ignore compiled files
-*.objs
+*.obj
 
 # Don't want to ignore .objs files in Assets
-!Assets/Models/*.objs
+!Assets/Models/*.obj
 
 *_i.c
 *_p.c
