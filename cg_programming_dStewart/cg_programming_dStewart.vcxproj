@@ -18,13 +18,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -140,6 +140,8 @@
     <None Include="Assets\Shaders\DiffuseTextureVertexShader.vertexshader" />
     <None Include="Assets\Shaders\FlattenTextureFragmentShader.fragmentshader" />
     <None Include="Assets\Shaders\FlattenTextureVertexShader.vertexshader" />
+    <None Include="Assets\Shaders\MyToon.fragmentshader" />
+    <None Include="Assets\Shaders\MyToon.vertexshader" />
     <None Include="Assets\Shaders\TextureFragmentShader.fragmentshader" />
     <None Include="Assets\Shaders\Toon.fragmentshader" />
     <None Include="Assets\Shaders\Toon.vertexshader" />

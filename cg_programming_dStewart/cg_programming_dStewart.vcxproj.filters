@@ -181,6 +181,8 @@
     <None Include="Assets\Shaders\Toon.vertexshader" />
     <None Include="Assets\Shaders\Dance.fragmentshader" />
     <None Include="Assets\Shaders\Dance.vertexshader" />
+    <None Include="Assets\Shaders\MyToon.fragmentshader" />
+    <None Include="Assets\Shaders\MyToon.vertexshader" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Models\torus.txt" />

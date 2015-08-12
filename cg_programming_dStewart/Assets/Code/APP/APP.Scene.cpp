@@ -71,8 +71,6 @@ vector<GameObject*> Scene::listOfObjects;
 //
 //}
 
-
-
 void RunControls1(vec3& position, float const& speed) {
 	if (Keyboard::Q) {
 		position.z += speed * DataCore::deltaTime;
@@ -159,8 +157,6 @@ void Scene::InitializeScene() {
 
 		Scene::LoadLevelOne();
 
-		
-
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
 	}
@@ -197,6 +193,9 @@ void Update() {
 	// get random float
 	//timer = Utility::GetRandomFloat(0.1f, 1.0f);
 
+	//////////////////////////////////////////////////
+	// timer
+	///////////////////////////////////////////////////
 	// get the timer variable on the video card
 	GLint timeLoc = glGetUniformLocationARB(DataCore::programID, "timer");
 
@@ -205,6 +204,14 @@ void Update() {
 
 	//increment the timer
 	timer += 2.0f * DataCore::deltaTime;
+
+	/////////////////////////////////////////////////////
+	// lightDirection 
+	/////////////////////////////////////////////////////
+	vec3 lightDirection = vec3(0.75f, 0.75f, 0.75f);
+	GLint lightLocation = glGetUniformLocationARB(DataCore::programID, "lightDirection");
+	
+	glUniform3f(lightLocation, lightDirection.x, lightDirection.y, lightDirection.z);
 }
 
 int Scene::MainLoop() {
