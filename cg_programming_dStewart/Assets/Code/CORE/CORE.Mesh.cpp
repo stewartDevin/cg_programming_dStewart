@@ -40,6 +40,10 @@ void Mesh::Run(Camera* camera) {
 
 	this->RenderMesh();
 
+	mat4 MV_Matrix = this->positionMatrix * camera->viewMatrix;
+	GLuint MV_Matrix_ID = glGetUniformLocation(DataCore::programID, "MV");
+	glUniformMatrix4fv(MV_Matrix_ID, 1, GL_FALSE, &MV_Matrix[0][0]);
+
 	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * this->positionMatrix;
 	glUniformMatrix4fv(camera->MVPMatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
@@ -97,8 +101,6 @@ Mesh* Mesh::CreateMeshObject(const char* objFilePath, Material material, Transfo
 	return mesh;
 }
 
-
-
 glm::mat4 Mesh::RenderMesh() {
 
 	// Enable blending
@@ -111,6 +113,9 @@ glm::mat4 Mesh::RenderMesh() {
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->material.diffuseImageID);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	if (this->uvsBufferID != NULL) {
 		Render::RenderUVs(this->uvsBufferID);

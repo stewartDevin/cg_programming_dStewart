@@ -38,7 +38,7 @@ dlldata.c
 *.obj
 
 # Don't want to ignore .objs files in Assets
-!Assets/Models/*.obj
+!cg_programming_dStewart/Assets/Models/*.obj
 
 *_i.c
 *_p.c

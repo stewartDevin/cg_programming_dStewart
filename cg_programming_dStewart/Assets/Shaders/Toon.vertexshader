@@ -10,6 +10,7 @@ smooth out vec3 fragColor;
 
 // model view projection matrix...
 uniform mat4 MVP;
+uniform mat4 MV;
 
 out vec3 normal;
 uniform vec3 lightDirection;
@@ -17,7 +18,8 @@ uniform vec3 lightDirection;
 void main() {
 	
 	UV = vertexUV;
-	normal = vertexNormal;
+	normal = normalize( vec3(vec4(vertexNormal, 1.0f) * MV));
+
 
 	gl_Position = MVP * vec4(model_space_pos, 1);
 	

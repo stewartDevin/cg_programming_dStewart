@@ -1,0 +1,22 @@
+#version 330 core
+
+in vec2 UV;
+uniform sampler2D myTextureSampler;
+
+out vec4 color;
+smooth in vec3 fragColor;
+
+uniform float timer;
+
+
+/////////////////////////////////////////
+// main function
+void main() {
+
+	//color = vec3(1, 1, 1);
+
+	// get the color from the texture
+	color = texture2D( myTextureSampler, UV ).rgba;
+
+
+}

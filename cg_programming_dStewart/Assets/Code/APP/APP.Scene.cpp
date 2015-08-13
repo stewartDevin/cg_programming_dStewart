@@ -109,6 +109,8 @@ void RunControls2(vec3& position, float const& speed) {
 
 Material* sceneMaterial = NULL;
 Material* bunnyMaterial = NULL;
+Material* waterMaterial = NULL;
+Material* lavaMaterial = NULL;
 Mesh* floorMesh = NULL;
 Mesh* bunnyMesh = NULL;
 Mesh* skyBox = NULL;
@@ -116,8 +118,12 @@ Mesh* skyBox = NULL;
 void Scene::LoadLevelOne() {
 	sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
 	bunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
+	waterMaterial = Material::CreateMaterial("./Assets/Images/water.jpg");
+	lavaMaterial = Material::CreateMaterial("./Assets/Images/lava.png");
 
-	skyBox = Mesh::CreateMeshObjectDontPush("./Assets/Models/cube.obj", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 0.0f), vec3(-1.0f), vec3(1.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
+	Mesh::CreateMeshObject("./Assets/Models/water.obj", *lavaMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+
+	//skyBox = Mesh::CreateMeshObjectDontPush("./Assets/Models/cube.obj", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 0.0f), vec3(-1.0f), vec3(1.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
 
 	//Mesh::CreateMeshObject("./Assets/Models/torus_NO_UVS.obj", *bunnyMaterial, Transform(vec3(-6.0f, 0.0f, 0.0f), vec3(0.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
 
@@ -125,20 +131,20 @@ void Scene::LoadLevelOne() {
 	//Mesh::CreateMeshObject("./Assets/Models/head2.obj", *bunnyMaterial, Transform(vec3(0.0f, 4.0f, 0.0f), vec3(0.25f, 0.25f, 0.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
 
 	// floor
-	floorMesh = Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	//floorMesh = Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
 	
 	// stairs
-	Mesh::CreateMeshObject("./Assets/Models/stairs1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
-	bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 6.0f)));
-	//// pillars
-	//first row
-	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
-	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 0.0f)));
-	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 0.0f)));
-	//second row
-	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 5.8f)));
-	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 5.8f)));
-	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 5.8f)));
+	//Mesh::CreateMeshObject("./Assets/Models/stairs1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	//bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 6.0f)));
+	////// pillars
+	////first row
+	//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 0.0f)));
+	//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 0.0f)));
+	////second row
+	//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 5.8f)));
+	//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 5.8f)));
+	//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 5.8f)));
 }
 
 
@@ -151,6 +157,7 @@ void Scene::InitializeScene() {
 		glEnable(GL_DEPTH_TEST);
 		// enable backface culling
 		glEnable(GL_CULL_FACE);
+		glShadeModel( GL_SMOOTH );
 		
 		// init the mouse
 		Mouse::InitMouse();
@@ -179,7 +186,7 @@ void Update() {
 	Keyboard::RunKeyboardKeys();
 
 	// draw the background mesh
-	skyBox->Run(&DataCore::camera);
+	if(skyBox != NULL) skyBox->Run(&DataCore::camera);
 	
 	// Run Objects
 	GameObject::RunAllObjects();
@@ -187,15 +194,15 @@ void Update() {
 	// make the bunny mesh spin
 	if (bunnyMesh != NULL) bunnyMesh->transform.Rotate(1.5f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
 
-	// create a timer
-	static GLfloat timer = 0.0f;
-
 	// get random float
 	//timer = Utility::GetRandomFloat(0.1f, 1.0f);
 
 	//////////////////////////////////////////////////
 	// timer
 	///////////////////////////////////////////////////
+	// create a timer
+	static GLfloat timer = 0.0f;
+
 	// get the timer variable on the video card
 	GLint timeLoc = glGetUniformLocationARB(DataCore::programID, "timer");
 
@@ -212,6 +219,47 @@ void Update() {
 	GLint lightLocation = glGetUniformLocationARB(DataCore::programID, "lightDirection");
 	
 	glUniform3f(lightLocation, lightDirection.x, lightDirection.y, lightDirection.z);
+
+	/////////////////////////////////////////////////////
+	// water
+	/////////////////////////////////////////////////////
+	static float waveTime = 0.5f;
+
+	static float waveWidth = 0.6f;
+	static float waveHeight = 0.4f;
+
+	static float waveFrequency = 2.0f;
+
+	static float changeSpeed = 0.25f;
+	static float direction = 1.0f;
+
+	if(direction > 0.0f) {
+		waveHeight += (changeSpeed * direction) * DataCore::deltaTime;
+		//waveWidth += (changeSpeed * direction) * DataCore::deltaTime;
+		if(waveHeight >= 0.5f) {
+			waveHeight = 0.5f;
+			direction = -1.0f;
+		}
+	} else {
+		waveHeight += (changeSpeed * direction) * DataCore::deltaTime;
+		//waveWidth += (changeSpeed * direction) * DataCore::deltaTime;
+		if(waveHeight <= 0.05f) {
+			waveHeight = 0.05f;
+			direction = 1.0f;
+		}
+	}
+	
+
+	GLint waveTimeLoc = glGetUniformLocationARB(DataCore::programID, "waveTime");
+	GLint waveWidthLoc = glGetUniformLocationARB(DataCore::programID, "waveWidth");
+	GLint waveHeightLoc = glGetUniformLocationARB(DataCore::programID, "waveHeight");
+
+	glUniform1fARB(waveTimeLoc, waveTime);
+	glUniform1fARB(waveWidthLoc, waveWidth);
+	glUniform1fARB(waveHeightLoc, waveHeight);
+
+	// Update wave variable
+	waveTime += waveFrequency * DataCore::deltaTime;
 }
 
 int Scene::MainLoop() {

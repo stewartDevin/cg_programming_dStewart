@@ -145,6 +145,8 @@
     <None Include="Assets\Shaders\TextureFragmentShader.fragmentshader" />
     <None Include="Assets\Shaders\Toon.fragmentshader" />
     <None Include="Assets\Shaders\Toon.vertexshader" />
+    <None Include="Assets\Shaders\Water.fragmentshader" />
+    <None Include="Assets\Shaders\Water.vertexshader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Images\grass.png" />
