@@ -29,6 +29,7 @@ glm::mat4 Render::RenderVertex(GLuint vertexBuffer, Transform& transform) {
 	mat4 identityMatrix = mat4(1.0f);
 	mat4 scaleMatrix = glm::scale(identityMatrix, transform.scale);
 	mat4 translateMatrix = glm::translate(identityMatrix, transform.position);
+
 	//mat4 rotationMatrix = mat4(1.0f);
 	//if (transform.isRotating) { 
 	mat4 rotationMatrix = glm::rotate(identityMatrix, transform.rotationAmount, transform.rotationAxis);

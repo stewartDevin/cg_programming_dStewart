@@ -121,31 +121,33 @@ void Scene::LoadLevelOne() {
 	waterMaterial = Material::CreateMaterial("./Assets/Images/water.jpg");
 	lavaMaterial = Material::CreateMaterial("./Assets/Images/lava.png");
 
-	Mesh::CreateMeshObject("./Assets/Models/water.obj", *lavaMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	//Mesh::CreateMeshObject("./Assets/Models/water.obj", *lavaMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
 
-	//skyBox = Mesh::CreateMeshObjectDontPush("./Assets/Models/cube.obj", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 0.0f), vec3(-1.0f), vec3(1.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
+	skyBox = Mesh::CreateMeshObjectDontPush("./Assets/Models/cube.obj", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 0.0f), vec3(-1.0f), vec3(1.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
 
-	//Mesh::CreateMeshObject("./Assets/Models/torus_NO_UVS.obj", *bunnyMaterial, Transform(vec3(-6.0f, 0.0f, 0.0f), vec3(0.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
+	Mesh::CreateMeshObject("./Assets/Models/candy.obj", *bunnyMaterial, Transform(vec3(6.0f, 0.0f, 0.0f)));
+	Mesh::CreateMeshObject("./Assets/Models/head2.obj", *bunnyMaterial, Transform(vec3(0.0f, 4.0f, 0.0f), vec3(0.25f, 0.25f, 0.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
 
-	//Mesh::CreateMeshObject("./Assets/Models/candy.obj", *bunnyMaterial, Transform(vec3(6.0f, 0.0f, 0.0f)));
-	//Mesh::CreateMeshObject("./Assets/Models/head2.obj", *bunnyMaterial, Transform(vec3(0.0f, 4.0f, 0.0f), vec3(0.25f, 0.25f, 0.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
-
-	// floor
-	//floorMesh = Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	//floor
+	floorMesh = Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
 	
-	// stairs
-	//Mesh::CreateMeshObject("./Assets/Models/stairs1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
-	//bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 6.0f)));
-	////// pillars
-	////first row
-	//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
-	//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 0.0f)));
-	//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 0.0f)));
-	////second row
-	//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 5.8f)));
-	//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 5.8f)));
-	//Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 5.8f)));
+	//stairs
+	Mesh::CreateMeshObject("./Assets/Models/stairs1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 6.0f)));
+	//// pillars
+	//first row
+	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 0.0f)));
+	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 0.0f)));
+	//second row
+	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 5.8f)));
+	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(4.0f, 0.0f, 5.8f)));
+	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(8.0f, 0.0f, 5.8f)));
+
+	// no uv's test
+	//Mesh::CreateMeshObject("./Assets/Models/torus_NO_UVS.obj", *bunnyMaterial, Transform(vec3(-6.0f, 0.0f, 0.0f), vec3(0.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
 }
+
 
 
 void Scene::InitializeScene() {

@@ -40,7 +40,7 @@ void Mesh::Run(Camera* camera) {
 
 	this->RenderMesh();
 
-	mat4 MV_Matrix = this->positionMatrix * camera->viewMatrix;
+	mat4 MV_Matrix = camera->viewMatrix;
 	GLuint MV_Matrix_ID = glGetUniformLocation(DataCore::programID, "MV");
 	glUniformMatrix4fv(MV_Matrix_ID, 1, GL_FALSE, &MV_Matrix[0][0]);
 

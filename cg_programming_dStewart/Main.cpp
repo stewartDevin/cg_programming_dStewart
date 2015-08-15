@@ -30,8 +30,8 @@ int main() {
 	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/FlattenTextureVertexShader.vertexshader", "./Assets/Shaders/FlattenTextureFragmentShader.fragmentshader");
 	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/TextureVertexShader.vertexshader", "./Assets/Shaders/TextureFragmentShader.fragmentshader");
 	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/Dance.vertexshader", "./Assets/Shaders/Dance.fragmentshader");
-	DataCore::programID = Load::LoadShaders("./Assets/Shaders/Water.vertexshader", "./Assets/Shaders/Water.fragmentshader");
-	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/Toon.vertexshader", "./Assets/Shaders/Toon.fragmentshader");
+	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/Water.vertexshader", "./Assets/Shaders/Water.fragmentshader");
+	DataCore::programID = Load::LoadShaders("./Assets/Shaders/Toon.vertexshader", "./Assets/Shaders/Toon.fragmentshader");
 	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/DiffuseTextureVertexShader.vertexshader", "./Assets/Shaders/DiffuseTextureFragmentShader.fragmentshader");
 
 	//// init camera.
