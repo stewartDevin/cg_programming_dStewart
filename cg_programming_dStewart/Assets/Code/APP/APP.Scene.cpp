@@ -118,12 +118,8 @@ Mesh* skyBox = NULL;
 void Scene::LoadLevelOne() {
 	sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
 	bunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
-	waterMaterial = Material::CreateMaterial("./Assets/Images/water.jpg");
-	lavaMaterial = Material::CreateMaterial("./Assets/Images/lava.png");
 
-	//Mesh::CreateMeshObject("./Assets/Models/water.obj", *lavaMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
-
-	skyBox = Mesh::CreateMeshObjectDontPush("./Assets/Models/cube.obj", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 0.0f), vec3(-1.0f), vec3(1.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
+	skyBox = Mesh::CreateMeshObject("./Assets/Models/cube.obj", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 0.0f), vec3(-1.0f), vec3(1.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
 
 	Mesh::CreateMeshObject("./Assets/Models/candy.obj", *bunnyMaterial, Transform(vec3(6.0f, 0.0f, 0.0f)));
 	Mesh::CreateMeshObject("./Assets/Models/head2.obj", *bunnyMaterial, Transform(vec3(0.0f, 4.0f, 0.0f), vec3(0.25f, 0.25f, 0.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
@@ -148,6 +144,13 @@ void Scene::LoadLevelOne() {
 	//Mesh::CreateMeshObject("./Assets/Models/torus_NO_UVS.obj", *bunnyMaterial, Transform(vec3(-6.0f, 0.0f, 0.0f), vec3(0.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
 }
 
+void LoadWater() {
+	waterMaterial = Material::CreateMaterial("./Assets/Images/water.jpg");
+	lavaMaterial = Material::CreateMaterial("./Assets/Images/lava.png");
+
+	Mesh::CreateMeshObject("./Assets/Models/water.obj", *lavaMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+}
+
 
 
 void Scene::InitializeScene() {
@@ -164,7 +167,9 @@ void Scene::InitializeScene() {
 		// init the mouse
 		Mouse::InitMouse();
 
-		Scene::LoadLevelOne();
+		//Scene::LoadLevelOne();
+
+		LoadWater();
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
@@ -186,9 +191,6 @@ void Update() {
 	Mouse::RunFPSMouse();
 	// Run Keyboard Input
 	Keyboard::RunKeyboardKeys();
-
-	// draw the background mesh
-	if(skyBox != NULL) skyBox->Run(&DataCore::camera);
 	
 	// Run Objects
 	GameObject::RunAllObjects();
