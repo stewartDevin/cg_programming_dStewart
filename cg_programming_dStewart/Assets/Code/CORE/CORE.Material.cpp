@@ -12,7 +12,7 @@ Material::Material() {
 	this->diffuseImageID = NULL;
 	this->specularImageID = NULL;
 	this->normalImageID = NULL;
-
+	this->shaderID = NULL;
 }
 
 Material::Material(char* diffuseImageFilePath) {
@@ -23,6 +23,7 @@ Material::Material(char* diffuseImageFilePath) {
 	this->diffuseImageID = NULL;
 	this->specularImageID = NULL;
 	this->normalImageID = NULL;
+	this->shaderID = NULL;
 }
 
 Material* Material::CreateMaterial(char* diffuseImageFilePath) {

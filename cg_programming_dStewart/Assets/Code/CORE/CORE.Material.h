@@ -15,6 +15,7 @@ public:
 	GLuint diffuseImageID;
 	GLuint specularImageID;
 	GLuint normalImageID;
+	GLuint shaderID;
 
 	// constructor functions
 	Material::Material(char* diffuseImageFilePath);
