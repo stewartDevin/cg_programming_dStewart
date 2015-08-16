@@ -119,6 +119,16 @@ void Scene::LoadLevelOne() {
 	sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
 	bunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
 
+	sceneMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/TextureVertexShader.vertexshader", "./Assets/Shaders/TextureFragmentShader.fragmentshader");
+	bunnyMaterial->shaderID = sceneMaterial->shaderID;
+
+	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/FlattenTextureVertexShader.vertexshader", "./Assets/Shaders/FlattenTextureFragmentShader.fragmentshader");
+	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/TextureVertexShader.vertexshader", "./Assets/Shaders/TextureFragmentShader.fragmentshader");
+	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/Dance.vertexshader", "./Assets/Shaders/Dance.fragmentshader");
+	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/Water.vertexshader", "./Assets/Shaders/Water.fragmentshader");
+	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/Toon.vertexshader", "./Assets/Shaders/Toon.fragmentshader");
+	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/DiffuseTextureVertexShader.vertexshader", "./Assets/Shaders/DiffuseTextureFragmentShader.fragmentshader");
+
 	skyBox = Mesh::CreateMeshObject("./Assets/Models/cube.obj", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 0.0f), vec3(-1.0f), vec3(1.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
 
 	Mesh::CreateMeshObject("./Assets/Models/candy.obj", *bunnyMaterial, Transform(vec3(6.0f, 0.0f, 0.0f)));
@@ -144,20 +154,102 @@ void Scene::LoadLevelOne() {
 	//Mesh::CreateMeshObject("./Assets/Models/torus_NO_UVS.obj", *bunnyMaterial, Transform(vec3(-6.0f, 0.0f, 0.0f), vec3(0.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
 }
 
+void RunLevelOne() {
+	glUseProgram(sceneMaterial->shaderID);
+	// make the bunny mesh spin
+	if (bunnyMesh != NULL) bunnyMesh->transform.Rotate(1.5f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
+
+	// get random float
+	//timer = Utility::GetRandomFloat(0.1f, 1.0f);
+
+	//////////////////////////////////////////////////
+	// timer
+	///////////////////////////////////////////////////
+	// create a timer
+	static GLfloat timer = 0.0f;
+
+	// get the timer variable on the video card
+	GLint timeLoc = glGetUniformLocationARB(sceneMaterial->shaderID, "timer");
+
+	// send the timer to the vertex Shader
+	glUniform1fARB(timeLoc, timer);
+
+	//increment the timer
+	timer += 2.0f * DataCore::deltaTime;
+
+	/////////////////////////////////////////////////////
+	// lightDirection 
+	/////////////////////////////////////////////////////
+	vec3 lightDirection = vec3(0.75f, 0.75f, 0.75f);
+	GLint lightLocation = glGetUniformLocationARB(sceneMaterial->shaderID, "lightDirection");
+
+	glUniform3f(lightLocation, lightDirection.x, lightDirection.y, lightDirection.z);
+
+}
+
 void LoadWater() {
 	waterMaterial = Material::CreateMaterial("./Assets/Images/water.jpg");
 	lavaMaterial = Material::CreateMaterial("./Assets/Images/lava.png");
 
-	Mesh::CreateMeshObject("./Assets/Models/water.obj", *lavaMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
+	lavaMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/Water.vertexshader", "./Assets/Shaders/Water.fragmentshader");
+	waterMaterial->shaderID = lavaMaterial->shaderID;
+
+	Mesh::CreateMeshObject("./Assets/Models/water.obj", *lavaMaterial, Transform(vec3(0.0f, -2.0f, 0.0f), vec3(0.25f)));
 }
 
+void RunWater() {
+	glUseProgram(waterMaterial->shaderID);
 
+	static float waveTime = 0.5f;
+
+	static float waveWidth = 0.6f;
+	static float waveHeight = 0.4f;
+
+	static float waveFrequency = 0.25f;
+
+	static float changeSpeed = 0.05f;
+	static float direction = 1.0f;
+
+	if (direction > 0.0f) {
+		waveHeight += (changeSpeed * direction) * DataCore::deltaTime;
+		//waveWidth += (changeSpeed * direction) * DataCore::deltaTime;
+		if (waveHeight >= 0.5f) {
+			waveHeight = 0.5f;
+			direction = -1.0f;
+		}
+	}
+	else {
+		waveHeight += (changeSpeed * direction) * DataCore::deltaTime;
+		//waveWidth += (changeSpeed * direction) * DataCore::deltaTime;
+		if (waveHeight <= 0.05f) {
+			waveHeight = 0.05f;
+			direction = 1.0f;
+		}
+	}
+
+
+	GLint waveTimeLoc = glGetUniformLocationARB(lavaMaterial->shaderID, "waveTime");
+	GLint waveWidthLoc = glGetUniformLocationARB(lavaMaterial->shaderID, "waveWidth");
+	GLint waveHeightLoc = glGetUniformLocationARB(lavaMaterial->shaderID, "waveHeight");
+
+	glUniform1fARB(waveTimeLoc, waveTime);
+	glUniform1fARB(waveWidthLoc, waveWidth);
+	glUniform1fARB(waveHeightLoc, waveHeight);
+
+	// Update wave variable
+	waveTime += waveFrequency * DataCore::deltaTime;
+
+}
 
 void Scene::InitializeScene() {
 	if (!Scene::sceneInitialized) {
 
+		GLuint vertexArrayID = NULL;
+		glGenVertexArrays(1, &vertexArrayID);
+		glBindVertexArray(vertexArrayID);
+
 		// tell openGL to use our program...
-		glUseProgram(DataCore::programID);
+		//glUseProgram(DataCore::programID);
 		// enable the depth test for 3d
 		glEnable(GL_DEPTH_TEST);
 		// enable backface culling
@@ -167,7 +259,7 @@ void Scene::InitializeScene() {
 		// init the mouse
 		Mouse::InitMouse();
 
-		//Scene::LoadLevelOne();
+		Scene::LoadLevelOne();
 
 		LoadWater();
 
@@ -195,75 +287,13 @@ void Update() {
 	// Run Objects
 	GameObject::RunAllObjects();
 
-	// make the bunny mesh spin
-	if (bunnyMesh != NULL) bunnyMesh->transform.Rotate(1.5f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
+	//level one
+	if (sceneMaterial != NULL) RunLevelOne();
 
-	// get random float
-	//timer = Utility::GetRandomFloat(0.1f, 1.0f);
-
-	//////////////////////////////////////////////////
-	// timer
-	///////////////////////////////////////////////////
-	// create a timer
-	static GLfloat timer = 0.0f;
-
-	// get the timer variable on the video card
-	GLint timeLoc = glGetUniformLocationARB(DataCore::programID, "timer");
-
-	// send the timer to the vertex Shader
-	glUniform1fARB(timeLoc, timer);
-
-	//increment the timer
-	timer += 2.0f * DataCore::deltaTime;
-
-	/////////////////////////////////////////////////////
-	// lightDirection 
-	/////////////////////////////////////////////////////
-	vec3 lightDirection = vec3(0.75f, 0.75f, 0.75f);
-	GLint lightLocation = glGetUniformLocationARB(DataCore::programID, "lightDirection");
-	
-	glUniform3f(lightLocation, lightDirection.x, lightDirection.y, lightDirection.z);
-
-	/////////////////////////////////////////////////////
+	///////////////////////////
 	// water
-	/////////////////////////////////////////////////////
-	static float waveTime = 0.5f;
-
-	static float waveWidth = 0.6f;
-	static float waveHeight = 0.4f;
-
-	static float waveFrequency = 2.0f;
-
-	static float changeSpeed = 0.25f;
-	static float direction = 1.0f;
-
-	if(direction > 0.0f) {
-		waveHeight += (changeSpeed * direction) * DataCore::deltaTime;
-		//waveWidth += (changeSpeed * direction) * DataCore::deltaTime;
-		if(waveHeight >= 0.5f) {
-			waveHeight = 0.5f;
-			direction = -1.0f;
-		}
-	} else {
-		waveHeight += (changeSpeed * direction) * DataCore::deltaTime;
-		//waveWidth += (changeSpeed * direction) * DataCore::deltaTime;
-		if(waveHeight <= 0.05f) {
-			waveHeight = 0.05f;
-			direction = 1.0f;
-		}
-	}
-	
-
-	GLint waveTimeLoc = glGetUniformLocationARB(DataCore::programID, "waveTime");
-	GLint waveWidthLoc = glGetUniformLocationARB(DataCore::programID, "waveWidth");
-	GLint waveHeightLoc = glGetUniformLocationARB(DataCore::programID, "waveHeight");
-
-	glUniform1fARB(waveTimeLoc, waveTime);
-	glUniform1fARB(waveWidthLoc, waveWidth);
-	glUniform1fARB(waveHeightLoc, waveHeight);
-
-	// Update wave variable
-	waveTime += waveFrequency * DataCore::deltaTime;
+	////////////////////////
+	if(waterMaterial != NULL) RunWater();
 }
 
 int Scene::MainLoop() {

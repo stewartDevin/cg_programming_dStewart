@@ -26,6 +26,16 @@ Transform::Transform(vec3 position, vec3 scale, vec3 rotationAxis, vec3 velocity
 	this->rotateAroundAxis = false;
 }
 
+Transform::Transform(vec3 position, vec3 scale) {
+	this->position = position;
+	this->scale = scale;
+	this->rotationAxis = vec3(0.0f, 1.0f, 0.0f);
+	this->velocity = vec3(0.0f, 0.0f, 0.0f);
+	this->rotationAmount = 0.0f;
+	this->isRotating = false;
+	this->rotateAroundAxis = false;
+}
+
 Transform::Transform(vec3 position) {
 	this->position = position;
 	this->scale = vec3(1.0f, 1.0f, 1.0f);

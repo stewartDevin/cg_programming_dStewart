@@ -35,17 +35,22 @@ void Mesh::Run(Camera* camera) {
 		this->initialized = true;
 	}
 
+	//glUseProgram(DataCore::programID);
+	//glUseProgram(this->material.shaderID);
+
 	this->transform.position += this->transform.velocity * DataCore::deltaTime;
 	//this->transform.angle += this->transform.rotationSpeed * DataCore::deltaTime;
 
 	this->RenderMesh();
 
 	mat4 MV_Matrix = camera->viewMatrix;
-	GLuint MV_Matrix_ID = glGetUniformLocation(DataCore::programID, "MV");
+	//GLuint MV_Matrix_ID = glGetUniformLocation(DataCore::programID, "MV");
+	GLuint MV_Matrix_ID = glGetUniformLocation(this->material.shaderID, "MV");
 	glUniformMatrix4fv(MV_Matrix_ID, 1, GL_FALSE, &MV_Matrix[0][0]);
 
+	this->MVP_MatrixID = glGetUniformLocation(this->material.shaderID, "MVP");
 	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * this->positionMatrix;
-	glUniformMatrix4fv(camera->MVPMatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
+	glUniformMatrix4fv(this->MVP_MatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
 	glDrawArrays(GL_TRIANGLES, 0, this->numIndices);
 
@@ -65,6 +70,7 @@ Mesh* Mesh::CreateMeshObjectDontPush(const char* objFilePath, Material material,
 	bool success = OBJ_Loader::LoadOBJ(objFilePath, mesh->verticesBuffer, mesh->uvsBuffer, mesh->normalsBuffer);
 
 	if(success) {
+		//glUseProgram(material.shaderID);
 		mesh->numIndices = mesh->verticesBuffer.size();
 		mesh->transform = transform;
 
@@ -103,6 +109,8 @@ Mesh* Mesh::CreateMeshObject(const char* objFilePath, Material material, Transfo
 
 glm::mat4 Mesh::RenderMesh() {
 
+	glUseProgram(this->material.shaderID);
+
 	// Enable blending
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -125,7 +133,8 @@ glm::mat4 Mesh::RenderMesh() {
 		Render::RenderNormals(this->normalsBufferID);
 	}
 
-	GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
+	//GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
+	GLuint gl_location = glGetUniformLocation(this->material.shaderID, "myTextureSampler");
 	glUniform1i(gl_location, 0);
 
 	/*glDrawArrays(GL_TRIANGLES, 0, this->numIndices);

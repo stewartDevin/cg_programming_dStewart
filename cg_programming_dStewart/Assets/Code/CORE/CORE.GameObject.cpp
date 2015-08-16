@@ -17,6 +17,7 @@ GameObject::GameObject(vec3 position, vec3 scale, BufferObject bufferObject, GLu
 	this->initialized = false;
 	this->numIndices = 0;
 	this->positionMatrix = mat4(1.0f);
+	this->MVP_MatrixID = NULL;
 }
 
 GameObject::GameObject() {
@@ -27,6 +28,7 @@ GameObject::GameObject() {
 	this->initialized = false;
 	this->numIndices = 0;
 	this->positionMatrix = mat4(1.0f);
+	this->MVP_MatrixID = NULL;
 }
 
 GameObject* GameObject::CreateObject(vec3 position, vec3 scale, BufferObject bufferObject, GLuint textureID) {

@@ -18,6 +18,7 @@ public:
 	bool initialized;
 	BufferObject bufferObject;
 	GLuint textureID;
+	GLuint MVP_MatrixID;
 	int numIndices;
 	
 

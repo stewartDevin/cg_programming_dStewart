@@ -14,7 +14,6 @@ public:
 	vec3 forward;
 	mat4 projectionMatrix;
 	mat4 viewMatrix;
-	GLuint MVPMatrixID;
 	float followSpeed;
 	bool followTargetSet;
 	bool isInitialized;

@@ -18,7 +18,6 @@ Camera::Camera() {
 		this->transform.position+this->forward,		// look at
 		this->up		// up
 		);
-	this->MVPMatrixID = NULL;
 	this->followTargetSet = false;
 	// horizontal angle : toward -Z
 	this->horizontalAngle = 3.14f;
@@ -43,7 +42,6 @@ Camera::Camera(vec3 position) {
 		this->transform.position + this->forward,		// look at
 		this->up		// up
 		);
-	this->MVPMatrixID = NULL;
 	this->followTargetSet = false;
 	// horizontal angle : toward -Z
 	this->horizontalAngle = 3.14f;
@@ -69,7 +67,6 @@ Camera::Camera(vec3 position, vec3 up, vec3 forward) {
 		this->transform.position + this->forward,		// look at
 		this->up		// up
 		);
-	this->MVPMatrixID = NULL;
 	this->followTargetSet = false;
 	// horizontal angle : toward -Z
 	this->horizontalAngle = 3.14f;
@@ -134,7 +131,7 @@ void Camera::CalculateVectors() {
 
 void Camera::Init() {
 	// init MVP Matrix ID
-	this->MVPMatrixID = glGetUniformLocation(DataCore::programID, "MVP");
+	//this->MVPMatrixID = glGetUniformLocation(DataCore::programID, "MVP");
 
 	// init perspective.
 	this->projectionMatrix = perspective(this->initialFoV, DataCore::aspectRatio, Z_NEAR, Z_FAR);
