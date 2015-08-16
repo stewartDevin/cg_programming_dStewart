@@ -109,8 +109,20 @@ void Camera::Update() {
 		);
 }
 
+void Camera::ConstrainLookAngles() {
+
+	if (this->verticalAngle > 1.5f) {
+		this->verticalAngle = 1.5f;
+	} 
+	else if (this->verticalAngle < -1.5f) {
+		this->verticalAngle = -1.5f;
+	}
+}
+
 void Camera::CalculateVectors() {
 	// forward : Spherical coordinates to Cartesian coordinates conversion.
+	this->ConstrainLookAngles();
+
 	this->forward = vec3(
 		cos(this->verticalAngle) * sin(this->horizontalAngle),
 		sin(this->verticalAngle),

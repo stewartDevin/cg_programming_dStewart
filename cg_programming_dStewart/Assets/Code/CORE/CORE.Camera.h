@@ -38,6 +38,7 @@ public:
 	void Update();
 	void Follow(vec3 targetPosition, float speed);
 	void ConstrainMovement(float left, float top, float right, float bottom);
+	void ConstrainLookAngles();
 	void LookAtTarget(vec3 targetPosition);
 	void MoveWithFPSControls();
 	void CalculateVectors();
