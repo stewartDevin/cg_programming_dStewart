@@ -111,6 +111,9 @@ Material* sceneMaterial = NULL;
 Material* bunnyMaterial = NULL;
 Material* waterMaterial = NULL;
 Material* lavaMaterial = NULL;
+
+Material* toonBunnyMaterial = NULL;
+
 Mesh* floorMesh = NULL;
 Mesh* bunnyMesh = NULL;
 Mesh* skyBox = NULL;
@@ -118,9 +121,11 @@ Mesh* skyBox = NULL;
 void Scene::LoadLevelOne() {
 	sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
 	bunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
+	toonBunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
 
 	sceneMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/TextureVertexShader.vertexshader", "./Assets/Shaders/TextureFragmentShader.fragmentshader");
 	bunnyMaterial->shaderID = sceneMaterial->shaderID;
+	toonBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/Toon.vertexshader", "./Assets/Shaders/Toon.fragmentshader");
 
 	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/FlattenTextureVertexShader.vertexshader", "./Assets/Shaders/FlattenTextureFragmentShader.fragmentshader");
 	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/TextureVertexShader.vertexshader", "./Assets/Shaders/TextureFragmentShader.fragmentshader");
@@ -131,7 +136,7 @@ void Scene::LoadLevelOne() {
 
 	skyBox = Mesh::CreateMeshObject("./Assets/Models/cube.obj", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 0.0f), vec3(-1.0f), vec3(1.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
 
-	Mesh::CreateMeshObject("./Assets/Models/candy.obj", *bunnyMaterial, Transform(vec3(6.0f, 0.0f, 0.0f)));
+	//Mesh::CreateMeshObject("./Assets/Models/candy.obj", *bunnyMaterial, Transform(vec3(6.0f, 0.0f, 0.0f)));
 	Mesh::CreateMeshObject("./Assets/Models/head2.obj", *bunnyMaterial, Transform(vec3(0.0f, 4.0f, 0.0f), vec3(0.25f, 0.25f, 0.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
 
 	//floor
@@ -139,7 +144,7 @@ void Scene::LoadLevelOne() {
 	
 	//stairs
 	Mesh::CreateMeshObject("./Assets/Models/stairs1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
-	bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *bunnyMaterial, Transform(vec3(0.0f, 0.0f, 6.0f)));
+	bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *toonBunnyMaterial, Transform(vec3(0.0f, 0.0f, 6.0f)));
 	//// pillars
 	//first row
 	Mesh::CreateMeshObject("./Assets/Models/pillar.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
@@ -152,6 +157,18 @@ void Scene::LoadLevelOne() {
 
 	// no uv's test
 	//Mesh::CreateMeshObject("./Assets/Models/torus_NO_UVS.obj", *bunnyMaterial, Transform(vec3(-6.0f, 0.0f, 0.0f), vec3(0.25f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 0.0f)));
+}
+
+void RunLight() {
+	
+	static vec3 lightDirection = vec3(0.75f, 0.75f, 0.75f);
+
+	RunControls2(lightDirection, 10.0f * DataCore::deltaTime);
+
+	glUseProgram(toonBunnyMaterial->shaderID);
+	GLint lightLocation = glGetUniformLocationARB(toonBunnyMaterial->shaderID, "lightDirection");
+	glUniform3f(lightLocation, lightDirection.x, lightDirection.y, lightDirection.z);
+
 }
 
 void RunLevelOne() {
@@ -180,10 +197,7 @@ void RunLevelOne() {
 	/////////////////////////////////////////////////////
 	// lightDirection 
 	/////////////////////////////////////////////////////
-	vec3 lightDirection = vec3(0.75f, 0.75f, 0.75f);
-	GLint lightLocation = glGetUniformLocationARB(sceneMaterial->shaderID, "lightDirection");
-
-	glUniform3f(lightLocation, lightDirection.x, lightDirection.y, lightDirection.z);
+	RunLight();
 
 }
 
@@ -194,7 +208,7 @@ void LoadWater() {
 	lavaMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/Water.vertexshader", "./Assets/Shaders/Water.fragmentshader");
 	waterMaterial->shaderID = lavaMaterial->shaderID;
 
-	Mesh::CreateMeshObject("./Assets/Models/water.obj", *lavaMaterial, Transform(vec3(0.0f, -2.0f, 0.0f), vec3(0.25f)));
+	Mesh::CreateMeshObject("./Assets/Models/water.obj", *lavaMaterial, Transform(vec3(0.0f, -2.5f, 0.0f), vec3(0.25f)));
 }
 
 void RunWater() {
@@ -255,6 +269,8 @@ void Scene::InitializeScene() {
 		// enable backface culling
 		glEnable(GL_CULL_FACE);
 		glShadeModel( GL_SMOOTH );
+		// render lines...
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINES);
 		
 		// init the mouse
 		Mouse::InitMouse();
@@ -290,8 +306,6 @@ void Update() {
 	//level one
 	if (sceneMaterial != NULL) RunLevelOne();
 
-	///////////////////////////
-	// water
 	////////////////////////
 	if(waterMaterial != NULL) RunWater();
 }

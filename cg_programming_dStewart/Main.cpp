@@ -18,29 +18,6 @@ int main() {
 		return EXIT_WITH_ERROR;
 	}
 
-	/*glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);*/
-
-	/*GLuint vertexArrayID = NULL;
-	glGenVertexArrays(1, &vertexArrayID);
-	glBindVertexArray(vertexArrayID);*/
-
-	// Create and compile glsl from shaders.
-	
-
-	//// init camera.
-	//// link the shaders to the camera.
-	//DataCore::camera.MVPMatrixID = glGetUniformLocation(DataCore::programID, "MVP");
-	////DataCore::camera.MVPMatrixID = glGetUniformLocation(DataCore::dirtID, "MVP");
-
-	//// init perspective.
-	//DataCore::camera.projectionMatrix = perspective(FIELD_OF_VIEW, DataCore::aspectRatio, Z_NEAR, Z_FAR);
-
-	// render lines...
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINES);
-	
-
 	// run the main loop of the program.
 	if (Scene::MainLoop() == EXIT_WITH_ERROR) return EXIT_WITH_ERROR;
 
