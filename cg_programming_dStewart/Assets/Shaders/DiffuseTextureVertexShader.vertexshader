@@ -17,7 +17,7 @@ uniform vec3 lightDirection;
 
 void main() {
 	
-	UV = vertexUV;
+	UV = vertexUV*10.0f;
 	//normal = normalize( vec3(vec4(vertexNormal, 1.0f) * MV));
 	normal = normalize( vec3(vec4(vertexNormal, 1.0f) ));
 

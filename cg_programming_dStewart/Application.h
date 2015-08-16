@@ -34,7 +34,7 @@
 #define SCREEN_HEIGHT 800
 #define FIELD_OF_VIEW 45.0f
 #define Z_NEAR 0.1f
-#define Z_FAR 1000.0f
+#define Z_FAR 2000.0f
 #define GLFW_OK 0
 
 // using namespaces
