@@ -10,7 +10,16 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // main
+
+
 int main() {
+	CSource source;
+	CReceiver receiver;
+
+	receiver.hookEvent(&source);
+	__raise source.MyEvent(123);
+	receiver.unhookEvent(&source);
+
 	// seed random number generator.
 	srand(time(NULL));
 	// launch the window, initialize GLEW...

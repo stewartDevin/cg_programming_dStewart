@@ -25,7 +25,7 @@ using namespace std;
 // Scene
 class Scene {
 public:
-	static vector<GameObject*> listOfObjects;
+	
 
 	static bool initializedPong;
 	static bool sceneInitialized;

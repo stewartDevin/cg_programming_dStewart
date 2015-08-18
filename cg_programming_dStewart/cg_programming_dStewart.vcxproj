@@ -78,7 +78,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Assets\Code\APP\APP.DataCore.cpp" />
-    <ClCompile Include="Assets\Code\APP\APP.GameOptions.cpp" />
     <ClCompile Include="Assets\Code\APP\APP.Scene.cpp" />
     <ClCompile Include="Assets\Code\APP\OpenWorldGame\OWG.DataCore.cpp" />
     <ClCompile Include="Assets\Code\APP\OpenWorldGame\OWG.Player.cpp" />
@@ -104,7 +103,6 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Assets\Code\APP\APP.DataCore.h" />
-    <ClInclude Include="Assets\Code\APP\APP.GameOptions.h" />
     <ClInclude Include="Assets\Code\APP\APP.Scene.h" />
     <ClInclude Include="Assets\Code\APP\OpenWorldGame\OWG.DataCore.h" />
     <ClInclude Include="Assets\Code\APP\OpenWorldGame\OWG.Player.h" />

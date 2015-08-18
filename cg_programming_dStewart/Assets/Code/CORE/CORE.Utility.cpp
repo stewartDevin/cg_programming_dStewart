@@ -44,3 +44,23 @@ float Utility::GetRandomFloat(float a, float b) {
 	float r = random * diff;
 	return a + r;
 }
+
+void Utility::FluctuateValueUpAndDown(float min, float max, float& value, float speed, bool startByGoingUp) {
+	static bool directionDecided = false;
+	static int direction = 1;
+	if (!directionDecided) {
+		if (!startByGoingUp) direction = -1;
+		directionDecided = true;
+	}
+
+	if (value >= max) {
+		value = max;
+		direction = -1;
+	}
+	else if (value <= min) {
+		value = min;
+		direction = 1;
+	}
+
+	value += speed * direction;
+}

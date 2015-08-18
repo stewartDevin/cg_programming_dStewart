@@ -34,9 +34,13 @@ public:
 
 	static void RunAllObjects();
 
+	static void GameObject::DeleteAllObjects();
+
 	void DeleteObject();
 
 	void Init();
 
 	void virtual Run(Camera* camera);
+
+	~GameObject();
 };

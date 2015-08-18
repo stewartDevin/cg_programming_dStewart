@@ -13,6 +13,8 @@ Material::Material() {
 	this->specularImageID = NULL;
 	this->normalImageID = NULL;
 	this->shaderID = NULL;
+
+	this->diffuseTiling = vec2(1.0f, 1.0f);
 }
 
 Material::Material(char* diffuseImageFilePath) {
@@ -24,6 +26,10 @@ Material::Material(char* diffuseImageFilePath) {
 	this->specularImageID = NULL;
 	this->normalImageID = NULL;
 	this->shaderID = NULL;
+
+	this->diffuseTiling = vec2(1.0f, 1.0f);
+
+	
 }
 
 Material* Material::CreateMaterial(char* diffuseImageFilePath) {
@@ -31,3 +37,11 @@ Material* Material::CreateMaterial(char* diffuseImageFilePath) {
 	Load::_LoadTexture(&material->diffuseImageID, material->diffuseImageFilePath);
 	return material;
 }
+
+void Material::ApplyTiling() {
+	GLint diffuseTextureTilingLocation = glGetUniformLocationARB(this->shaderID, "diffuseTiling");
+	glUniform2fARB(diffuseTextureTilingLocation, this->diffuseTiling.x, this->diffuseTiling.y);
+
+}
+
+

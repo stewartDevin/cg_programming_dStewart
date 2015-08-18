@@ -78,9 +78,6 @@
     <ClCompile Include="Assets\Code\APP\APP.DataCore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Assets\Code\APP\APP.GameOptions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Assets\Code\APP\APP.Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -150,9 +147,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Assets\Code\APP\APP.DataCore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Assets\Code\APP\APP.GameOptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Assets\Code\APP\APP.Scene.h">

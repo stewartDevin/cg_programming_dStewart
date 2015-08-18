@@ -17,11 +17,14 @@ public:
 	GLuint normalImageID;
 	GLuint shaderID;
 
+	vec2 diffuseTiling;
+
 	// constructor functions
 	Material::Material(char* diffuseImageFilePath);
 	Material::Material();
 
 	// member functions
+	void ApplyTiling();
 
 	// static functions
 	static Material* CreateMaterial(char* diffuseImageFilePath);

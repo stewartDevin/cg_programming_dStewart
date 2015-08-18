@@ -150,8 +150,8 @@ glm::mat4 Render::RenderQuad(Mesh* mesh) {
 	glBindTexture(GL_TEXTURE_2D, mesh->material.diffuseImageID);
 	glCullFace(GL_BACK);
 
-	GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
-	glUniform1i(gl_location, 0);
+	//GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
+	//glUniform1i(gl_location, 0);
 
 	/*glDrawArrays(GL_TRIANGLES, 0, mesh->numIndices);
 	glDisableVertexAttribArray(0);

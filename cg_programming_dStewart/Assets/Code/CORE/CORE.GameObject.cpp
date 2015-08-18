@@ -7,6 +7,10 @@
 #include "CORE.Render.h"
 #include "..\APP\APP.DataCore.h"
 
+GameObject::~GameObject() {
+
+}
+
 GameObject::GameObject(vec3 position, vec3 scale, BufferObject bufferObject, GLuint textureID) {
 	this->transform.position = position;
 	this->transform.scale = scale;
@@ -33,7 +37,7 @@ GameObject::GameObject() {
 
 GameObject* GameObject::CreateObject(vec3 position, vec3 scale, BufferObject bufferObject, GLuint textureID) {
 	GameObject* object = new GameObject(position, scale, bufferObject, textureID);
-	Scene::listOfObjects.push_back(object);
+	DataCore::listOfObjects.push_back(object);
 	//Scene::listOfObjects[Scene::sizeOfListOfObjects] = object;
 	//Scene::sizeOfListOfObjects++;
 	return object;
@@ -46,11 +50,29 @@ GameObject* GameObject::CreateObject(vec3 position, vec3 scale, BufferObject buf
 //	return object;
 //}
 
+// when calling this, remember to null out pointers.
 void GameObject::DeleteObject(GameObject* object) {
-	delete(object);
+	if (object == nullptr) return;
+	for (int n = DataCore::listOfObjects.size() - 1; n > -1; n--) {
+		GameObject* obj = DataCore::listOfObjects[n];
+		if (obj == object) {
+			DataCore::listOfObjects.erase(DataCore::listOfObjects.begin() + n);
+			delete object;
+			object = nullptr;
+			return;
+		}
+	}
 }
+
 void GameObject::DeleteObject() {
-	delete(this);
+	for (int n = DataCore::listOfObjects.size() - 1; n > -1; n--) {
+		GameObject* obj = DataCore::listOfObjects[n];
+		if (obj == this) {
+			DataCore::listOfObjects.erase(DataCore::listOfObjects.begin() + n);
+			delete this;
+			return;
+		}
+	}
 }
 
 void GameObject::Init() {
@@ -71,8 +93,16 @@ void GameObject::Run(Camera* camera) {
 }
 
 void GameObject::RunAllObjects() {
-	for (int n = Scene::listOfObjects.size()-1; n > -1; n--) {
-		GameObject* obj = Scene::listOfObjects[n];
+	for (int n = DataCore::listOfObjects.size() - 1; n > -1; n--) {
+		GameObject* obj = DataCore::listOfObjects[n];
 		obj->Run(&DataCore::camera);
 	}
+}
+
+void GameObject::DeleteAllObjects() {
+	for (int n = DataCore::listOfObjects.size() - 1; n > -1; n--) {
+		GameObject* obj = DataCore::listOfObjects[n];
+		obj->DeleteObject();
+	}
+	DataCore::listOfObjects.clear();
 }

@@ -16,4 +16,6 @@ public:
 
 	static int GetRandomInt(int from, int to);
 	static float GetRandomFloat(float a, float b);
+
+	static void FluctuateValueUpAndDown(float min, float max, float& value, float speed, bool startByGoingUp);
 };

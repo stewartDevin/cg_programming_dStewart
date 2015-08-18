@@ -47,6 +47,8 @@ Keyboard::Keyboard() {
 	
 }
 
+
+
 void Keyboard::RunKeyboardKeys() {
 	if (glfwGetKey(DataCore::window, GLFW_KEY_A) == GLFW_PRESS) {
 		Keyboard::A = true;

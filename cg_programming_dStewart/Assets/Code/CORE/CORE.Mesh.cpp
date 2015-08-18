@@ -103,7 +103,7 @@ Mesh* Mesh::CreateMeshObjectDontPush(const char* objFilePath, Material material,
 
 Mesh* Mesh::CreateMeshObject(const char* objFilePath, Material material, Transform transform) {
 	Mesh* mesh = Mesh::CreateMeshObjectDontPush(objFilePath, material, transform);
-	Scene::listOfObjects.push_back(mesh);
+	DataCore::listOfObjects.push_back(mesh);
 	return mesh;
 }
 
@@ -125,6 +125,8 @@ glm::mat4 Mesh::RenderMesh() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
+	this->material.ApplyTiling();
+
 	if (this->uvsBufferID != NULL) {
 		Render::RenderUVs(this->uvsBufferID);
 	}
@@ -134,8 +136,8 @@ glm::mat4 Mesh::RenderMesh() {
 	}
 
 	//GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
-	GLuint gl_location = glGetUniformLocation(this->material.shaderID, "myTextureSampler");
-	glUniform1i(gl_location, 0);
+	//GLuint gl_location = glGetUniformLocation(this->material.shaderID, "myTextureSampler");
+	//glUniform1i(gl_location, 0);
 
 	/*glDrawArrays(GL_TRIANGLES, 0, this->numIndices);
 

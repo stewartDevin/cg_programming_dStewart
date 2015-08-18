@@ -25,8 +25,6 @@ bool Scene::sceneInitialized = false;
 string Scene::loadedFile = "";
 string Scene::loadedLevel = "";
 
-vector<GameObject*> Scene::listOfObjects;
-
 //void LoadGrid() {
 //	// load grid
 //	/*float xPos = -2.4f;
@@ -108,7 +106,7 @@ void RunControls2(vec3& position, float const& speed) {
 }
 
 Material* sceneMaterial = NULL;
-Material* bunnyMaterial = NULL;
+Material* landscapeMaterial = NULL;
 Material* waterMaterial = NULL;
 Material* lavaMaterial = NULL;
 
@@ -117,13 +115,14 @@ Material* skyBoxMaterial = NULL;
 
 Mesh* floorMesh = NULL;
 Mesh* bunnyMesh = NULL;
+
 Mesh* skyBox = NULL;
 Mesh* landscapeMesh = NULL;
 
 bool levelOneInitialized = false;
 void Scene::LoadLevelOne() {
 	sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
-	bunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
+	landscapeMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
 	toonBunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
 	skyBoxMaterial = Material::CreateMaterial("./Assets/Images/skyBox_texture.png");
 
@@ -131,9 +130,8 @@ void Scene::LoadLevelOne() {
 	sceneMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/DiffuseTextureVertexShader.vertexshader", "./Assets/Shaders/DiffuseTextureFragmentShader.fragmentshader");
 	toonBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/Toon.vertexshader", "./Assets/Shaders/Toon.fragmentshader");
 	skyBoxMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/TextureVertexShader.vertexshader", "./Assets/Shaders/TextureFragmentShader.fragmentshader");
-
-	bunnyMaterial->shaderID = sceneMaterial->shaderID;
-
+	landscapeMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/DiffuseTextureVertexShader.vertexshader", "./Assets/Shaders/DiffuseTextureFragmentShader.fragmentshader");
+	landscapeMaterial->diffuseTiling = vec2(10.0f, 10.0f);
 	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/FlattenTextureVertexShader.vertexshader", "./Assets/Shaders/FlattenTextureFragmentShader.fragmentshader");
 	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/TextureVertexShader.vertexshader", "./Assets/Shaders/TextureFragmentShader.fragmentshader");
 	//DataCore::programID = Load::LoadShaders("./Assets/Shaders/Dance.vertexshader", "./Assets/Shaders/Dance.fragmentshader");
@@ -148,7 +146,7 @@ void Scene::LoadLevelOne() {
 	skyBox = Mesh::CreateMeshObject("./Assets/Models/skyBox.obj", *skyBoxMaterial, Transform(vec3(0.0f, 4.0f, 0.0f), vec3(-60.0f)));
 	//if (skyBox != NULL) skyBox->transform.Rotate(10.0f, vec3(0.0f, 0.0f, 1.0f), false);
 	//Mesh::CreateMeshObject("./Assets/Models/candy.obj", *bunnyMaterial, Transform(vec3(6.0f, 0.0f, 0.0f)));
-	Mesh::CreateMeshObject("./Assets/Models/head2.obj", *bunnyMaterial, Transform(vec3(0.0f, 4.0f, 0.0f), vec3(0.25f)));
+	Mesh::CreateMeshObject("./Assets/Models/head2.obj", *landscapeMaterial, Transform(vec3(0.0f, 4.0f, 0.0f), vec3(0.25f)));
 
 	////floor
 	floorMesh = Mesh::CreateMeshObject("./Assets/Models/floor1.obj", *sceneMaterial, Transform(vec3(0.0f, 0.0f, 0.0f)));
@@ -172,13 +170,14 @@ void Scene::LoadLevelOne() {
 	levelOneInitialized = true;
 }
 
-
-
 void RunLight() {
-	
-	static vec3 lightDirection = vec3(0.75f, 0.75f, 0.75f);
+	if (toonBunnyMaterial == NULL || sceneMaterial == NULL) return;
 
-	RunControls2(lightDirection, 10.0f * DataCore::deltaTime);
+	static vec3 lightDirection = vec3(0.5f, 0.75f, 1.0f);
+	
+	Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.x, 0.25f * DataCore::deltaTime, true);
+	//Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.y, 0.25f * DataCore::deltaTime, true);
+	//Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.z, 0.25f * DataCore::deltaTime, true);
 
 	glUseProgram(toonBunnyMaterial->shaderID);
 	GLint lightLocation = glGetUniformLocationARB(toonBunnyMaterial->shaderID, "lightDirection");
@@ -188,12 +187,16 @@ void RunLight() {
 	lightLocation = glGetUniformLocationARB(sceneMaterial->shaderID, "lightDirection");
 	glUniform3f(lightLocation, lightDirection.x, lightDirection.y, lightDirection.z);
 
+	glUseProgram(landscapeMaterial->shaderID);
+	lightLocation = glGetUniformLocationARB(landscapeMaterial->shaderID, "lightDirection");
+	glUniform3f(lightLocation, lightDirection.x, lightDirection.y, lightDirection.z);
+
 }
 
 bool levelTwoInitialized = false;
 void LoadLevelTwo() {
 	sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
-	bunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
+	landscapeMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
 	toonBunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
 	skyBoxMaterial = Material::CreateMaterial("./Assets/Images/skyBox_texture.png");
 
@@ -201,9 +204,10 @@ void LoadLevelTwo() {
 	toonBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/Toon.vertexshader", "./Assets/Shaders/Toon.fragmentshader");
 	skyBoxMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/TextureVertexShader.vertexshader", "./Assets/Shaders/TextureFragmentShader.fragmentshader");
 
-	bunnyMaterial->shaderID = sceneMaterial->shaderID;
+	landscapeMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/DiffuseTextureVertexShader.vertexshader", "./Assets/Shaders/DiffuseTextureFragmentShader.fragmentshader");
+	landscapeMaterial->diffuseTiling = vec2(10.0f, 10.0f);
 
-	landscapeMesh = Mesh::CreateMeshObject("./Assets/Models/landscape.obj", *bunnyMaterial, Transform(vec3(0.0f, -15.0f, 0.0f), vec3(5.0f)));
+	landscapeMesh = Mesh::CreateMeshObject("./Assets/Models/landscape.obj", *landscapeMaterial, Transform(vec3(0.0f, -15.0f, 0.0f), vec3(5.0f)));
 
 	bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *toonBunnyMaterial, Transform(vec3(0.0f, 0.0f, 6.0f)));
 	///*
@@ -212,6 +216,7 @@ void LoadLevelTwo() {
 }
 
 void RunLevelTwo() {
+	if (sceneMaterial == NULL) return;
 	glUseProgram(sceneMaterial->shaderID);
 	// make the bunny mesh spin
 	if (bunnyMesh != NULL) bunnyMesh->transform.Rotate(1.5f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
@@ -242,6 +247,7 @@ void RunLevelTwo() {
 }
 
 void RunLevelOne() {
+	if (sceneMaterial == NULL) return;
 	glUseProgram(sceneMaterial->shaderID);
 	// make the bunny mesh spin
 	if (bunnyMesh != NULL) bunnyMesh->transform.Rotate(1.5f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
@@ -284,6 +290,7 @@ void LoadWater() {
 }
 
 void RunWater() {
+	if (waterMaterial == NULL) return;
 	glUseProgram(waterMaterial->shaderID);
 
 	static float waveTime = 0.5f;
@@ -347,14 +354,32 @@ void Scene::InitializeScene() {
 		// init the mouse
 		Mouse::InitMouse();
 
-		Scene::LoadLevelOne();
+		//Scene::LoadLevelOne();
 
 		LoadWater();
 
-		//LoadLevelTwo();
+		LoadLevelTwo();
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
+	}
+}
+
+void DeleteAllObjectsTest() {
+
+	if (Keyboard::SpaceBar) {
+		//GameObject::DeleteAllObjects();
+		GameObject::DeleteAllObjects();
+		sceneMaterial = NULL;
+		landscapeMaterial = NULL;
+		waterMaterial = NULL;
+		lavaMaterial = NULL;
+		toonBunnyMaterial = NULL;
+		skyBoxMaterial = NULL;
+		floorMesh = NULL;
+		bunnyMesh = NULL;
+		skyBox = NULL;
+		landscapeMesh = NULL;
 	}
 }
 
@@ -376,6 +401,8 @@ void Update() {
 	
 	// Run Objects
 	GameObject::RunAllObjects();
+
+	//DeleteAllObjectsTest();
 
 	//level one
 	if (levelOneInitialized) RunLevelOne();

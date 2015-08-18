@@ -5,6 +5,9 @@
 #include "../CORE/CORE.OBJ_Loader.h"
 #include "../CORE/CORE.Mesh.h"
 
+// list of game objects
+vector<GameObject*> DataCore::listOfObjects;
+
 // program id
 GLuint DataCore::programID = NULL;
 
@@ -42,6 +45,24 @@ float DataCore::tileSpacing = -0.02f;
 
 // playerMesh
 Mesh* DataCore::playerMesh = NULL;
+
+void CReceiver::MyHandler1(int nValue) {
+	printf("MyHandler1 was called with value %d.\n", nValue);
+}
+
+void CReceiver::MyHandler2(int nValue) {
+	printf("MyHandler2 was called with value %d.\n", nValue);
+}
+
+void CReceiver::hookEvent(CSource* pSource) {
+	__hook(&CSource::MyEvent, pSource, &CReceiver::MyHandler1);
+	__hook(&CSource::MyEvent, pSource, &CReceiver::MyHandler2);
+}
+
+void CReceiver::unhookEvent(CSource* pSource) {
+	__unhook(&CSource::MyEvent, pSource, &CReceiver::MyHandler1);
+	__unhook(&CSource::MyEvent, pSource, &CReceiver::MyHandler2);
+}
 
 // Read our .obj file
 //std::vector< glm::vec3 > DataCore::vertices;

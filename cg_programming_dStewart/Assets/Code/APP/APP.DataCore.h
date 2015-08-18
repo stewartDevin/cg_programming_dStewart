@@ -10,6 +10,10 @@
 
 class DataCore {
 public:
+	// list of game objects
+	static vector<GameObject*> listOfObjects;
+
+	// program id
 	static GLuint programID;
 
 	// aspect ratio
@@ -48,4 +52,21 @@ public:
 
 	//playerMesh
 	static Mesh* playerMesh;
+};
+
+class CSource {
+public:
+	__event void MyEvent(int nValue);
+};
+
+
+class CReceiver {
+public:
+	void MyHandler1(int nValue);
+	
+	void MyHandler2(int nValue);
+	
+	void hookEvent(CSource* pSource);
+	
+	void unhookEvent(CSource* pSource);
 };

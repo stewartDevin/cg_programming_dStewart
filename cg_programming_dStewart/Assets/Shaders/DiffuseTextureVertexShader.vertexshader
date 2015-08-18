@@ -15,9 +15,12 @@ uniform mat4 MV;
 out vec3 normal;
 uniform vec3 lightDirection;
 
+uniform vec2 diffuseTiling;
+
 void main() {
 	
-	UV = vertexUV*10.0f;
+	UV = vertexUV * vec2(diffuseTiling.x, diffuseTiling.y);
+
 	//normal = normalize( vec3(vec4(vertexNormal, 1.0f) * MV));
 	normal = normalize( vec3(vec4(vertexNormal, 1.0f) ));
 
