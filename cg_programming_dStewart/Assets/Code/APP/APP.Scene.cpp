@@ -407,7 +407,6 @@ void Update() {
 	//level one
 	if (levelOneInitialized) RunLevelOne();
 
-	////////////////////////
 	if (waterInitialized) RunWater();
 
 	if (levelTwoInitialized) RunLevelTwo();
