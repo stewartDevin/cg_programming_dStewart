@@ -8,13 +8,14 @@ class Material {
 public:
 
 	// variables
-	char* diffuseImageFilePath;
-	char* specularImageFilePath;
-	char* normalImageFilePath;
+	char* diffuseImageFilePath[MAX_TEXTURES];
+	char* specularImageFilePath[MAX_TEXTURES];
+	char* normalImageFilePath[MAX_TEXTURES];
 
-	GLuint diffuseImageID;
-	GLuint specularImageID;
-	GLuint normalImageID;
+	GLuint diffuseImageID[MAX_TEXTURES];
+	GLuint specularImageID[MAX_TEXTURES];
+	GLuint normalImageID[MAX_TEXTURES];
+
 	GLuint shaderID;
 
 	vec2 diffuseTiling;

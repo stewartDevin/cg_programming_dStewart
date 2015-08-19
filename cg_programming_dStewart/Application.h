@@ -36,6 +36,7 @@
 #define Z_NEAR 0.1f
 #define Z_FAR 2000.0f
 #define GLFW_OK 0
+#define MAX_TEXTURES 4
 
 // using namespaces
 using namespace std;

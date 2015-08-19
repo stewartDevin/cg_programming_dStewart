@@ -115,15 +115,29 @@ glm::mat4 Mesh::RenderMesh() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	// apply diffuse texture
+	//GLuint gl_location = glGetUniformLocation(DataCore::programID, "diffuseTexture1");
+	if(this->material.diffuseImageID[0] != NULL) {
+		GLuint gl_location = glGetUniformLocation(this->material.shaderID, "diffuseTexture1");
+		glUniform1i(gl_location, 0);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, this->material.diffuseImageID[0]);
+	}
+
+	if(this->material.diffuseImageID[1] != NULL) {
+		GLuint gl_location = glGetUniformLocation(this->material.shaderID, "diffuseTexture2");
+		glUniform1i(gl_location, 1);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, this->material.diffuseImageID[1]);
+	}
 
 	//mat4 positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
 	this->positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, this->material.diffuseImageID);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	this->material.ApplyTiling();
 
@@ -134,10 +148,6 @@ glm::mat4 Mesh::RenderMesh() {
 	if (this->normalsBufferID != NULL) {
 		Render::RenderNormals(this->normalsBufferID);
 	}
-
-	//GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
-	//GLuint gl_location = glGetUniformLocation(this->material.shaderID, "myTextureSampler");
-	//glUniform1i(gl_location, 0);
 
 	/*glDrawArrays(GL_TRIANGLES, 0, this->numIndices);
 

@@ -126,6 +126,8 @@ void Scene::LoadLevelOne() {
 	toonBunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
 	skyBoxMaterial = Material::CreateMaterial("./Assets/Images/skyBox_texture.png");
 
+
+
 	//sceneMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/TextureVertexShader.vertexshader", "./Assets/Shaders/TextureFragmentShader.fragmentshader");
 	sceneMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/DiffuseTextureVertexShader.vertexshader", "./Assets/Shaders/DiffuseTextureFragmentShader.fragmentshader");
 	toonBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/Toon.vertexshader", "./Assets/Shaders/Toon.fragmentshader");
@@ -174,7 +176,7 @@ void RunLight() {
 	if (toonBunnyMaterial == NULL || sceneMaterial == NULL) return;
 
 	static vec3 lightDirection = vec3(0.5f, 0.75f, 1.0f);
-	
+
 	Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.x, 0.25f * DataCore::deltaTime, true);
 	//Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.y, 0.25f * DataCore::deltaTime, true);
 	//Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.z, 0.25f * DataCore::deltaTime, true);
@@ -205,6 +207,8 @@ void LoadLevelTwo() {
 	skyBoxMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/TextureVertexShader.vertexshader", "./Assets/Shaders/TextureFragmentShader.fragmentshader");
 
 	landscapeMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/DiffuseTextureVertexShader.vertexshader", "./Assets/Shaders/DiffuseTextureFragmentShader.fragmentshader");
+	landscapeMaterial->diffuseImageFilePath[1] = "./Assets/Images/floorPillarStairs_Diffuse.png";
+	Load::_LoadTexture(&landscapeMaterial->diffuseImageID[1], landscapeMaterial->diffuseImageFilePath[1]);
 	landscapeMaterial->diffuseTiling = vec2(10.0f, 10.0f);
 
 	landscapeMesh = Mesh::CreateMeshObject("./Assets/Models/landscape.obj", *landscapeMaterial, Transform(vec3(0.0f, -15.0f, 0.0f), vec3(5.0f)));
@@ -215,12 +219,7 @@ void LoadLevelTwo() {
 	levelTwoInitialized = true;
 }
 
-void RunLevelTwo() {
-	if (sceneMaterial == NULL) return;
-	glUseProgram(sceneMaterial->shaderID);
-	// make the bunny mesh spin
-	if (bunnyMesh != NULL) bunnyMesh->transform.Rotate(1.5f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
-
+void RunTimer () {
 	// get random float
 	//timer = Utility::GetRandomFloat(0.1f, 1.0f);
 
@@ -229,15 +228,31 @@ void RunLevelTwo() {
 	///////////////////////////////////////////////////
 	// create a timer
 	static GLfloat timer = 0.0f;
-
-	// get the timer variable on the video card
-	GLint timeLoc = glGetUniformLocationARB(sceneMaterial->shaderID, "timer");
-
-	// send the timer to the vertex Shader
-	glUniform1fARB(timeLoc, timer);
-
+	if (sceneMaterial != NULL ) {
+		glUseProgram(sceneMaterial->shaderID);
+		// get the timer variable on the video card
+		GLint timeLoc = glGetUniformLocationARB(sceneMaterial->shaderID, "timer");
+		// send the timer to the vertex Shader
+		glUniform1fARB(timeLoc, timer);
+	}
+	if (landscapeMaterial != NULL ) {
+		glUseProgram(landscapeMaterial->shaderID);
+		// get the timer variable on the video card
+		GLint timeLoc = glGetUniformLocationARB(landscapeMaterial->shaderID, "timer");
+		// send the timer to the vertex Shader
+		glUniform1fARB(timeLoc, timer);
+	}
 	//increment the timer
 	timer += 2.0f * DataCore::deltaTime;
+}
+
+void RunLevelTwo() {
+	if (sceneMaterial == NULL) return;
+	glUseProgram(sceneMaterial->shaderID);
+	// make the bunny mesh spin
+	if (bunnyMesh != NULL) bunnyMesh->transform.Rotate(1.5f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
+
+	RunTimer ();
 
 	/////////////////////////////////////////////////////
 	// lightDirection 
@@ -246,29 +261,15 @@ void RunLevelTwo() {
 
 }
 
+
+
 void RunLevelOne() {
 	if (sceneMaterial == NULL) return;
 	glUseProgram(sceneMaterial->shaderID);
 	// make the bunny mesh spin
 	if (bunnyMesh != NULL) bunnyMesh->transform.Rotate(1.5f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
 
-	// get random float
-	//timer = Utility::GetRandomFloat(0.1f, 1.0f);
-
-	//////////////////////////////////////////////////
-	// timer
-	///////////////////////////////////////////////////
-	// create a timer
-	static GLfloat timer = 0.0f;
-
-	// get the timer variable on the video card
-	GLint timeLoc = glGetUniformLocationARB(sceneMaterial->shaderID, "timer");
-
-	// send the timer to the vertex Shader
-	glUniform1fARB(timeLoc, timer);
-
-	//increment the timer
-	timer += 2.0f * DataCore::deltaTime;
+	RunTimer ();
 
 	/////////////////////////////////////////////////////
 	// lightDirection 
@@ -350,7 +351,7 @@ void Scene::InitializeScene() {
 		glShadeModel( GL_SMOOTH );
 		// render lines...
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINES);
-		
+
 		// init the mouse
 		Mouse::InitMouse();
 
@@ -398,7 +399,7 @@ void Update() {
 	Mouse::RunFPSMouse();
 	// Run Keyboard Input
 	Keyboard::RunKeyboardKeys();
-	
+
 	// Run Objects
 	GameObject::RunAllObjects();
 
@@ -413,7 +414,7 @@ void Update() {
 }
 
 int Scene::MainLoop() {
-	
+
 	Scene::InitializeScene();
 
 	do {

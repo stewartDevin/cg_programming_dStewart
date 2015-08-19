@@ -6,11 +6,13 @@ layout(location = 2) in vec2 vertexUV;
 layout(location = 3) in vec3 vertexNormal;
 
 out vec2 UV;
+
 smooth out vec3 fragColor;
 
 // model view projection matrix...
 uniform mat4 MVP;
 uniform mat4 MV;
+uniform float timer;
 
 out vec3 normal;
 uniform vec3 lightDirection;
@@ -19,7 +21,7 @@ uniform vec2 diffuseTiling;
 
 void main() {
 	
-	UV = vertexUV * vec2(diffuseTiling.x, diffuseTiling.y);
+	UV = (vertexUV * vec2(diffuseTiling.x, diffuseTiling.y));
 
 	//normal = normalize( vec3(vec4(vertexNormal, 1.0f) * MV));
 	normal = normalize( vec3(vec4(vertexNormal, 1.0f) ));

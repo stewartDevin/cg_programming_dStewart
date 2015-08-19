@@ -118,7 +118,7 @@ void Render::RenderNormals(GLuint normalBuffer) {
 //	glBindTexture(GL_TEXTURE_2D, textureID);
 //	glCullFace(GL_BACK);
 //
-//	GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
+//	GLuint gl_location = glGetUniformLocation(DataCore::programID, "diffuseTexture1");
 //	glUniform1i(gl_location, 0);
 //
 //	glDrawArrays(GL_TRIANGLES, 0, 500000);
@@ -147,10 +147,10 @@ glm::mat4 Render::RenderQuad(Mesh* mesh) {
 	}
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, mesh->material.diffuseImageID);
+	glBindTexture(GL_TEXTURE_2D, mesh->material.diffuseImageID[0]);
 	glCullFace(GL_BACK);
 
-	//GLuint gl_location = glGetUniformLocation(DataCore::programID, "myTextureSampler");
+	//GLuint gl_location = glGetUniformLocation(DataCore::programID, "diffuseTexture1");
 	//glUniform1i(gl_location, 0);
 
 	/*glDrawArrays(GL_TRIANGLES, 0, mesh->numIndices);
