@@ -37,6 +37,7 @@ void Mesh::Run(Camera* camera) {
 
 	//glUseProgram(DataCore::programID);
 	glUseProgram(this->material.shaderID);
+	camera->SendVariablesToShader(this->material.shaderID);
 
 	this->transform.position += this->transform.velocity * DataCore::deltaTime;
 	//this->transform.angle += this->transform.rotationSpeed * DataCore::deltaTime;
@@ -115,8 +116,8 @@ glm::mat4 Mesh::RenderMesh() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	
 
 	// apply diffuse texture
 	//GLuint gl_location = glGetUniformLocation(DataCore::programID, "diffuseTexture1");

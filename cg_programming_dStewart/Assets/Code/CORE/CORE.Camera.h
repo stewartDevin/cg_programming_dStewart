@@ -42,6 +42,7 @@ public:
 	void LookAtTarget(vec3 targetPosition);
 	void MoveWithFPSControls();
 	void CalculateVectors();
+	void SendVariablesToShader(GLuint& shaderID);
 
 	// private section
 private:

@@ -18,8 +18,9 @@ uniform vec3 lightDirection;
 void main() {
 	
 	UV = vertexUV;
+	mat4 normalMatrix = transpose(inverse(M_Matrix));
 
-	normal = normalize(( M_Matrix * vec4(vertexNormal, 0.0f) ).xyz );
+	normal = normalize(( normalMatrix * vec4(vertexNormal, 0.0f) ).xyz );
 
 	gl_Position = MVP * vec4(model_space_pos, 1.0f);
 	

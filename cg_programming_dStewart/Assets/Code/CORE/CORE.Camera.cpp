@@ -95,6 +95,12 @@ void Camera::ConstrainMovement(float left, float top, float right, float bottom)
 	}
 }
 
+void Camera::SendVariablesToShader(GLuint& shaderID) {
+	glUseProgram(shaderID);
+	GLuint cameraForwardLocation = glGetUniformLocationARB(shaderID, "cameraForward");
+	glUniform3f(cameraForwardLocation, this->forward.x, this->forward.y, this->forward.z);
+}
+
 void Camera::Update() {
 	if (!this->isInitialized) this->Init();
 
@@ -107,6 +113,9 @@ void Camera::Update() {
 		this->transform.position + this->forward, // look at.
 		this->up		// up.
 		);
+
+	
+
 }
 
 void Camera::ConstrainLookAngles() {

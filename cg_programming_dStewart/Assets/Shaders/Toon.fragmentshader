@@ -12,6 +12,7 @@ uniform vec3 lightDirection;
 // model view projection matrix...
 uniform mat4 MVP;
 uniform mat4 M_Matrix;
+uniform vec3 cameraForward;
 
 in vec3 normal;
 
@@ -20,27 +21,33 @@ in vec3 normal;
 void main() {
 
 	float intensity;
+	float lineIntensity;
 	vec4 _color;
-
 	
 	//vec3 lightDirection2 = (vec4(lightDirection, 0.0) * M_Matrix).xyz;
 	intensity = dot(lightDirection, normal);
+	lineIntensity = dot(-cameraForward, normal);
 
-	if (intensity > 0.95)
-		_color = vec4(1.0,0.5,0.5,1.0);
-	else if (intensity > 0.5)
-		_color = vec4(0.6,0.3,0.3,1.0);
-	else if (intensity > 0.25)
-		_color = vec4(0.4,0.2,0.2,1.0);
-	else 
-		_color = vec4(0.2,0.1,0.1,1.0);
-	
-	//color = vec3(1, 1, 1);
+	vec3 reflectionVector = normalize(lightDirection - (2.0f * normal * dot(lightDirection, normal)));
+
+	float specIntensity = pow( clamp( dot(reflectionVector, normalize(cameraForward)), 0.0f, 1.0f), 20.0f) * intensity;
+	//specIntensity *= 2.9;
+	//specIntensity = floor(specIntensity) / 2;
+
+	_color = vec4(1.0,0.5,0.5,1.0);
+	intensity *= 3.0;
+	intensity = ceil(intensity) / 3;
+
+	_color *= intensity;
+
+	_color.a = 1.0;
+	_color = _color * (1.0 - specIntensity) + specIntensity * vec4(1.0, 1.0, 1.0, 1.0);
+	//_color = _color + specIntensity * vec4(1.0, 1.0, 1.0, 1.0);
 
 	// get the color from the texture
 	//color = texture2D( diffuseTexture1, UV ).rgba;
 	
 	//color = clamp(clamp(intensity, 0.3f, 1.0f) * texture2D( diffuseTexture1, UV ).rgba, 0.0f, 1.0f);
-	color.a = 1.0f;
+	_color.a = 1.0f;
 	color = _color;
 }
