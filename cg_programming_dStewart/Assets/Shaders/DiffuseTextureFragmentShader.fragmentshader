@@ -26,11 +26,11 @@ void main() {
 
 	intensity = dot(lightDirection, normal);
 	
-	vec4 texture1 = texture2D( diffuseTexture1, UV ).rgba;
-	vec4 texture2 = texture2D( diffuseTexture2, UV + timer*0.1 ).rgba;
+	vec4 texture1 = texture2D( diffuseTexture1, UV + timer*0.06 ).rgba;
+	vec4 texture2 = texture2D( diffuseTexture2, UV  ).rgba;
 
-	//color = (10*intensity) * (clamp(texture2, 0.0, 0.5) * texture1);
-	color = intensity * texture1 * texture2;
+	color = intensity * (texture1 * texture2);
+	
 	color.a = 1.0f;
 	//color = _color;
 }

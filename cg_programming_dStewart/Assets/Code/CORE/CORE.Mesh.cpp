@@ -43,10 +43,10 @@ void Mesh::Run(Camera* camera) {
 
 	this->RenderMesh();
 
-	mat4 MV_Matrix = camera->viewMatrix;
+	mat4 M_Matrix = this->positionMatrix;
 	//GLuint MV_Matrix_ID = glGetUniformLocation(DataCore::programID, "MV");
-	GLuint MV_Matrix_ID = glGetUniformLocation(this->material.shaderID, "MV");
-	glUniformMatrix4fv(MV_Matrix_ID, 1, GL_FALSE, &MV_Matrix[0][0]);
+	GLuint M_Matrix_ID = glGetUniformLocation(this->material.shaderID, "M_Matrix");
+	glUniformMatrix4fv(M_Matrix_ID, 1, GL_FALSE, &M_Matrix[0][0]);
 
 	this->MVP_MatrixID = glGetUniformLocation(this->material.shaderID, "MVP");
 	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * this->positionMatrix;

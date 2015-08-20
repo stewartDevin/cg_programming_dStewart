@@ -26,5 +26,5 @@ void main() {
 	//fragColor = vertex_color;
 
 	// UV of the vertex. No special space for this one.
-	UV = (vertexUV + vec2(waveTime*0.01, waveTime*0.01))*2;
+	UV = (vertexUV + vec2(waveTime*0.03, waveTime*0.03))*2;
 }

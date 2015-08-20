@@ -141,7 +141,7 @@ void Scene::LoadLevelOne() {
 
 	//landscapeMesh = Mesh::CreateMeshObject("./Assets/Models/landscape.obj", *bunnyMaterial, Transform(vec3(0.0f, -15.0f, 0.0f), vec3(5.0f)));
 
-	bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *toonBunnyMaterial, Transform(vec3(0.0f, 0.0f, 6.0f)));
+	bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *toonBunnyMaterial, Transform(vec3(0.0f, 0.0f, 6.0f), vec3(1.0f)));
 	///*
 	skyBox = Mesh::CreateMeshObject("./Assets/Models/skyBox.obj", *skyBoxMaterial, Transform(vec3(0.0f, 4.0f, 0.0f), vec3(-60.0f)));
 	//if (skyBox != NULL) skyBox->transform.Rotate(10.0f, vec3(0.0f, 0.0f, 1.0f), false);
@@ -175,7 +175,7 @@ void RunLight() {
 
 	static vec3 lightDirection = vec3(0.75f, 0.75f, 0.75f);
 
-	Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.x, 0.25f * DataCore::deltaTime, true);
+	//Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.x, 0.25f * DataCore::deltaTime, true);
 	//Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.y, 0.25f * DataCore::deltaTime, true);
 	//Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.z, 0.25f * DataCore::deltaTime, true);
 

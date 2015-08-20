@@ -40,7 +40,7 @@ vec2 Mouse::GetMousePosition() {
 		return vec2(Mouse::X, Mouse::Y);
 	}
 	else {
-		fprintf(stderr, "Can't get mouse position.");
+		fprintf(stderr, "Can't get mouse position because the window is null.");
 	}
 	
 }

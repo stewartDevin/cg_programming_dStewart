@@ -11,7 +11,7 @@ uniform vec3 lightDirection;
 
 // model view projection matrix...
 uniform mat4 MVP;
-uniform mat4 MV;
+uniform mat4 M_Matrix;
 
 in vec3 normal;
 
@@ -22,6 +22,8 @@ void main() {
 	float intensity;
 	vec4 _color;
 
+	
+	//vec3 lightDirection2 = (vec4(lightDirection, 0.0) * M_Matrix).xyz;
 	intensity = dot(lightDirection, normal);
 
 	if (intensity > 0.95)
@@ -30,9 +32,9 @@ void main() {
 		_color = vec4(0.6,0.3,0.3,1.0);
 	else if (intensity > 0.25)
 		_color = vec4(0.4,0.2,0.2,1.0);
-	else
+	else 
 		_color = vec4(0.2,0.1,0.1,1.0);
-
+	
 	//color = vec3(1, 1, 1);
 
 	// get the color from the texture
