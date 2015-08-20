@@ -126,8 +126,6 @@ void Scene::LoadLevelOne() {
 	toonBunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
 	skyBoxMaterial = Material::CreateMaterial("./Assets/Images/skyBox_texture.png");
 
-
-
 	//sceneMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/TextureVertexShader.vertexshader", "./Assets/Shaders/TextureFragmentShader.fragmentshader");
 	sceneMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/DiffuseTextureVertexShader.vertexshader", "./Assets/Shaders/DiffuseTextureFragmentShader.fragmentshader");
 	toonBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/Toon.vertexshader", "./Assets/Shaders/Toon.fragmentshader");
@@ -175,7 +173,7 @@ void Scene::LoadLevelOne() {
 void RunLight() {
 	if (toonBunnyMaterial == NULL || sceneMaterial == NULL) return;
 
-	static vec3 lightDirection = vec3(0.5f, 0.75f, 1.0f);
+	static vec3 lightDirection = vec3(0.75f, 0.75f, 0.75f);
 
 	Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.x, 0.25f * DataCore::deltaTime, true);
 	//Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.y, 0.25f * DataCore::deltaTime, true);
@@ -209,7 +207,7 @@ void LoadLevelTwo() {
 	landscapeMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/DiffuseTextureVertexShader.vertexshader", "./Assets/Shaders/DiffuseTextureFragmentShader.fragmentshader");
 	landscapeMaterial->diffuseImageFilePath[1] = "./Assets/Images/floorPillarStairs_Diffuse.png";
 	Load::_LoadTexture(&landscapeMaterial->diffuseImageID[1], landscapeMaterial->diffuseImageFilePath[1]);
-	landscapeMaterial->diffuseTiling = vec2(10.0f, 10.0f);
+	landscapeMaterial->diffuseTiling = vec2(4.0f, 4.0f);
 
 	landscapeMesh = Mesh::CreateMeshObject("./Assets/Models/landscape.obj", *landscapeMaterial, Transform(vec3(0.0f, -15.0f, 0.0f), vec3(5.0f)));
 

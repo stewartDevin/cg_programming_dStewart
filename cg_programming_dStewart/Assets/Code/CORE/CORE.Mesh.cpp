@@ -36,7 +36,7 @@ void Mesh::Run(Camera* camera) {
 	}
 
 	//glUseProgram(DataCore::programID);
-	//glUseProgram(this->material.shaderID);
+	glUseProgram(this->material.shaderID);
 
 	this->transform.position += this->transform.velocity * DataCore::deltaTime;
 	//this->transform.angle += this->transform.rotationSpeed * DataCore::deltaTime;
@@ -128,6 +128,9 @@ glm::mat4 Mesh::RenderMesh() {
 		glBindTexture(GL_TEXTURE_2D, this->material.diffuseImageID[0]);
 	}
 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
 	if(this->material.diffuseImageID[1] != NULL) {
 		GLuint gl_location = glGetUniformLocation(this->material.shaderID, "diffuseTexture2");
 		glUniform1i(gl_location, 1);
@@ -135,6 +138,9 @@ glm::mat4 Mesh::RenderMesh() {
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, this->material.diffuseImageID[1]);
 	}
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	//mat4 positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
 	this->positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
