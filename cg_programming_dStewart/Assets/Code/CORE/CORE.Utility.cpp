@@ -64,3 +64,42 @@ void Utility::FluctuateValueUpAndDown(float min, float max, float& value, float 
 
 	value += speed * direction;
 }
+
+float Utility::Clamp(float value, float from, float to) {
+	if(value > to) {
+		return to;
+	} 
+	else if(value < from) {
+		return from;
+	}
+	return value;
+}
+
+vec3 Utility::Clamp(vec3 vector3, float from, float to) {
+	// clamp x
+	if(vector3.x > to) {
+		vector3.x = to;
+	} 
+	else if(vector3.x < from) {
+		vector3.x = from;
+	}
+
+	// clamp y
+	if(vector3.y > to) {
+		vector3.y = to;
+	} 
+	else if(vector3.y < from) {
+		vector3.y = from;
+	}
+
+	// clamp z
+	if(vector3.z > to) {
+		vector3.z = to;
+	}
+	else if(vector3.z < from) {
+		vector3.z = from;
+	}
+	
+	// return the clamped vector.
+	return vector3;
+}

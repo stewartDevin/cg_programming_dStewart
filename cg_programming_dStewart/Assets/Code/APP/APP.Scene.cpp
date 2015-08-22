@@ -91,17 +91,23 @@ void RunControls1(vec3& position, float const& speed) {
 }
 
 void RunControls2(vec3& position, float const& speed) {
-	if (Keyboard::LeftArrow) {
-		position.x -= speed * DataCore::deltaTime;
+	if (Keyboard::U) {
+		position.z += speed * DataCore::deltaTime;
 	}
-	if (Keyboard::UpArrow) {
+	if (Keyboard::I) {
 		position.y += speed * DataCore::deltaTime;
 	}
-	if (Keyboard::RightArrow) {
-		position.x += speed * DataCore::deltaTime;
+	if (Keyboard::O) {
+		position.z -= speed * DataCore::deltaTime;
 	}
-	if (Keyboard::DownArrow) {
+	if (Keyboard::J) {
+		position.x -= speed * DataCore::deltaTime;
+	}
+	if (Keyboard::K) {
 		position.y -= speed * DataCore::deltaTime;
+	}
+	if (Keyboard::L) {
+		position.x += speed * DataCore::deltaTime;
 	}
 }
 
@@ -173,11 +179,13 @@ void Scene::LoadLevelOne() {
 void RunLight() {
 	if (toonBunnyMaterial == NULL || sceneMaterial == NULL) return;
 
-	static vec3 lightDirection = vec3(0.75f, 0.75f, 0.75f);
+	static vec3 lightDirection = vec3(0.0f, 1.0f, 0.1f);
 
 	//Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.x, 0.25f * DataCore::deltaTime, true);
-	//Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.y, 0.25f * DataCore::deltaTime, true);
-	//Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.z, 0.25f * DataCore::deltaTime, true);
+
+	RunControls2(lightDirection, 25.0f * DataCore::deltaTime);
+
+	lightDirection = Utility::Clamp(lightDirection, 0.0f, 1.0f);
 
 	glUseProgram(toonBunnyMaterial->shaderID);
 	GLint lightLocation = glGetUniformLocationARB(toonBunnyMaterial->shaderID, "lightDirection");
@@ -205,7 +213,7 @@ void LoadLevelTwo() {
 	skyBoxMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/TextureVertexShader.vertexshader", "./Assets/Shaders/TextureFragmentShader.fragmentshader");
 
 	landscapeMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/DiffuseTextureVertexShader.vertexshader", "./Assets/Shaders/DiffuseTextureFragmentShader.fragmentshader");
-	landscapeMaterial->diffuseImageFilePath[1] = "./Assets/Images/floorPillarStairs_Diffuse.png";
+	landscapeMaterial->diffuseImageFilePath[1] = "./Assets/Images/sand.jpg";
 	Load::_LoadTexture(&landscapeMaterial->diffuseImageID[1], landscapeMaterial->diffuseImageFilePath[1]);
 	landscapeMaterial->diffuseTiling = vec2(4.0f, 4.0f);
 
@@ -258,8 +266,6 @@ void RunLevelTwo() {
 	RunLight();
 
 }
-
-
 
 void RunLevelOne() {
 	if (sceneMaterial == NULL) return;
