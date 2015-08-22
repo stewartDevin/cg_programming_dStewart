@@ -54,7 +54,7 @@ void Mesh::Run(Camera* camera) {
 	glUniformMatrix4fv(this->MVP_MatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
 	glDrawArrays(GL_TRIANGLES, 0, this->numIndices);
-
+	
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);

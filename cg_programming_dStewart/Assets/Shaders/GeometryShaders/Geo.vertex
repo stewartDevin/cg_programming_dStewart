@@ -1,0 +1,26 @@
+#version 330 core
+
+// Geo.vertex
+///////////////////////////////////////////
+
+layout(location = 0) in vec3 model_space_pos;
+layout(location = 1) in vec3 vertex_color;
+layout(location = 2) in vec2 vertexUV;
+layout(location = 3) in vec3 vertexNormal;
+
+//uniform mat4 MVP;
+//uniform mat4 M_Matrix;
+
+out vec2 UV_Pass;
+out vec3 normalPass;
+
+uniform vec2 diffuseTiling;
+
+void main() {
+
+	UV_Pass = (vertexUV * vec2(diffuseTiling.x, diffuseTiling.y));
+	//UV_Pass = vertexUV;
+	normalPass = normalize(vertexNormal);
+
+	gl_Position = vec4(model_space_pos, 1.0f);
+}

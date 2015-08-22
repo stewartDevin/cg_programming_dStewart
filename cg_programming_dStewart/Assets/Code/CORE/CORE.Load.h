@@ -9,7 +9,8 @@
 class Load {
 public:
 	static GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path);
-	static void Load::LoadFile(char* str);
+	static GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path, const char* geometry_file_path);
+	static void LoadFile(char* str);
 
 	static GLuint LoadQuad();
 	static GLuint LoadCube();

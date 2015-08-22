@@ -175,10 +175,11 @@
     <None Include="Assets\Shaders\Toon.vertexshader" />
     <None Include="Assets\Shaders\Dance.fragmentshader" />
     <None Include="Assets\Shaders\Dance.vertexshader" />
-    <None Include="Assets\Shaders\MyToon.fragmentshader" />
-    <None Include="Assets\Shaders\MyToon.vertexshader" />
     <None Include="Assets\Shaders\Water.fragmentshader" />
     <None Include="Assets\Shaders\Water.vertexshader" />
+    <None Include="Assets\Shaders\GeometryShaders\Geo.vertex" />
+    <None Include="Assets\Shaders\GeometryShaders\Geo.fragment" />
+    <None Include="Assets\Shaders\GeometryShaders\Geo.geometry" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Models\torus.txt" />

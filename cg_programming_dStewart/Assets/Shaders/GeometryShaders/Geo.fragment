@@ -1,0 +1,16 @@
+#version 330 core
+
+smooth in vec2 UV;
+smooth in vec3 normal;
+out vec4 color;
+
+uniform sampler2D diffuseTexture1;
+
+void main()
+{
+	vec3 vNormalized = normalize(normal);
+	
+	vec4 vTexColor = texture2D(diffuseTexture1, UV);
+	vTexColor.a = 1.0f;
+	color = vTexColor;
+}

@@ -117,6 +117,7 @@ Material* waterMaterial = NULL;
 Material* lavaMaterial = NULL;
 
 Material* toonBunnyMaterial = NULL;
+Material* geometryShaderMaterial = NULL;
 Material* skyBoxMaterial = NULL;
 
 Mesh* floorMesh = NULL;
@@ -179,13 +180,14 @@ void Scene::LoadLevelOne() {
 void RunLight() {
 	if (toonBunnyMaterial == NULL || sceneMaterial == NULL) return;
 
-	static vec3 lightDirection = vec3(0.0f, 1.0f, 0.1f);
+	//static vec3 lightDirection = vec3(0.0f, 1.0f, 0.1f);
+	static vec3 lightDirection = vec3(-1.0f, 1.0f, 1.0f);
 
 	//Utility::FluctuateValueUpAndDown(-1.0f, 1.0f, lightDirection.x, 0.25f * DataCore::deltaTime, true);
 
-	RunControls2(lightDirection, 25.0f * DataCore::deltaTime);
+	//RunControls2(lightDirection, 25.0f * DataCore::deltaTime);
 
-	lightDirection = Utility::Clamp(lightDirection, 0.0f, 1.0f);
+	lightDirection = Utility::Clamp(lightDirection, -1.0f, 1.0f);
 
 	glUseProgram(toonBunnyMaterial->shaderID);
 	GLint lightLocation = glGetUniformLocationARB(toonBunnyMaterial->shaderID, "lightDirection");
@@ -207,9 +209,11 @@ void LoadLevelTwo() {
 	landscapeMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
 	toonBunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
 	skyBoxMaterial = Material::CreateMaterial("./Assets/Images/skyBox_texture.png");
+	geometryShaderMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
 
 	sceneMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/DiffuseTextureVertexShader.vertexshader", "./Assets/Shaders/DiffuseTextureFragmentShader.fragmentshader");
 	toonBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/Toon.vertexshader", "./Assets/Shaders/Toon.fragmentshader");
+	geometryShaderMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/GeometryShaders/Geo.vertex", "./Assets/Shaders/GeometryShaders/Geo.frag", "./Assets/Shaders/GeometryShaders/Geo.geometry");
 	skyBoxMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/TextureVertexShader.vertexshader", "./Assets/Shaders/TextureFragmentShader.fragmentshader");
 
 	landscapeMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/DiffuseTextureVertexShader.vertexshader", "./Assets/Shaders/DiffuseTextureFragmentShader.fragmentshader");
@@ -219,9 +223,10 @@ void LoadLevelTwo() {
 
 	landscapeMesh = Mesh::CreateMeshObject("./Assets/Models/landscape.obj", *landscapeMaterial, Transform(vec3(0.0f, -15.0f, 0.0f), vec3(5.0f)));
 
-	bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *toonBunnyMaterial, Transform(vec3(0.0f, 0.0f, 6.0f)));
+	bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *geometryShaderMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
+	//bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *toonBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
 	///*
-	skyBox = Mesh::CreateMeshObject("./Assets/Models/skyBox.obj", *skyBoxMaterial, Transform(vec3(0.0f, 4.0f, 0.0f), vec3(-60.0f)));
+	skyBox = Mesh::CreateMeshObject("./Assets/Models/skyBox.obj", *skyBoxMaterial, Transform(vec3(0.0f, 4.0f, 0.0f), vec3(-70.0f)));
 	levelTwoInitialized = true;
 }
 
@@ -256,7 +261,7 @@ void RunLevelTwo() {
 	if (sceneMaterial == NULL) return;
 	glUseProgram(sceneMaterial->shaderID);
 	// make the bunny mesh spin
-	if (bunnyMesh != NULL) bunnyMesh->transform.Rotate(1.5f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
+	if (bunnyMesh != NULL) bunnyMesh->transform.Rotate(0.75f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
 
 	RunTimer ();
 
@@ -264,6 +269,24 @@ void RunLevelTwo() {
 	// lightDirection 
 	/////////////////////////////////////////////////////
 	RunLight();
+
+	////////////////////////////////////
+	//geo shader stuff
+	if (geometryShaderMaterial != NULL) {
+		static float fBender = 0.1f;
+		glUseProgram(geometryShaderMaterial->shaderID);
+		// get the timer variable on the video card
+		GLint fBenderLoc = glGetUniformLocationARB(geometryShaderMaterial->shaderID, "fBender");
+		// send the timer to the vertex Shader
+		glUniform1fARB(fBenderLoc, fBender);
+
+		if (Keyboard::O) {
+			fBender -= 0.1f * DataCore::deltaTime;
+		}
+		if (Keyboard::P) {
+			fBender += 0.1f * DataCore::deltaTime;
+		}
+	}
 
 }
 
@@ -354,7 +377,7 @@ void Scene::InitializeScene() {
 		glEnable(GL_CULL_FACE);
 		glShadeModel( GL_SMOOTH );
 		// render lines...
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINES);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINES);
 
 		// init the mouse
 		Mouse::InitMouse();
