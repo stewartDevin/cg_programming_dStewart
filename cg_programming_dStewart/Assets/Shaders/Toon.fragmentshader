@@ -16,38 +16,69 @@ uniform vec3 cameraForward;
 
 in vec3 normal;
 
+vec4 emissiveColor;
+vec4 ambientColor;
+vec4 diffuseColor;
+vec4 specularColor;
+
+vec4 lightColor = vec4(1.0, 1.0, 1.0, 1.0);
+
+float glow = 0.0f;
+float objectAmbientReflect = 0.0f;
+
 /////////////////////////////////////////
 // main function
 void main() {
 
-	float intensity;
-	float lineIntensity;
-	vec4 _color;
+	float diffuseIntensity;
+	//float lineIntensity;
+	//vec4 _color;
+
+	vec4 objectColor = texture2D( diffuseTexture1, UV ).rgba;
+
+	// calculate emissive color
+	emissiveColor = objectColor * glow;
+
+	// calculate ambient color
+	ambientColor = objectAmbientReflect * lightColor;
+
+	// calculate diffuse intensity
+	diffuseIntensity = dot(normalize(lightDirection), normalize(normal));
+	//lineIntensity = dot(-cameraForward, normal);
+
+	// step the diffuse intensity
+	//diffuseIntensity *= 3.0;
+	//diffuseIntensity = ceil(diffuseIntensity) / 3;
+
+	// calculate diffuse color
+	//_color = vec4(0.5, 0.5, 1.0, 1.0);
+	diffuseColor = diffuseIntensity * objectColor;
+
+	// calculate the reflection vector
+	vec3 reflectionVector = normalize(normalize(lightDirection) - (2.0f * normal * dot(normalize(lightDirection), normal)));
+
+	// specular intensity
+	float specularIntensity = pow( clamp( dot(reflectionVector, normalize(cameraForward)), 0.0f, 1.0f), 20.0f) * diffuseIntensity;
+
+	// step the specular
+	//specularIntensity *= 2.9;
+	//specularIntensity = floor(specularIntensity) / 2;
+
+	//_color *= diffuseIntensity;
+
+	//_color.a = 1.0;
 	
-	//vec3 lightDirection2 = (vec4(lightDirection, 0.0) * M_Matrix).xyz;
-	intensity = dot(lightDirection, normal);
-	lineIntensity = dot(-cameraForward, normal);
-
-	vec3 reflectionVector = normalize(lightDirection - (2.0f * normal * dot(lightDirection, normal)));
-
-	float specIntensity = pow( clamp( dot(reflectionVector, normalize(cameraForward)), 0.0f, 1.0f), 20.0f) * intensity;
-	//specIntensity *= 2.9;
-	//specIntensity = floor(specIntensity) / 2;
-
-	_color = vec4(1.0,0.5,0.5,1.0);
-	intensity *= 3.0;
-	intensity = ceil(intensity) / 3;
-
-	_color *= intensity;
-
-	_color.a = 1.0;
-	_color = _color * (1.0 - specIntensity) + specIntensity * vec4(1.0, 1.0, 1.0, 1.0);
-	//_color = _color + specIntensity * vec4(1.0, 1.0, 1.0, 1.0);
+	// calculate specular color
+	//specularColor = objectColor * (1.0 - specularIntensity) + specularIntensity * lightColor;
+	specularColor =  specularIntensity * lightColor;
 
 	// get the color from the texture
 	//color = texture2D( diffuseTexture1, UV ).rgba;
-	
-	//color = clamp(clamp(intensity, 0.3f, 1.0f) * texture2D( diffuseTexture1, UV ).rgba, 0.0f, 1.0f);
-	_color.a = 1.0f;
-	color = _color;
+
+	// set the color
+	//color = _color;
+
+	color = emissiveColor + ambientColor + diffuseColor + specularColor;
+	//color = specularColor;
+	color.a = 1.0f;
 }

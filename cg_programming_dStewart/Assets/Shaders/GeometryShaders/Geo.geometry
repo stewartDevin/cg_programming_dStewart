@@ -25,7 +25,7 @@ void main()
   vec3 vMiddle = (gl_in[0].gl_Position.xyz+gl_in[1].gl_Position.xyz+gl_in[2].gl_Position.xyz)/3.0+(normalPass[0]+normalPass[1]+normalPass[2])*fBender; 
 
   // Centroid coordinate is average of three as well
-  vec2 vTexCoordMiddle = (UV_Pass[0]+UV_Pass[1]+UV_Pass[2])/3.0; 
+  vec2 vTexCoordMiddle = (UV_Pass[0]+UV_Pass[1]+UV_Pass[2])/3.0;
 
   // Transform normals of 3 triangle vertices with transform matrix and store them in this array
   vec3 vNormalTransformed[3]; 

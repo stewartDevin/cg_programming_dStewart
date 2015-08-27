@@ -11,6 +11,6 @@ void main()
 	vec3 vNormalized = normalize(normal);
 	
 	vec4 vTexColor = texture2D(diffuseTexture1, UV);
-	vTexColor.a = 1.0f;
+	vTexColor.a = 0.0f;
 	color = vTexColor;
 }

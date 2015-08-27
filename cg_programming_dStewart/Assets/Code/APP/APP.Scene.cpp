@@ -121,7 +121,8 @@ Material* geometryShaderMaterial = NULL;
 Material* skyBoxMaterial = NULL;
 
 Mesh* floorMesh = NULL;
-Mesh* bunnyMesh = NULL;
+Mesh* bunnyMesh1 = NULL;
+Mesh* bunnyMesh2 = NULL;
 
 Mesh* skyBox = NULL;
 Mesh* landscapeMesh = NULL;
@@ -148,7 +149,7 @@ void Scene::LoadLevelOne() {
 
 	//landscapeMesh = Mesh::CreateMeshObject("./Assets/Models/landscape.obj", *bunnyMaterial, Transform(vec3(0.0f, -15.0f, 0.0f), vec3(5.0f)));
 
-	bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *toonBunnyMaterial, Transform(vec3(0.0f, 0.0f, 6.0f), vec3(1.0f)));
+	bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *toonBunnyMaterial, Transform(vec3(0.0f, 0.0f, 6.0f), vec3(1.0f)));
 	///*
 	skyBox = Mesh::CreateMeshObject("./Assets/Models/skyBox.obj", *skyBoxMaterial, Transform(vec3(0.0f, 4.0f, 0.0f), vec3(-60.0f)));
 	//if (skyBox != NULL) skyBox->transform.Rotate(10.0f, vec3(0.0f, 0.0f, 1.0f), false);
@@ -207,7 +208,7 @@ bool levelTwoInitialized = false;
 void LoadLevelTwo() {
 	sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
 	landscapeMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
-	toonBunnyMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
+	toonBunnyMaterial = Material::CreateMaterial("./Assets/Images/sand.jpg");
 	skyBoxMaterial = Material::CreateMaterial("./Assets/Images/skyBox_texture.png");
 	geometryShaderMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
 
@@ -223,8 +224,9 @@ void LoadLevelTwo() {
 
 	landscapeMesh = Mesh::CreateMeshObject("./Assets/Models/landscape.obj", *landscapeMaterial, Transform(vec3(0.0f, -15.0f, 0.0f), vec3(5.0f)));
 
-	bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *geometryShaderMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
-	//bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *toonBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
+	//bunnyMesh = Mesh::CreateMeshObject("./Assets/Models/bunny.txt", *geometryShaderMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
+	bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *toonBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
+	bunnyMesh2 = Mesh::CreateMeshObject("./Assets/Models/bunny.obj", *toonBunnyMaterial, Transform(vec3(3.0f, 0.0f, 10.0f)));
 	///*
 	skyBox = Mesh::CreateMeshObject("./Assets/Models/skyBox.obj", *skyBoxMaterial, Transform(vec3(0.0f, 4.0f, 0.0f), vec3(-70.0f)));
 	levelTwoInitialized = true;
@@ -261,7 +263,8 @@ void RunLevelTwo() {
 	if (sceneMaterial == NULL) return;
 	glUseProgram(sceneMaterial->shaderID);
 	// make the bunny mesh spin
-	if (bunnyMesh != NULL) bunnyMesh->transform.Rotate(0.75f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
+	if (bunnyMesh1 != NULL) bunnyMesh1->transform.Rotate(0.75f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
+	if (bunnyMesh2 != NULL) bunnyMesh2->transform.Rotate(0.75f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
 
 	RunTimer ();
 
@@ -294,7 +297,7 @@ void RunLevelOne() {
 	if (sceneMaterial == NULL) return;
 	glUseProgram(sceneMaterial->shaderID);
 	// make the bunny mesh spin
-	if (bunnyMesh != NULL) bunnyMesh->transform.Rotate(1.5f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
+	if (bunnyMesh1 != NULL) bunnyMesh1->transform.Rotate(1.5f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
 
 	RunTimer ();
 
@@ -347,7 +350,6 @@ void RunWater() {
 			direction = 1.0f;
 		}
 	}
-
 
 	GLint waveTimeLoc = glGetUniformLocationARB(lavaMaterial->shaderID, "waveTime");
 	GLint waveWidthLoc = glGetUniformLocationARB(lavaMaterial->shaderID, "waveWidth");
@@ -405,7 +407,8 @@ void DeleteAllObjectsTest() {
 		toonBunnyMaterial = NULL;
 		skyBoxMaterial = NULL;
 		floorMesh = NULL;
-		bunnyMesh = NULL;
+		bunnyMesh1 = NULL;
+		bunnyMesh2 = NULL;
 		skyBox = NULL;
 		landscapeMesh = NULL;
 	}
