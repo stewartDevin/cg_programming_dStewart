@@ -24,7 +24,7 @@ vec4 specularColor;
 vec4 lightColor = vec4(1.0, 1.0, 1.0, 1.0);
 
 float glow = 0.0f;
-float objectAmbientReflect = 0.0f;
+float objectAmbientReflect = 0.2f;
 
 /////////////////////////////////////////
 // main function
@@ -58,7 +58,7 @@ void main() {
 	vec3 reflectionVector = normalize(normalize(lightDirection) - (2.0f * normal * dot(normalize(lightDirection), normal)));
 
 	// specular intensity
-	float specularIntensity = pow( clamp( dot(reflectionVector, normalize(cameraForward)), 0.0f, 1.0f), 20.0f) * diffuseIntensity;
+	float specularIntensity = pow( clamp( dot(reflectionVector, normalize(cameraForward)), 0.0f, 1.0f), 40.0f) * diffuseIntensity;
 
 	// step the specular
 	//specularIntensity *= 2.9;

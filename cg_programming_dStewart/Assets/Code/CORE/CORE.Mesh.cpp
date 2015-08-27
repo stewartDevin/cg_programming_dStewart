@@ -34,7 +34,7 @@ void Mesh::Run(Camera* camera) {
 		this->Init();
 		this->initialized = true;
 	}
-
+	
 	//glUseProgram(DataCore::programID);
 	glUseProgram(this->material.shaderID);
 	camera->SendVariablesToShader(this->material.shaderID);
