@@ -1,0 +1,31 @@
+#version 330 core
+
+layout(location = 0) in vec3 model_space_pos;
+layout(location = 1) in vec3 vertex_color;
+layout(location = 2) in vec2 vertexUV;
+layout(location = 3) in vec3 vertexNormal;
+
+out vec2 UV;
+smooth out vec3 fragColor;
+
+// model view projection matrix...
+uniform mat4 MVP;
+uniform mat4 M_Matrix;
+
+out vec3 normal;
+uniform vec3 lightDirection;
+
+void main() {
+	
+	UV = vertexUV;
+	mat4 normalMatrix = transpose(inverse(M_Matrix));
+
+	normal = normalize(( normalMatrix * vec4(vertexNormal, 0.0f) ).xyz );
+
+	gl_Position = MVP * vec4(model_space_pos, 1.0f);
+	
+}
+
+
+
+

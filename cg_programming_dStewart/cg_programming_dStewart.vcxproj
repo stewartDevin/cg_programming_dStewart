@@ -132,6 +132,8 @@
   <ItemGroup>
     <None Include="Assets\Shaders\BasicFragmentShader.fragmentshader" />
     <None Include="Assets\Shaders\BasicVertexShader.vertexshader" />
+    <None Include="Assets\Shaders\BlinnFresnel.fragmentshader" />
+    <None Include="Assets\Shaders\BlinnFresnel.vertexshader" />
     <None Include="Assets\Shaders\Dance.fragmentshader" />
     <None Include="Assets\Shaders\Dance.vertexshader" />
     <None Include="Assets\Shaders\DiffuseTextureFragmentShader.fragmentshader" />

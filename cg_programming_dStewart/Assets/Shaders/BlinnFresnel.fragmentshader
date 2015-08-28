@@ -1,0 +1,84 @@
+#version 330 core
+
+in vec2 UV;
+uniform sampler2D diffuseTexture1;
+
+out vec4 color;
+smooth in vec3 fragColor;
+
+uniform float timer;
+uniform vec3 lightDirection;
+
+// model view projection matrix...
+uniform mat4 MVP;
+uniform mat4 M_Matrix;
+uniform vec3 cameraForward;
+
+uniform vec2 diffuseTiling;
+
+in vec3 normal;
+
+vec4 emissiveColor;
+vec4 ambientColor;
+vec4 diffuseColor;
+vec4 specularColor;
+vec4 fresnelColor;
+
+// yellow light
+vec4 lightColor = vec4(1.0f, 0.988235f, 0.815686f, 1.0f);
+// white light
+vec4 whiteLightColor = vec4(1.0, 1.0, 1.0, 1.0);
+
+float glow = 0.0f;
+float objectAmbientReflect = 0.2f;
+float diffuseIntensity;
+float lineIntensity;
+
+/////////////////////////////////////////
+// main function
+void main() {
+
+	///////////////////////////////////////////
+	// OBJECT COLOR
+	vec4 objectColor = clamp(texture2D( diffuseTexture1, UV * diffuseTiling ).rgba, 0.0f, 1.0f);
+
+	////////////////////////////////////////////
+	// EMISSIVE LIGHTING
+	emissiveColor = objectColor * glow;
+
+	////////////////////////////////////////////
+	// AMBIENT LIGHTING
+	ambientColor = objectAmbientReflect * objectColor * lightColor;
+
+	///////////////////////////////////////////
+	// DIFFUSE LIGHTING
+	diffuseIntensity = clamp(dot(normalize(lightDirection), normalize(normal)), 0.0f, 1.0f);
+	
+	// SET DIFFUSE COLOR
+	diffuseColor = diffuseIntensity * objectColor;
+
+	//////////////////////////////////////////
+	// SPECULAR LIGHTING
+	vec3 reflectionVector = normalize(normalize(lightDirection) - (2.0f * normal * dot(normalize(lightDirection), normal)));
+	float specularIntensity = pow( clamp( dot(reflectionVector, normalize(cameraForward)), 0.0f, 1.0f), 100.0f) * diffuseIntensity;
+
+	// SET SPECULAR COLOR
+	//specularColor = objectColor * (1.0 - specularIntensity) + specularIntensity * whiteLightColor;
+	specularColor =  specularIntensity * whiteLightColor;
+
+	///////////////////////////////////////////
+	// FRESNEL LIGHTING
+	//float fcbias = 0.20373;
+	float fcbias = 0.001;
+	float facing = clamp(1.0 - max( dot( normalize(-cameraForward.xyz), normalize(normal)), 0.0f), 0.0f, 1.0f);
+	float refl2Refr = max(fcbias + (1.0-fcbias) * pow(facing, 3.0f), 0);
+	//fresnelColor = clamp(objectColor * refl2Refr, 0.0f, 1.0f);
+	fresnelColor = clamp(whiteLightColor * refl2Refr, 0.0f, 1.0f);
+
+	//////////////////////////////////////////////
+	// ADD ALL LIGHTING TOGETHER AND SET COLOR
+	color = clamp(emissiveColor + ambientColor + diffuseColor + specularColor + fresnelColor, 0.0f, 1.0f);
+	//color = clamp(emissiveColor + ambientColor + diffuseColor + specularColor, 0.0f, 1.0f);
+	//color = fresnelColor;
+	color.a = 1.0f;
+}

@@ -117,6 +117,7 @@ Material* waterMaterial = NULL;
 Material* lavaMaterial = NULL;
 
 Material* toonBunnyMaterial = NULL;
+Material* blinnBunnyMaterial = NULL;
 Material* geometryShaderMaterial = NULL;
 Material* skyBoxMaterial = NULL;
 
@@ -128,16 +129,23 @@ Mesh* skyBox = NULL;
 Mesh* landscapeMesh = NULL;
 
 void LoadBunny() {
-	toonBunnyMaterial = Material::CreateMaterial("./Assets/Images/sand.jpg");
+	toonBunnyMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
 	toonBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/Toon.vertexshader", "./Assets/Shaders/Toon.fragmentshader");
+	toonBunnyMaterial->diffuseTiling = vec2(10.0f);
 
-	bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *toonBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
-	//bunnyMesh2 = Mesh::CreateMeshObject("./Assets/Models/bunny.obj", *toonBunnyMaterial, Transform(vec3(3.0f, 0.0f, 10.0f)));
+	blinnBunnyMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
+	blinnBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/BlinnFresnel.vertexshader", "./Assets/Shaders/BlinnFresnel.fragmentshader");
+	blinnBunnyMaterial->diffuseTiling = vec2(10.0f);
+
+	//bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *toonBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
+	bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *blinnBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
+
+	//bunnyMesh2 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *toonBunnyMaterial, Transform(vec3(2.0f, 0.0f, 12.0f)));
 }
 
 void RunBunny() {
-	if (bunnyMesh1 != NULL) bunnyMesh1->transform.Rotate(0.75f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
-	if (bunnyMesh2 != NULL) bunnyMesh2->transform.Rotate(0.75f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
+	if (bunnyMesh1 != NULL) bunnyMesh1->transform.Rotate(0.4f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
+	if (bunnyMesh2 != NULL) bunnyMesh2->transform.Rotate(0.4f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
 
 }
 
@@ -169,6 +177,12 @@ void RunLight() {
 	if (landscapeMaterial != NULL) {
 		glUseProgram(landscapeMaterial->shaderID);
 		GLint lightLocation = glGetUniformLocationARB(landscapeMaterial->shaderID, "lightDirection");
+		glUniform3f(lightLocation, lightDirection.x, lightDirection.y, lightDirection.z);
+	}
+
+	if (blinnBunnyMaterial != NULL) {
+		glUseProgram(blinnBunnyMaterial->shaderID);
+		GLint lightLocation = glGetUniformLocationARB(blinnBunnyMaterial->shaderID, "lightDirection");
 		glUniform3f(lightLocation, lightDirection.x, lightDirection.y, lightDirection.z);
 	}
 
@@ -417,9 +431,9 @@ void Scene::InitializeScene() {
 
 		//Scene::LoadLevelOne();
 
-		LoadLevelTwo();
+		//LoadLevelTwo();
 
-		//LoadTestLevel();
+		LoadTestLevel();
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;

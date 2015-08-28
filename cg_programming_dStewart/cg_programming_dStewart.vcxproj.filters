@@ -180,6 +180,8 @@
     <None Include="Assets\Shaders\GeometryShaders\Geo.vertex" />
     <None Include="Assets\Shaders\GeometryShaders\Geo.fragment" />
     <None Include="Assets\Shaders\GeometryShaders\Geo.geometry" />
+    <None Include="Assets\Shaders\BlinnFresnel.fragmentshader" />
+    <None Include="Assets\Shaders\BlinnFresnel.vertexshader" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Models\torus.txt" />
