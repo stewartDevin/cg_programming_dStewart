@@ -1,7 +1,7 @@
 #version 330 core
 
 in vec2 UV;
-uniform sampler2D diffuseTexture1;
+uniform sampler2D diffuseTexture0;
 
 out vec4 color;
 smooth in vec3 fragColor;
@@ -40,7 +40,7 @@ void main() {
 
 	///////////////////////////////////////////
 	// OBJECT COLOR
-	vec4 objectColor = clamp(texture2D( diffuseTexture1, UV * diffuseTiling ).rgba, 0.0f, 1.0f);
+	vec4 objectColor = clamp(texture2D( diffuseTexture0, UV * diffuseTiling ).rgba, 0.0f, 1.0f);
 
 	////////////////////////////////////////////
 	// EMISSIVE LIGHTING
@@ -77,8 +77,8 @@ void main() {
 
 	//////////////////////////////////////////////
 	// ADD ALL LIGHTING TOGETHER AND SET COLOR
-	color = clamp(emissiveColor + ambientColor + diffuseColor + specularColor + fresnelColor, 0.0f, 1.0f);
-	//color = clamp(emissiveColor + ambientColor + diffuseColor + specularColor, 0.0f, 1.0f);
+	//color = clamp(emissiveColor + ambientColor + diffuseColor + specularColor + fresnelColor, 0.0f, 1.0f);
+	color = clamp(emissiveColor + ambientColor + diffuseColor + specularColor, 0.0f, 1.0f);
 	//color = fresnelColor;
 	color.a = 1.0f;
 }

@@ -1,7 +1,7 @@
 #version 330 core
 
 in vec2 UV;
-uniform sampler2D diffuseTexture1;
+uniform sampler2D diffuseTexture0;
 
 out vec4 color;
 smooth in vec3 fragColor;
@@ -16,7 +16,7 @@ void main() {
 	//color = vec3(1, 1, 1);
 
 	// get the color from the texture
-	color = texture2D( diffuseTexture1, UV ).rgba;
+	color = texture2D( diffuseTexture0, UV ).rgba;
 
 
 }

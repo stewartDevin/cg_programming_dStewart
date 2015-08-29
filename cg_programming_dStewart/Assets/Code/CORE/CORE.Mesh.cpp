@@ -117,11 +117,9 @@ glm::mat4 Mesh::RenderMesh() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 
-	
-
 	// apply diffuse texture
 	//GLuint gl_location = glGetUniformLocation(DataCore::programID, "diffuseTexture1");
-	if(this->material.diffuseImageID[0] != NULL) {
+	/*if(this->material.diffuseImageID[0] != NULL) {
 		GLuint gl_location = glGetUniformLocation(this->material.shaderID, "diffuseTexture1");
 		glUniform1i(gl_location, 0);
 
@@ -141,11 +139,12 @@ glm::mat4 Mesh::RenderMesh() {
 	}
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);*/
 
 	//mat4 positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
 	this->positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
 
+	this->material.SendTexturesToVideoCard();
 	this->material.ApplyTiling();
 
 	if (this->uvsBufferID != NULL) {

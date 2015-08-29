@@ -26,6 +26,8 @@ public:
 
 	// member functions
 	void ApplyTiling();
+	void SendTexturesToVideoCard();
+	//void LoadTexture(GLuint* texture, char* path);
 
 	// static functions
 	static Material* CreateMaterial(char* diffuseImageFilePath);

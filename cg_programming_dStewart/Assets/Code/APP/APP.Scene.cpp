@@ -136,6 +136,7 @@ void LoadBunny() {
 	blinnBunnyMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
 	blinnBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/BlinnFresnel.vertexshader", "./Assets/Shaders/BlinnFresnel.fragmentshader");
 	blinnBunnyMaterial->diffuseTiling = vec2(10.0f);
+	blinnBunnyMaterial->specularImageFilePath[0] = "./Assets/Images/specMapTest.jpg";
 
 	//bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *toonBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
 	bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *blinnBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
@@ -149,10 +150,8 @@ void RunBunny() {
 
 }
 
-
 void RunLight() {
 	
-
 	//static vec3 lightDirection = vec3(0.0f, 1.0f, 0.1f);
 	static vec3 lightDirection = vec3(-1.0f, 1.0f, 1.0f);
 
