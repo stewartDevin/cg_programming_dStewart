@@ -5,6 +5,7 @@
 #include "CORE.GameObject.h"
 #include "CORE.Material.h"
 #include "CORE.Transform.h"
+#include "CORE.Camera.h"
 
 class Mesh : public GameObject {
 public:
@@ -24,9 +25,13 @@ public:
 
 	// member functions
 	void Mesh::Run(Camera* camera);
+	void Mesh::Init();
+	void Mesh::CalculateMVPMatrix();
+	void Mesh::SendMVPMatrixToShader(Camera* camera);
+	void Mesh::SendMeshToShader();
+	void Mesh::SendLayoutsAndUniformsToShader(Camera* camera);
 	static Mesh* Mesh::CreateMeshObject(const char* objFilePath, Material material, Transform transform);
 	static Mesh* Mesh::CreateMeshObjectDontPush(const char* objFilePath, Material material, Transform transform);
 	
-	void Mesh::LoadMesh();
-	glm::mat4 RenderMesh();
+	void Mesh::RenderMesh();
 };

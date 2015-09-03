@@ -25,8 +25,8 @@ public:
 	Material::Material();
 
 	// member functions
-	void ApplyTiling();
-	void SendTexturesToVideoCard();
+	void SendTextureTilingToShader();
+	void SendTexturesToShader();
 	//void LoadTexture(GLuint* texture, char* path);
 
 	// static functions

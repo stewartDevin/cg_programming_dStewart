@@ -46,6 +46,9 @@ Transform::Transform(vec3 position) {
 	this->rotateAroundAxis = false;
 }
 
+void Transform::ApplyVelocity() {
+	this->position += this->velocity * DataCore::deltaTime;
+}
 
 void Transform::Rotate(float amount, vec3 rotationAxis, bool rotateAroundAxis) {
 	this->isRotating = true;

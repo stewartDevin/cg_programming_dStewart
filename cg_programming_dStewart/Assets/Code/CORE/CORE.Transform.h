@@ -23,4 +23,5 @@ public:
 	Transform::Transform(vec3 position);
 
 	void Transform::Rotate(float amount, vec3 rotationAxis, bool rotateAroundAxis);
+	void Transform::ApplyVelocity();
 };

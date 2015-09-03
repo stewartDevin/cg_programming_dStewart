@@ -11,14 +11,14 @@
 // Render
 class Render {
 public:
-	static glm::mat4 RenderVertex(GLuint vertexBuffer, Transform& transform);
+	static void Render::RenderVertex(GLuint vertexBuffer);
 
-	static void RenderColor(GLuint vertexBuffer);
+	static void Render::RenderColor(GLuint vertexBuffer);
 
 	//static void RenderTriangle(GLuint vertexBuffer, GLuint colorBuffer);
 
 	//static glm::mat4 Render::RenderQuad(BufferObject* bufferObject, const vec3& position, const vec3& scaleVec, const GLuint& textureID);
-	static glm::mat4 Render::RenderQuad(Mesh* mesh);
+	static void Render::RenderQuad(Mesh* mesh);
 
 	static void Render::RenderUVs(GLuint vertexBuffer);
 	static void Render::RenderNormals(GLuint normalBuffer);

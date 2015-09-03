@@ -11,7 +11,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // Render
-glm::mat4 Render::RenderVertex(GLuint vertexBuffer, Transform& transform) {
+void Render::RenderVertex(GLuint vertexBuffer) {
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
@@ -25,34 +25,7 @@ glm::mat4 Render::RenderVertex(GLuint vertexBuffer, Transform& transform) {
 		);
 
 	//num += 1.0f * DataCore::deltaTime;
-
-	mat4 identityMatrix = mat4(1.0f);
-	mat4 scaleMatrix = glm::scale(identityMatrix, transform.scale);
-	mat4 translateMatrix = glm::translate(identityMatrix, transform.position);
-
-	//mat4 rotationMatrix = mat4(1.0f);
-	//if (transform.isRotating) { 
-	mat4 rotationMatrix = glm::rotate(identityMatrix, transform.rotationAmount, transform.rotationAxis);
-	//transform.rotationAmount = 0.0f;
-	//transform.isRotating = false;
-	//}
-
-	/*if () {
-
-	}*/
-
-	mat4 modelToWorldMatrix = mat4(1.0f);
-
-	if (transform.rotateAroundAxis) {
-		modelToWorldMatrix = rotationMatrix * translateMatrix * scaleMatrix * identityMatrix;
-	}
-	else {
-
-		modelToWorldMatrix = translateMatrix * rotationMatrix * scaleMatrix * identityMatrix;
-	}
-
-
-	return modelToWorldMatrix;
+	
 }
 
 void Render::RenderColor(GLuint colorBuffer) {
@@ -129,13 +102,13 @@ void Render::RenderNormals(GLuint normalBuffer) {
 //	return positionMatrix;
 //}
 
-glm::mat4 Render::RenderQuad(Mesh* mesh) {
+void Render::RenderQuad(Mesh* mesh) {
 	// Enable blending
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 
-	mat4 positionMatrix = RenderVertex(mesh->verticesBufferID, mesh->transform);
+	RenderVertex(mesh->verticesBufferID);
 
 	//RenderColor(colorBuffer);
 
@@ -158,6 +131,6 @@ glm::mat4 Render::RenderQuad(Mesh* mesh) {
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);*/
 
-	return positionMatrix;
+
 }
 

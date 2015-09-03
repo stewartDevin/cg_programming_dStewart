@@ -29,21 +29,7 @@ Mesh::Mesh() {
 	this->positionMatrix = mat4(1.0f);
 }
 
-void Mesh::Run(Camera* camera) {
-	if (!this->initialized) {
-		this->Init();
-		this->initialized = true;
-	}
-	
-	//glUseProgram(DataCore::programID);
-	glUseProgram(this->material.shaderID);
-	camera->SendVariablesToShader(this->material.shaderID);
-
-	this->transform.position += this->transform.velocity * DataCore::deltaTime;
-	//this->transform.angle += this->transform.rotationSpeed * DataCore::deltaTime;
-
-	this->RenderMesh();
-
+void Mesh::SendMVPMatrixToShader(Camera* camera) {
 	mat4 M_Matrix = this->positionMatrix;
 	//GLuint MV_Matrix_ID = glGetUniformLocation(DataCore::programID, "MV");
 	GLuint M_Matrix_ID = glGetUniformLocation(this->material.shaderID, "M_Matrix");
@@ -53,16 +39,27 @@ void Mesh::Run(Camera* camera) {
 	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * this->positionMatrix;
 	glUniformMatrix4fv(this->MVP_MatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
-	glDrawArrays(GL_TRIANGLES, 0, this->numIndices);
 	
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(2);
-	glDisableVertexAttribArray(3);
 }
 
-void Mesh::LoadMesh() {
+void Mesh::Init() {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+}
 
+void Mesh::Run(Camera* camera) {
+	if (!this->initialized) {
+		this->Init();
+		this->initialized = true;
+	}
+	
+	glUseProgram(this->material.shaderID);
+
+	this->transform.ApplyVelocity();
+	this->CalculateMVPMatrix();
+	this->SendLayoutsAndUniformsToShader(camera);
+	this->RenderMesh();
 }
 
 Mesh* Mesh::CreateMeshObjectDontPush(const char* objFilePath, Material material, Transform transform) {
@@ -97,7 +94,7 @@ Mesh* Mesh::CreateMeshObjectDontPush(const char* objFilePath, Material material,
 
 		return mesh;
 	} else {
-		//printf("Mesh didn't load properly.\n");
+		printf("obj didn't load properly.\n");
 		return NULL;
 	}
 }
@@ -108,20 +105,28 @@ Mesh* Mesh::CreateMeshObject(const char* objFilePath, Material material, Transfo
 	return mesh;
 }
 
-glm::mat4 Mesh::RenderMesh() {
+void Mesh::CalculateMVPMatrix() {
+	mat4 modelToWorldMatrix = mat4(1.0f);
 
-	glUseProgram(this->material.shaderID);
+	mat4 identityMatrix = mat4(1.0f);
+	mat4 scaleMatrix = glm::scale(identityMatrix, this->transform.scale);
+	mat4 translateMatrix = glm::translate(identityMatrix, this->transform.position);
+	mat4 rotationMatrix = glm::rotate(identityMatrix, this->transform.rotationAmount, this->transform.rotationAxis);
+	
+	if (this->transform.rotateAroundAxis) {
+		modelToWorldMatrix = rotationMatrix * translateMatrix * scaleMatrix * identityMatrix;
+	}
+	else {
+		modelToWorldMatrix = translateMatrix * rotationMatrix * scaleMatrix * identityMatrix;
+	}
 
-	// Enable blending
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+	this->positionMatrix = modelToWorldMatrix;
+}
 
-	//mat4 positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
-	this->positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
-
-	this->material.SendTexturesToVideoCard();
-	this->material.ApplyTiling();
+void Mesh::SendMeshToShader() {
+	if (this->verticesBufferID != NULL) {
+		Render::RenderVertex(this->verticesBufferID);
+	}
 
 	if (this->uvsBufferID != NULL) {
 		Render::RenderUVs(this->uvsBufferID);
@@ -130,9 +135,24 @@ glm::mat4 Mesh::RenderMesh() {
 	if (this->normalsBufferID != NULL) {
 		Render::RenderNormals(this->normalsBufferID);
 	}
+}
 
-	//return positionMatrix;
-	return this->positionMatrix;
+void Mesh::SendLayoutsAndUniformsToShader(Camera* camera) {
+	this->SendMeshToShader();
+	this->material.SendTexturesToShader();
+	this->material.SendTextureTilingToShader();
+	this->SendMVPMatrixToShader(camera);
+	camera->SendVariablesToShader(this->material.shaderID);
+}
 
+void Mesh::RenderMesh() {
+	
+	// draw the mesh in tri's
+	glDrawArrays(GL_TRIANGLES, 0, this->numIndices);
 
+	// disable layout locations
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
 }

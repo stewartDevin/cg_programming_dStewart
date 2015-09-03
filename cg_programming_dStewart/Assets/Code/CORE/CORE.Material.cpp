@@ -43,14 +43,14 @@ Material* Material::CreateMaterial(char* diffuseImageFilePath) {
 //	Load::_LoadTexture(&material->diffuseImageID[0], material->diffuseImageFilePath[0]);
 //}
 
-void Material::ApplyTiling() {
+void Material::SendTextureTilingToShader() {
 	glUseProgram(this->shaderID);
 	GLint diffuseTextureTilingLocation = glGetUniformLocationARB(this->shaderID, "diffuseTiling");
 	glUniform2fARB(diffuseTextureTilingLocation, this->diffuseTiling.x, this->diffuseTiling.y);
 
 }
 
-void Material::SendTexturesToVideoCard() {
+void Material::SendTexturesToShader() {
 
 	for(int n = 0; n < 4; n++) {
 		if(this->diffuseImageID[n] != NULL) {

@@ -37,17 +37,27 @@ bool Keyboard::X = false;
 bool Keyboard::Y = false;
 bool Keyboard::Z = false;
 
+bool Keyboard::Number_0 = false;
+bool Keyboard::Number_1 = false;
+bool Keyboard::Number_2 = false;
+bool Keyboard::Number_3 = false;
+bool Keyboard::Number_4 = false;
+bool Keyboard::Number_5 = false;
+bool Keyboard::Number_6 = false;
+bool Keyboard::Number_7 = false;
+bool Keyboard::Number_8 = false;
+bool Keyboard::Number_9 = false;
+
 bool Keyboard::UpArrow = false;
 bool Keyboard::LeftArrow = false;
 bool Keyboard::RightArrow = false;
 bool Keyboard::DownArrow = false;
 bool Keyboard::SpaceBar = false;
+bool Keyboard::Enter = false;
 
 Keyboard::Keyboard() {
 	
 }
-
-
 
 void Keyboard::RunKeyboardKeys() {
 	if (glfwGetKey(DataCore::window, GLFW_KEY_A) == GLFW_PRESS) {
@@ -232,7 +242,79 @@ void Keyboard::RunKeyboardKeys() {
 		Keyboard::Z = false;
 	}
 
-	/////////////////////////
+	/////////////////////////////////////////
+
+	if (glfwGetKey(DataCore::window, GLFW_KEY_0) == GLFW_PRESS) {
+		Keyboard::Number_0 = true;
+	}
+	else {
+		Keyboard::Number_0 = false;
+	}
+
+	if (glfwGetKey(DataCore::window, GLFW_KEY_1) == GLFW_PRESS) {
+		Keyboard::Number_1 = true;
+	}
+	else {
+		Keyboard::Number_1 = false;
+	}
+
+	if (glfwGetKey(DataCore::window, GLFW_KEY_2) == GLFW_PRESS) {
+		Keyboard::Number_2 = true;
+	}
+	else {
+		Keyboard::Number_2 = false;
+	}
+
+	if (glfwGetKey(DataCore::window, GLFW_KEY_3) == GLFW_PRESS) {
+		Keyboard::Number_3 = true;
+	}
+	else {
+		Keyboard::Number_3 = false;
+	}
+
+	if (glfwGetKey(DataCore::window, GLFW_KEY_4) == GLFW_PRESS) {
+		Keyboard::Number_4 = true;
+	}
+	else {
+		Keyboard::Number_4 = false;
+	}
+
+	if (glfwGetKey(DataCore::window, GLFW_KEY_5) == GLFW_PRESS) {
+		Keyboard::Number_5 = true;
+	}
+	else {
+		Keyboard::Number_5 = false;
+	}
+
+	if (glfwGetKey(DataCore::window, GLFW_KEY_6) == GLFW_PRESS) {
+		Keyboard::Number_6 = true;
+	}
+	else {
+		Keyboard::Number_6 = false;
+	}
+
+	if (glfwGetKey(DataCore::window, GLFW_KEY_7) == GLFW_PRESS) {
+		Keyboard::Number_7 = true;
+	}
+	else {
+		Keyboard::Number_7 = false;
+	}
+
+	if (glfwGetKey(DataCore::window, GLFW_KEY_8) == GLFW_PRESS) {
+		Keyboard::Number_8 = true;
+	}
+	else {
+		Keyboard::Number_8 = false;
+	}
+
+	if (glfwGetKey(DataCore::window, GLFW_KEY_9) == GLFW_PRESS) {
+		Keyboard::Number_9 = true;
+	}
+	else {
+		Keyboard::Number_9 = false;
+	}
+
+	///////////////////////////////////
 
 	if (glfwGetKey(DataCore::window, GLFW_KEY_UP) == GLFW_PRESS) {
 		Keyboard::UpArrow = true;
@@ -262,6 +344,8 @@ void Keyboard::RunKeyboardKeys() {
 		Keyboard::RightArrow = false;
 	}
 
+	/////////////////////////////////////
+
 	if (glfwGetKey(DataCore::window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		Keyboard::Escape = true;
 	}
@@ -274,5 +358,12 @@ void Keyboard::RunKeyboardKeys() {
 	}
 	else {
 		Keyboard::SpaceBar = false;
+	}
+
+	if (glfwGetKey(DataCore::window, GLFW_KEY_ENTER) == GLFW_PRESS) {
+		Keyboard::Enter = true;
+	}
+	else {
+		Keyboard::Enter = false;
 	}
 }

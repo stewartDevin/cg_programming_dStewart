@@ -35,11 +35,24 @@ public:
 	static bool Y;
 	static bool Z;
 
+	static bool Number_0;
+	static bool Number_1;
+	static bool Number_2;
+	static bool Number_3;
+	static bool Number_4;
+	static bool Number_5;
+	static bool Number_6;
+	static bool Number_7;
+	static bool Number_8;
+	static bool Number_9;
+
 	static bool UpArrow;
 	static bool LeftArrow;
 	static bool RightArrow;
 	static bool DownArrow;
 	static bool SpaceBar;
+
+	static bool Enter;
 
 	Keyboard::Keyboard();
 
