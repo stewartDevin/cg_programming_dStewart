@@ -182,6 +182,8 @@
     <None Include="Assets\Shaders\GeometryShaders\Geo.geometry" />
     <None Include="Assets\Shaders\BlinnFresnel.fragmentshader" />
     <None Include="Assets\Shaders\BlinnFresnel.vertexshader" />
+    <None Include="Assets\Shaders\FadeInShaders\FadeIn.fragmentshader" />
+    <None Include="Assets\Shaders\FadeInShaders\FadeIn.vertexshader" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Models\torus.txt" />

@@ -60,6 +60,7 @@ void Material::SendTexturesToVideoCard() {
 			std::string s = std::to_string(n);
 			const char *cstr = s.c_str();
 			strcat (buffer, cstr);
+
 			GLuint gl_location = glGetUniformLocation(this->shaderID, buffer);
 			glUniform1i(gl_location, n);
 
@@ -78,9 +79,9 @@ void Material::SendTexturesToVideoCard() {
 			const char *cstr = s.c_str();
 			strcat (buffer, cstr);
 			GLuint gl_location = glGetUniformLocation(this->shaderID, buffer);
-			glUniform1i(gl_location, n);
+			glUniform1i(gl_location, n + 4);
 
-			glActiveTexture(GL_TEXTURE0 + n);
+			glActiveTexture(GL_TEXTURE0 + n + 4);
 			glBindTexture(GL_TEXTURE_2D, this->specularImageID[n]);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -95,9 +96,9 @@ void Material::SendTexturesToVideoCard() {
 			const char *cstr = s.c_str();
 			strcat (buffer, cstr);
 			GLuint gl_location = glGetUniformLocation(this->shaderID, buffer);
-			glUniform1i(gl_location, n);
+			glUniform1i(gl_location, n + 8);
 
-			glActiveTexture(GL_TEXTURE0 + n);
+			glActiveTexture(GL_TEXTURE0 + n + 8);
 			glBindTexture(GL_TEXTURE_2D, this->normalImageID[n]);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

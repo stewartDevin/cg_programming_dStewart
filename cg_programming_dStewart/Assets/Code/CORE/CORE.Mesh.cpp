@@ -117,30 +117,6 @@ glm::mat4 Mesh::RenderMesh() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 
-	// apply diffuse texture
-	//GLuint gl_location = glGetUniformLocation(DataCore::programID, "diffuseTexture1");
-	/*if(this->material.diffuseImageID[0] != NULL) {
-		GLuint gl_location = glGetUniformLocation(this->material.shaderID, "diffuseTexture1");
-		glUniform1i(gl_location, 0);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, this->material.diffuseImageID[0]);
-	}
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	if(this->material.diffuseImageID[1] != NULL) {
-		GLuint gl_location = glGetUniformLocation(this->material.shaderID, "diffuseTexture2");
-		glUniform1i(gl_location, 1);
-
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, this->material.diffuseImageID[1]);
-	}
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);*/
-
 	//mat4 positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
 	this->positionMatrix = Render::RenderVertex(this->verticesBufferID, this->transform);
 
@@ -154,13 +130,6 @@ glm::mat4 Mesh::RenderMesh() {
 	if (this->normalsBufferID != NULL) {
 		Render::RenderNormals(this->normalsBufferID);
 	}
-
-	/*glDrawArrays(GL_TRIANGLES, 0, this->numIndices);
-
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(2);
-	glDisableVertexAttribArray(3);*/
 
 	//return positionMatrix;
 	return this->positionMatrix;

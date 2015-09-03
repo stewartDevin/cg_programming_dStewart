@@ -138,6 +138,8 @@
     <None Include="Assets\Shaders\Dance.vertexshader" />
     <None Include="Assets\Shaders\DiffuseTextureFragmentShader.fragmentshader" />
     <None Include="Assets\Shaders\DiffuseTextureVertexShader.vertexshader" />
+    <None Include="Assets\Shaders\FadeInShaders\FadeIn.fragmentshader" />
+    <None Include="Assets\Shaders\FadeInShaders\FadeIn.vertexshader" />
     <None Include="Assets\Shaders\FlattenTextureFragmentShader.fragmentshader" />
     <None Include="Assets\Shaders\FlattenTextureVertexShader.vertexshader" />
     <None Include="Assets\Shaders\GeometryShaders\Geo.fragment" />

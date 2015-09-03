@@ -2,7 +2,6 @@
 
 in vec2 UV;
 uniform sampler2D diffuseTexture0;
-uniform sampler2D specularTexture0;
 
 out vec4 color;
 smooth in vec3 fragColor;
@@ -42,13 +41,12 @@ void main() {
 	///////////////////////////////////////////
 	// OBJECT COLOR
 	vec4 objectColor = clamp(texture2D( diffuseTexture0, UV * diffuseTiling ).rgba, 0.0f, 1.0f);
-	vec4 specularTextureColor = texture2D( specularTexture0, UV * diffuseTiling ).rgba;
 
-	////////////////////////////////////////////
+	///////////////////////////////////////////
 	// EMISSIVE LIGHTING
 	emissiveColor = objectColor * glow;
 
-	////////////////////////////////////////////
+	///////////////////////////////////////////
 	// AMBIENT LIGHTING
 	ambientColor = objectAmbientReflect * objectColor * lightColor;
 
@@ -59,11 +57,11 @@ void main() {
 	// SET DIFFUSE COLOR
 	diffuseColor = diffuseIntensity * objectColor;
 
-	//////////////////////////////////////////
+	///////////////////////////////////////////
 	// SPECULAR LIGHTING
-	vec3 reflectionVector = normalize(normalize(lightDirection) - (2.0f * normal * dot(normalize(lightDirection), normal)) * specularTextureColor.rgb);
-	float specularIntensity = pow( clamp( dot(reflectionVector, normalize(cameraForward)), 0.0f, 1.0f), 50.0f) * diffuseIntensity;
-	
+	vec3 reflectionVector = normalize(normalize(lightDirection) - (2.0f * normal * dot(normalize(lightDirection), normal)));
+	float specularIntensity = pow( clamp( dot(reflectionVector, normalize(cameraForward)), 0.0f, 1.0f), 100.0f) * diffuseIntensity;
+
 	// SET SPECULAR COLOR
 	//specularColor = objectColor * (1.0 - specularIntensity) + specularIntensity * whiteLightColor;
 	specularColor =  specularIntensity * whiteLightColor;
@@ -77,11 +75,10 @@ void main() {
 	//fresnelColor = clamp(objectColor * refl2Refr, 0.0f, 1.0f);
 	fresnelColor = clamp(whiteLightColor * refl2Refr, 0.0f, 1.0f);
 
-	//////////////////////////////////////////////
+	////////////////////////////////////////////
 	// ADD ALL LIGHTING TOGETHER AND SET COLOR
 	//color = clamp(emissiveColor + ambientColor + diffuseColor + specularColor + fresnelColor, 0.0f, 1.0f);
 	color = clamp(emissiveColor + ambientColor + diffuseColor + specularColor, 0.0f, 1.0f);
 	//color = fresnelColor;
-
 	color.a = 1.0f;
 }

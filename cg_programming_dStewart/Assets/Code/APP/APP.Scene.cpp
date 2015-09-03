@@ -118,6 +118,7 @@ Material* lavaMaterial = NULL;
 
 Material* toonBunnyMaterial = NULL;
 Material* blinnBunnyMaterial = NULL;
+Material* fadeInBunnyMaterial = NULL;
 Material* geometryShaderMaterial = NULL;
 Material* skyBoxMaterial = NULL;
 
@@ -136,7 +137,13 @@ void LoadBunny() {
 	blinnBunnyMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
 	blinnBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/BlinnFresnel.vertexshader", "./Assets/Shaders/BlinnFresnel.fragmentshader");
 	blinnBunnyMaterial->diffuseTiling = vec2(10.0f);
-	blinnBunnyMaterial->specularImageFilePath[0] = "./Assets/Images/specMapTest.jpg";
+	blinnBunnyMaterial->specularImageFilePath[0] = "./Assets/Images/brownFurSpecMap2.png";
+	//blinnBunnyMaterial->specularImageFilePath[0] = "./Assets/Images/specMapTest.jpg";
+	Load::_LoadTexture(&blinnBunnyMaterial->specularImageID[0], blinnBunnyMaterial->specularImageFilePath[0]);
+
+	/*fadeInBunnyMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
+	fadeInBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/FadeInShaders/FadeIn.vertexshader", "./Assets/Shaders/FadeInShaders/FadeIn.fragmentshader");
+	fadeInBunnyMaterial->diffuseTiling = vec2(10.0f);*/
 
 	//bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *toonBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
 	bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *blinnBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
