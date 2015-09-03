@@ -144,7 +144,7 @@ void LoadBunny() {
 	blinnBunnyMaterial->specularImageFilePath[0] = "./Assets/Images/brownFurSpecMap2.png";
 	//blinnBunnyMaterial->specularImageFilePath[0] = "./Assets/Images/specMapTest.jpg";
 	Load::_LoadTexture(&blinnBunnyMaterial->specularImageID[0], blinnBunnyMaterial->specularImageFilePath[0]);
-
+	
 	/////////////////////////////
 	// load Fade-In material
 	fadeInBunnyMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");

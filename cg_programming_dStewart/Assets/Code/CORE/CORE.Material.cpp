@@ -44,7 +44,7 @@ Material* Material::CreateMaterial(char* diffuseImageFilePath) {
 //}
 
 void Material::SendTextureTilingToShader() {
-	glUseProgram(this->shaderID);
+	//glUseProgram(this->shaderID);
 	GLint diffuseTextureTilingLocation = glGetUniformLocationARB(this->shaderID, "diffuseTiling");
 	glUniform2fARB(diffuseTextureTilingLocation, this->diffuseTiling.x, this->diffuseTiling.y);
 

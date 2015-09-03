@@ -39,7 +39,6 @@ void Mesh::SendMVPMatrixToShader(Camera* camera) {
 	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * this->positionMatrix;
 	glUniformMatrix4fv(this->MVP_MatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
-	
 }
 
 void Mesh::Init() {
@@ -142,7 +141,7 @@ void Mesh::SendLayoutsAndUniformsToShader(Camera* camera) {
 	this->material.SendTexturesToShader();
 	this->material.SendTextureTilingToShader();
 	this->SendMVPMatrixToShader(camera);
-	camera->SendVariablesToShader(this->material.shaderID);
+	camera->SendCameraVariablesToShader(this->material.shaderID);
 }
 
 void Mesh::RenderMesh() {
