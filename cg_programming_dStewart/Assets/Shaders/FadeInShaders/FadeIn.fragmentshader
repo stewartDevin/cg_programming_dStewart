@@ -2,11 +2,13 @@
 
 in vec2 UV;
 uniform sampler2D diffuseTexture0;
+uniform sampler2D specularTexture0;
 
 out vec4 color;
 smooth in vec3 fragColor;
 
 uniform float timer;
+uniform float fadeInTimer;
 uniform vec3 lightDirection;
 
 // model view projection matrix...
@@ -41,6 +43,7 @@ void main() {
 	///////////////////////////////////////////
 	// OBJECT COLOR
 	vec4 objectColor = clamp(texture2D( diffuseTexture0, UV * diffuseTiling ).rgba, 0.0f, 1.0f);
+	vec4 fadeInTexture = clamp(texture2D( specularTexture0, UV ).rgba, 0.0f, 1.0f);
 
 	///////////////////////////////////////////
 	// EMISSIVE LIGHTING
@@ -79,6 +82,16 @@ void main() {
 	// ADD ALL LIGHTING TOGETHER AND SET COLOR
 	//color = clamp(emissiveColor + ambientColor + diffuseColor + specularColor + fresnelColor, 0.0f, 1.0f);
 	color = clamp(emissiveColor + ambientColor + diffuseColor + specularColor, 0.0f, 1.0f);
+	color.a = 0.0f;
+
+	if(fadeInTimer >= fadeInTexture.r) {
+		color.a = 1.0f;
+	}
+
+	if(fadeInTexture.r >= fadeInTimer - 0.02f && fadeInTexture.r <= fadeInTimer + 0.02f) {
+		color = vec4(sin(fadeInTimer), -cos(fadeInTimer), cos(fadeInTimer), 1.0f);
+	}
+
 	//color = fresnelColor;
-	color.a = 1.0f;
+	//color.a = 1.0f;
 }
