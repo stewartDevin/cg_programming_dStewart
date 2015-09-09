@@ -30,13 +30,6 @@ Mesh::Mesh() {
 }
 
 void Mesh::SendMVPMatrixToShader(Camera* camera) {
-	///////////////////////////////////////////////////
-	// M_MATRIX
-	mat4 M_Matrix = this->positionMatrix;
-	//GLuint MV_Matrix_ID = glGetUniformLocation(DataCore::programID, "MV");
-	GLuint M_Matrix_ID = glGetUniformLocation(this->material.shaderID, "M_Matrix");
-	glUniformMatrix4fv(M_Matrix_ID, 1, GL_FALSE, &M_Matrix[0][0]);
-
 	////////////////////////////////////////////////////
 	// MVP_MATRIX
 	this->MVP_MatrixID = glGetUniformLocation(this->material.shaderID, "MVP");
@@ -44,10 +37,24 @@ void Mesh::SendMVPMatrixToShader(Camera* camera) {
 	glUniformMatrix4fv(this->MVP_MatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
 
 	///////////////////////////////////////////////////
-	// MV_MATRIX
-	mat4 MV_Matrix = camera->viewMatrix * this->positionMatrix;
-	GLuint MV_Matrix_ID = glGetUniformLocation(this->material.shaderID, "MV_Matrix");
-	glUniformMatrix4fv(MV_Matrix_ID, 1, GL_FALSE, &MV_Matrix[0][0]);
+	// M_MATRIX
+	mat4 M_Matrix = this->positionMatrix;
+	//GLuint MV_Matrix_ID = glGetUniformLocation(DataCore::programID, "MV");
+	GLuint M_Matrix_ID = glGetUniformLocation(this->material.shaderID, "M_Matrix");
+	glUniformMatrix4fv(M_Matrix_ID, 1, GL_FALSE, &M_Matrix[0][0]);
+
+	///////////////////////////////////////////////////
+	// V_MATRIX
+	mat4 V_Matrix = camera->viewMatrix;
+	//GLuint MV_Matrix_ID = glGetUniformLocation(DataCore::programID, "MV");
+	GLuint V_Matrix_ID = glGetUniformLocation(this->material.shaderID, "V_Matrix");
+	glUniformMatrix4fv(V_Matrix_ID, 1, GL_FALSE, &V_Matrix[0][0]);
+
+	////////////////////////////////////////////////////
+	// P_MATRIX
+	mat4 P_Matrix = camera->projectionMatrix;
+	GLuint P_Matrix_ID = glGetUniformLocation(this->material.shaderID, "P_Matrix");
+	glUniformMatrix4fv(P_Matrix_ID, 1, GL_FALSE, &P_Matrix[0][0]);
 
 }
 
@@ -133,6 +140,11 @@ void Mesh::CalculateMVPMatrix() {
 }
 
 void Mesh::SendMeshToShader() {
+	// get the position location
+	GLint posLoc = glGetUniformLocationARB(this->material.shaderID, "position");
+	// send the position to the Shader
+	glUniform3fARB(posLoc, this->transform.position.x, this->transform.position.y, this->transform.position.z);
+
 	if (this->verticesBufferID != NULL) {
 		Render::RenderVertex(this->verticesBufferID);
 	}
@@ -147,6 +159,7 @@ void Mesh::SendMeshToShader() {
 }
 
 void Mesh::SendLayoutsAndUniformsToShader(Camera* camera) {
+	glUseProgram(this->material.shaderID);
 	this->SendMeshToShader();
 	this->material.SendTexturesToShader();
 	this->material.SendTextureTilingToShader();

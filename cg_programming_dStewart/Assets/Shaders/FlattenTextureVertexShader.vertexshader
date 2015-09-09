@@ -11,18 +11,31 @@ smooth out vec3 fragColor;
 // model view projection matrix...
 uniform mat4 MVP;
 uniform mat4 M_Matrix;
-uniform mat4 MV_Matrix;
+uniform mat4 V_Matrix;
+uniform mat4 P_Matrix;
+
+uniform vec3 cameraForward;
+uniform vec3 cameraRight;
+uniform vec3 cameraUp;
+
+uniform vec3 position;
 
 uniform float timer;
 
 void main() {
 	UV = vertexUV;
 
+	vec4 cameraRightWorld = vec4(cameraRight, 1.0) * inverse(V_Matrix);
+	vec4 cameraUpWorld = vec4(cameraUp, 1.0) * inverse(V_Matrix);
+	vec4 positionWorld = P_Matrix * V_Matrix * vec4(model_space_pos, 1.0);
+
 	vec4 v = vec4(model_space_pos, 1);
 	//v.x = sin(5.0*v.y + timer)*0.25;
 	//v = MVP * v;
 
-	gl_Position = MVP * (vec4(model_space_pos, 1.0) + vec4(M_Matrix[3].xyz, 0));
+	gl_Position = positionWorld
+	+ cameraRightWorld * model_space_pos.x * 2.0f
+	+ cameraUpWorld * model_space_pos.y * 2.0f;
 
 	//gl_Position = MVP * v;
 

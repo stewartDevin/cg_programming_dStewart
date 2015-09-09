@@ -126,6 +126,7 @@ Material* billboardMaterial = NULL;
 Mesh* floorMesh = NULL;
 Mesh* bunnyMesh1 = NULL;
 Mesh* bunnyMesh2 = NULL;
+Mesh* planeMesh = NULL;
 
 Mesh* skyBox = NULL;
 Mesh* landscapeMesh = NULL;
@@ -159,9 +160,10 @@ void LoadBunny() {
 	billboardMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
 	billboardMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/FlattenTextureVertexShader.vertexshader", "./Assets/Shaders/FlattenTextureFragmentShader.fragmentshader");
 
-	bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *billboardMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
+	//bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *billboardMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
+	planeMesh = Mesh::CreateMeshObject("./Assets/Models/plane.obj", *billboardMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
 
-	//bunnyMesh2 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *toonBunnyMaterial, Transform(vec3(2.0f, 0.0f, 12.0f)));
+	bunnyMesh2 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *toonBunnyMaterial, Transform(vec3(2.0f, 0.0f, 12.0f)));
 }
 
 void RunBunny() {
