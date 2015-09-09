@@ -30,14 +30,24 @@ Mesh::Mesh() {
 }
 
 void Mesh::SendMVPMatrixToShader(Camera* camera) {
+	///////////////////////////////////////////////////
+	// M_MATRIX
 	mat4 M_Matrix = this->positionMatrix;
 	//GLuint MV_Matrix_ID = glGetUniformLocation(DataCore::programID, "MV");
 	GLuint M_Matrix_ID = glGetUniformLocation(this->material.shaderID, "M_Matrix");
 	glUniformMatrix4fv(M_Matrix_ID, 1, GL_FALSE, &M_Matrix[0][0]);
 
+	////////////////////////////////////////////////////
+	// MVP_MATRIX
 	this->MVP_MatrixID = glGetUniformLocation(this->material.shaderID, "MVP");
 	this->MVPMatrix = camera->projectionMatrix * camera->viewMatrix * this->positionMatrix;
 	glUniformMatrix4fv(this->MVP_MatrixID, 1, GL_FALSE, &this->MVPMatrix[0][0]);
+
+	///////////////////////////////////////////////////
+	// MV_MATRIX
+	mat4 MV_Matrix = camera->viewMatrix * this->positionMatrix;
+	GLuint MV_Matrix_ID = glGetUniformLocation(this->material.shaderID, "MV_Matrix");
+	glUniformMatrix4fv(MV_Matrix_ID, 1, GL_FALSE, &MV_Matrix[0][0]);
 
 }
 

@@ -121,6 +121,7 @@ Material* blinnBunnyMaterial = NULL;
 Material* fadeInBunnyMaterial = NULL;
 Material* geometryShaderMaterial = NULL;
 Material* skyBoxMaterial = NULL;
+Material* billboardMaterial = NULL;
 
 Mesh* floorMesh = NULL;
 Mesh* bunnyMesh1 = NULL;
@@ -153,14 +154,19 @@ void LoadBunny() {
 	fadeInBunnyMaterial->specularImageFilePath[0] = "./Assets/Images/fadeIn_boxes_TopToBottom.png";
 	Load::_LoadTexture(&fadeInBunnyMaterial->specularImageID[0], fadeInBunnyMaterial->specularImageFilePath[0]);
 
-	bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *fadeInBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
+	////////////////////////////
+	// billboard material
+	billboardMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
+	billboardMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/FlattenTextureVertexShader.vertexshader", "./Assets/Shaders/FlattenTextureFragmentShader.fragmentshader");
+
+	bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *billboardMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
 
 	//bunnyMesh2 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *toonBunnyMaterial, Transform(vec3(2.0f, 0.0f, 12.0f)));
 }
 
 void RunBunny() {
-	if (bunnyMesh1 != NULL) bunnyMesh1->transform.Rotate(0.4f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
-	if (bunnyMesh2 != NULL) bunnyMesh2->transform.Rotate(0.4f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
+	//if (bunnyMesh1 != NULL) bunnyMesh1->transform.Rotate(0.4f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
+	//if (bunnyMesh2 != NULL) bunnyMesh2->transform.Rotate(0.4f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
 
 	static GLfloat fadeInTimer = 0.0f;
 	static float direction = 1.0f;
@@ -348,6 +354,13 @@ void RunTimer() {
 		glUseProgram(landscapeMaterial->shaderID);
 		// get the timer variable on the video card
 		GLint timeLoc = glGetUniformLocationARB(landscapeMaterial->shaderID, "timer");
+		// send the timer to the vertex Shader
+		glUniform1fARB(timeLoc, timer);
+	}
+	if (billboardMaterial != NULL) {
+		glUseProgram(billboardMaterial->shaderID);
+		// get the timer variable on the video card
+		GLint timeLoc = glGetUniformLocationARB(billboardMaterial->shaderID, "timer");
 		// send the timer to the vertex Shader
 		glUniform1fARB(timeLoc, timer);
 	}
