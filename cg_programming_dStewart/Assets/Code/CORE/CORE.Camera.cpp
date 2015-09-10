@@ -96,6 +96,10 @@ void Camera::ConstrainMovement(float left, float top, float right, float bottom)
 }
 
 void Camera::SendCameraVariablesToShader(GLuint& shaderID) {
+	// send position
+	GLuint cameraPositionLocation = glGetUniformLocationARB(shaderID, "cameraPosition");
+	glUniform3f(cameraPositionLocation, this->transform.position.x, this->transform.position.y, this->transform.position.z);
+
 	// send forward
 	GLuint cameraForwardLocation = glGetUniformLocationARB(shaderID, "cameraForward");
 	glUniform3f(cameraForwardLocation, this->forward.x, this->forward.y, this->forward.z);

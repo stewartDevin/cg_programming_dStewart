@@ -134,9 +134,9 @@ Mesh* landscapeMesh = NULL;
 void LoadBunny() {
 	/////////////////////////////
 	// load toon material
-	toonBunnyMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
-	toonBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/Toon.vertexshader", "./Assets/Shaders/Toon.fragmentshader");
-	toonBunnyMaterial->diffuseTiling = vec2(10.0f);
+	//toonBunnyMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
+	//toonBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/Toon.vertexshader", "./Assets/Shaders/Toon.fragmentshader");
+	//toonBunnyMaterial->diffuseTiling = vec2(10.0f);
 
 	/////////////////////////////
 	// load blinn material
@@ -149,36 +149,69 @@ void LoadBunny() {
 
 	/////////////////////////////
 	// load Fade-In material
-	fadeInBunnyMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
-	fadeInBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/FadeInShaders/FadeIn.vertexshader", "./Assets/Shaders/FadeInShaders/FadeIn.fragmentshader");
-	fadeInBunnyMaterial->diffuseTiling = vec2(10.0f);
-	fadeInBunnyMaterial->specularImageFilePath[0] = "./Assets/Images/fadeIn_boxes_TopToBottom.png";
-	Load::_LoadTexture(&fadeInBunnyMaterial->specularImageID[0], fadeInBunnyMaterial->specularImageFilePath[0]);
+	//fadeInBunnyMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
+	//fadeInBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/FadeInShaders/FadeIn.vertexshader", "./Assets/Shaders/FadeInShaders/FadeIn.fragmentshader");
+	//fadeInBunnyMaterial->diffuseTiling = vec2(10.0f);
+	//fadeInBunnyMaterial->specularImageFilePath[0] = "./Assets/Images/fadeIn_boxes_TopToBottom.png";
+	//Load::_LoadTexture(&fadeInBunnyMaterial->specularImageID[0], fadeInBunnyMaterial->specularImageFilePath[0]);
 
 	////////////////////////////
 	// billboard material
-	billboardMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
-	billboardMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/FlattenTextureVertexShader.vertexshader", "./Assets/Shaders/FlattenTextureFragmentShader.fragmentshader");
+	//billboardMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
+	//billboardMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/FlattenTextureVertexShader.vertexshader", "./Assets/Shaders/FlattenTextureFragmentShader.fragmentshader");
 
 	//////////////////////////////////
 	// geo shader
-	geometryShaderMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
-	geometryShaderMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/GeometryShaders/Geo.vertex", "./Assets/Shaders/GeometryShaders/Geo.frag", "./Assets/Shaders/GeometryShaders/Geo.geometry");
+	//geometryShaderMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
+	//geometryShaderMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/GeometryShaders/Geo.vertex", "./Assets/Shaders/GeometryShaders/Geo.frag", "./Assets/Shaders/GeometryShaders/Geo.geometry");
 
 	//////////////////////////////
 	// Load Meshes and set materials
-	bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *fadeInBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
+	//bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *fadeInBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
 	//planeMesh = Mesh::CreateMeshObject("./Assets/Models/plane.obj", *billboardMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
 
 	bunnyMesh2 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *blinnBunnyMaterial, Transform(vec3(2.0f, 0.0f, 12.0f)));
-	Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *geometryShaderMaterial, Transform(vec3(4.0f, 0.0f, 14.0f)));
+	//Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *geometryShaderMaterial, Transform(vec3(4.0f, 0.0f, 14.0f)));  
 
+	glUseProgram(blinnBunnyMaterial->shaderID);
 
+	// Directional light
+    glUniform3f(glGetUniformLocation(blinnBunnyMaterial->shaderID, "dirLight.direction"), 1.0f, 1.0f, 1.0f);
+    glUniform3f(glGetUniformLocation(blinnBunnyMaterial->shaderID, "dirLight.ambient"), 0.05f, 0.05f, 0.05f);
+    glUniform3f(glGetUniformLocation(blinnBunnyMaterial->shaderID, "dirLight.diffuse"), 0.4f, 0.4f, 0.4f);
+    glUniform3f(glGetUniformLocation(blinnBunnyMaterial->shaderID, "dirLight.specular"), 0.5f, 0.5f, 0.5f);
+
+	glm::vec3 pointLightPositions[] = {
+		glm::vec3( 6.0f,  2.0f, 14.0f),
+		glm::vec3( -2.0f,  2.0f, 8.0f),
+		glm::vec3( -2.0f,  2.0f, 14.0f),
+		glm::vec3( 6.0f,  2.0f, 8.0f)
+	}; 
+
+	glm::vec3 pointLightColors[] = {
+		glm::vec3(0.75f, 0.75f, 0.75f),
+		glm::vec3(0.75f, 0.75f, 0.75f),
+		glm::vec3(0.75f, 0.75f, 0.75f),
+		glm::vec3(0.75f, 0.75f, 0.75f)
+	}; 
+
+	for (GLuint i = 0; i < 4; i++)
+	{
+		string number = to_string(i);
+		// Point Lights
+		glUniform3f(glGetUniformLocation(blinnBunnyMaterial->shaderID, ("pointLights[" + number + "].position").c_str()), pointLightPositions[i].x, pointLightPositions[i].y, pointLightPositions[i].z);
+		glUniform3f(glGetUniformLocation(blinnBunnyMaterial->shaderID, ("pointLights[" + number + "].ambient").c_str()), pointLightColors[i].r * 0.15f, pointLightColors[i].g * 0.15f, pointLightColors[i].b * 0.15f);
+		glUniform3f(glGetUniformLocation(blinnBunnyMaterial->shaderID, ("pointLights[" + number + "].diffuse").c_str()), pointLightColors[i].r, pointLightColors[i].g, pointLightColors[i].b);
+		glUniform3f(glGetUniformLocation(blinnBunnyMaterial->shaderID, ("pointLights[" + number + "].specular").c_str()), 1.0f, 1.0f, 1.0f);
+		glUniform1f(glGetUniformLocation(blinnBunnyMaterial->shaderID, ("pointLights[" + number + "].constant").c_str()), 1.0f);
+		glUniform1f(glGetUniformLocation(blinnBunnyMaterial->shaderID, ("pointLights[" + number + "].linear").c_str()), 0.08f);
+		glUniform1f(glGetUniformLocation(blinnBunnyMaterial->shaderID, ("pointLights[" + number + "].quadratic").c_str()), 0.032f);
+	}
 }
 
 void RunBunny() {
 	//if (bunnyMesh1 != NULL) bunnyMesh1->transform.Rotate(0.4f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
-	//if (bunnyMesh2 != NULL) bunnyMesh2->transform.Rotate(0.4f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
+	if (bunnyMesh2 != NULL) bunnyMesh2->transform.Rotate(0.4f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
 
 	static GLfloat fadeInTimer = 0.0f;
 	static float direction = 1.0f;
@@ -446,8 +479,6 @@ void RunLevelOne() {
 
 }
 
-
-
 void RunWater() {
 	if (waterMaterial == NULL) return;
 	glUseProgram(waterMaterial->shaderID);
@@ -514,12 +545,14 @@ void Scene::InitializeScene() {
 
 		//Scene::LoadLevelOne();
 
-		LoadLevelTwo();
+		//LoadLevelTwo();
 
-		//LoadTestLevel();
+		LoadTestLevel();
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
+
+		//glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].constant"), 1.0f);
 	}
 }
 
