@@ -92,6 +92,10 @@ void main() {
 		color = vec4(sin(fadeInTimer), -cos(fadeInTimer), cos(fadeInTimer), 1.0f);
 	}
 
+	if(color.a < 0.1) {
+		discard;
+	}
+
 	//color = fresnelColor;
 	//color.a = 1.0f;
 }

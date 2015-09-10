@@ -146,7 +146,7 @@ void LoadBunny() {
 	blinnBunnyMaterial->specularImageFilePath[0] = "./Assets/Images/brownFurSpecMap2.png";
 	//blinnBunnyMaterial->specularImageFilePath[0] = "./Assets/Images/specMapTest.jpg";
 	Load::_LoadTexture(&blinnBunnyMaterial->specularImageID[0], blinnBunnyMaterial->specularImageFilePath[0]);
-	
+
 	/////////////////////////////
 	// load Fade-In material
 	fadeInBunnyMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
@@ -160,10 +160,20 @@ void LoadBunny() {
 	billboardMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
 	billboardMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/FlattenTextureVertexShader.vertexshader", "./Assets/Shaders/FlattenTextureFragmentShader.fragmentshader");
 
-	//bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *billboardMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
-	planeMesh = Mesh::CreateMeshObject("./Assets/Models/plane.obj", *billboardMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
+	//////////////////////////////////
+	// geo shader
+	geometryShaderMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
+	geometryShaderMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/GeometryShaders/Geo.vertex", "./Assets/Shaders/GeometryShaders/Geo.frag", "./Assets/Shaders/GeometryShaders/Geo.geometry");
 
-	bunnyMesh2 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *toonBunnyMaterial, Transform(vec3(2.0f, 0.0f, 12.0f)));
+	//////////////////////////////
+	// Load Meshes and set materials
+	bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *fadeInBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
+	//planeMesh = Mesh::CreateMeshObject("./Assets/Models/plane.obj", *billboardMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
+
+	bunnyMesh2 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *blinnBunnyMaterial, Transform(vec3(2.0f, 0.0f, 12.0f)));
+	Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *geometryShaderMaterial, Transform(vec3(4.0f, 0.0f, 14.0f)));
+
+
 }
 
 void RunBunny() {
@@ -173,7 +183,7 @@ void RunBunny() {
 	static GLfloat fadeInTimer = 0.0f;
 	static float direction = 1.0f;
 	if(fadeInBunnyMaterial != NULL) {
-		
+
 		glUseProgram(fadeInBunnyMaterial->shaderID);
 		// get the timer variable on the video card
 		GLint timeLoc = glGetUniformLocationARB(fadeInBunnyMaterial->shaderID, "fadeInTimer");
@@ -190,12 +200,29 @@ void RunBunny() {
 			fadeInTimer = 0.0f;
 			direction = 1.0f;
 		} 
-	
+
+		// geo shader stuff
+		if (geometryShaderMaterial != NULL) {
+			static float fBender = 0.1f;
+			glUseProgram(geometryShaderMaterial->shaderID);
+			// get the timer variable on the video card
+			GLint fBenderLoc = glGetUniformLocationARB(geometryShaderMaterial->shaderID, "fBender");
+			// send the timer to the vertex Shader
+			glUniform1fARB(fBenderLoc, fBender);
+
+			if (Keyboard::O) {
+				fBender -= 0.1f * DataCore::deltaTime;
+			}
+			if (Keyboard::P) {
+				fBender += 0.1f * DataCore::deltaTime;
+			}
+		}
+
 	}
 }
 
 void RunLight() {
-	
+
 	//static vec3 lightDirection = vec3(0.0f, 1.0f, 0.1f);
 	static vec3 lightDirection = vec3(-1.0f, 1.0f, 1.0f);
 
@@ -374,8 +401,8 @@ void RunLevelTwo() {
 	if (sceneMaterial == NULL) return;
 	glUseProgram(sceneMaterial->shaderID);
 	// make the bunny mesh spin
-	//if (bunnyMesh1 != NULL) bunnyMesh1->transform.Rotate(0.75f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
-	//if (bunnyMesh2 != NULL) bunnyMesh2->transform.Rotate(0.75f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
+	if (bunnyMesh1 != NULL) bunnyMesh1->transform.Rotate(0.75f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
+	if (bunnyMesh2 != NULL) bunnyMesh2->transform.Rotate(0.75f * DataCore::deltaTime, vec3(0.0f, 1.0f, 0.0f), false);
 	RunBunny();
 	RunTimer();
 
@@ -386,21 +413,21 @@ void RunLevelTwo() {
 
 	////////////////////////////////////
 	//geo shader stuff
-	if (geometryShaderMaterial != NULL) {
-		static float fBender = 0.1f;
-		glUseProgram(geometryShaderMaterial->shaderID);
-		// get the timer variable on the video card
-		GLint fBenderLoc = glGetUniformLocationARB(geometryShaderMaterial->shaderID, "fBender");
-		// send the timer to the vertex Shader
-		glUniform1fARB(fBenderLoc, fBender);
+	//if (geometryShaderMaterial != NULL) {
+	//	static float fBender = 0.1f;
+	//	glUseProgram(geometryShaderMaterial->shaderID);
+	//	// get the timer variable on the video card
+	//	GLint fBenderLoc = glGetUniformLocationARB(geometryShaderMaterial->shaderID, "fBender");
+	//	// send the timer to the vertex Shader
+	//	glUniform1fARB(fBenderLoc, fBender);
 
-		if (Keyboard::O) {
-			fBender -= 0.1f * DataCore::deltaTime;
-		}
-		if (Keyboard::P) {
-			fBender += 0.1f * DataCore::deltaTime;
-		}
-	}
+	//	if (Keyboard::O) {
+	//		fBender -= 0.1f * DataCore::deltaTime;
+	//	}
+	//	if (Keyboard::P) {
+	//		fBender += 0.1f * DataCore::deltaTime;
+	//	}
+	//}
 
 }
 
@@ -487,9 +514,9 @@ void Scene::InitializeScene() {
 
 		//Scene::LoadLevelOne();
 
-		//LoadLevelTwo();
+		LoadLevelTwo();
 
-		LoadTestLevel();
+		//LoadTestLevel();
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
