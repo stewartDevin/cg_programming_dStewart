@@ -149,11 +149,11 @@ void LoadBunny() {
 
 	/////////////////////////////
 	// load Fade-In material
-	//fadeInBunnyMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
-	//fadeInBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/FadeInShaders/FadeIn.vertexshader", "./Assets/Shaders/FadeInShaders/FadeIn.fragmentshader");
-	//fadeInBunnyMaterial->diffuseTiling = vec2(10.0f);
-	//fadeInBunnyMaterial->specularImageFilePath[0] = "./Assets/Images/fadeIn_boxes_TopToBottom.png";
-	//Load::_LoadTexture(&fadeInBunnyMaterial->specularImageID[0], fadeInBunnyMaterial->specularImageFilePath[0]);
+	fadeInBunnyMaterial = Material::CreateMaterial("./Assets/Images/soft-brown-fur-texture.png");
+	fadeInBunnyMaterial->shaderID = Load::LoadShaders("./Assets/Shaders/FadeInShaders/FadeIn.vertexshader", "./Assets/Shaders/FadeInShaders/FadeIn.fragmentshader");
+	fadeInBunnyMaterial->diffuseTiling = vec2(10.0f);
+	fadeInBunnyMaterial->specularImageFilePath[0] = "./Assets/Images/fadeIn_boxes_TopToBottom.png";
+	Load::_LoadTexture(&fadeInBunnyMaterial->specularImageID[0], fadeInBunnyMaterial->specularImageFilePath[0]);
 
 	////////////////////////////
 	// billboard material
@@ -167,7 +167,7 @@ void LoadBunny() {
 
 	//////////////////////////////
 	// Load Meshes and set materials
-	//bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *fadeInBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
+	bunnyMesh1 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *fadeInBunnyMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
 	//planeMesh = Mesh::CreateMeshObject("./Assets/Models/plane.obj", *billboardMaterial, Transform(vec3(0.0f, 0.0f, 10.0f)));
 
 	bunnyMesh2 = Mesh::CreateMeshObject("./Assets/Models/bunnyAveraged.obj", *blinnBunnyMaterial, Transform(vec3(2.0f, 0.0f, 12.0f)));
@@ -189,9 +189,9 @@ void LoadBunny() {
 	}; 
 
 	glm::vec3 pointLightColors[] = {
-		glm::vec3(0.75f, 0.75f, 0.75f),
-		glm::vec3(0.75f, 0.75f, 0.75f),
-		glm::vec3(0.75f, 0.75f, 0.75f),
+		glm::vec3(0.0f, 0.75f, 0.75f),
+		glm::vec3(0.75f, 0.0f, 0.75f),
+		glm::vec3(0.75f, 0.75f, 0.0f),
 		glm::vec3(0.75f, 0.75f, 0.75f)
 	}; 
 
@@ -545,9 +545,9 @@ void Scene::InitializeScene() {
 
 		//Scene::LoadLevelOne();
 
-		//LoadLevelTwo();
+		LoadLevelTwo();
 
-		LoadTestLevel();
+		//LoadTestLevel();
 
 		// init scene variable = true;
 		Scene::sceneInitialized = true;
