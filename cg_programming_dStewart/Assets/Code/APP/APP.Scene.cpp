@@ -372,7 +372,7 @@ void LoadLevelTwo() {
 	LoadWater();
 
 	sceneMaterial = Material::CreateMaterial("./Assets/Images/floorPillarStairs_Diffuse.png");
-	landscapeMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
+	landscapeMaterial = Material::CreateMaterial("./Assets/Images/clouds3.png");
 
 	skyBoxMaterial = Material::CreateMaterial("./Assets/Images/skyBox_texture.png");
 	geometryShaderMaterial = Material::CreateMaterial("./Assets/Images/dirt.jpg");
