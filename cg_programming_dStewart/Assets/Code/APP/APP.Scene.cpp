@@ -223,7 +223,7 @@ void RunBunny() {
 		// send the timer to the vertex Shader
 		glUniform1fARB(timeLoc, fadeInTimer);
 
-		fadeInTimer += 0.3f * direction * DataCore::deltaTime;
+		fadeInTimer += 0.2f * direction * DataCore::deltaTime;
 
 		if(fadeInTimer >= 1.0f) {
 			fadeInTimer = 1.0f;

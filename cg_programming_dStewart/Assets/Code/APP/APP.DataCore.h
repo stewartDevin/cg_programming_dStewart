@@ -47,7 +47,7 @@ public:
 	// Read our .obj file
 	static std::vector< glm::vec3 > vertices;
 	static std::vector< glm::vec2 > uvs;
-	static std::vector< glm::vec3 > normals; // Won't be used at the moment.
+	static std::vector< glm::vec3 > normals;
 	static bool res;
 
 	//playerMesh
